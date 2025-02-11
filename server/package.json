@@ -1,6 +1,7 @@
 {
   "scripts": {
     "build": "npx tsc",
+    "deploy": "node src/server.ts", 
     "start": "nodemon src/server.ts"
   },
   "dependencies": {

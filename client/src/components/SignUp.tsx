@@ -1,23 +1,19 @@
 import React, { useState } from "react";
-import "./SignIn.css";
+import "./SignUp.css";
 
-const SignIn: React.FC = () => {
+const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Email:", email, "Password:", password);
-    // Add authentication logic here
   };
 
   return (
     <div className="signin-container">
       <form className="signin-form" onSubmit={handleSubmit}>
-        <div className="signin-header">
-          <h2>Sign In</h2>
-        </div>
-
+        <h2>Welcome new member</h2>
         <div className="input-group">
           <label>Email</label>
           <input
@@ -42,11 +38,7 @@ const SignIn: React.FC = () => {
           <button type="submit" className="signin-button">
             Sign In
           </button>
-          <button
-            type="button"
-            className="signup-button"
-            onClick={() => (window.location.href = "/signup")}
-          >
+          <button type="button" className="signup-button" onClick={() => window.location.href = "/signup"}>
             Sign Up
           </button>
         </div>
@@ -55,4 +47,4 @@ const SignIn: React.FC = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;

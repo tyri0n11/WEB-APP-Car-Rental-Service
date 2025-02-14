@@ -57,9 +57,7 @@
 }
 
 .menuItems {
-  display: flex;
   align-items: center;
-  width: 70%;
 }
 
 .searchBar {
@@ -89,15 +87,18 @@
 
 .authButtons {
   display: flex;
-  gap: 0.5rem;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
 }
 
-/* Style Login & Signup buttons */
-.authButtons a {
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  font-size: 1rem;
+.authButtons :link {
+  padding: 10px 15px;
+  border: none;
   cursor: pointer;
+  font-size: 16px;
+  border-radius: 6px;
+  transition: background 0.3s ease;
 }
 
 .authButtons .loginButton {
@@ -116,61 +117,74 @@
 
 .authButtons .signupButton:hover {
   background-color: #0056b3;
+  color: #ffffff;
 }
 
-/* Mobile Menu */
+
+
+/* Mobile Styles */
 .menuToggle {
   display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 25px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
 }
 
+.menuToggle span {
+  width: 100%;
+  height: 3px;
+  background-color: #333;
+  transition: all 0.3s ease-in-out;
+}
+
+.menuToggle .barOpen {
+  background-color: #007bff;
+}
+
+/* Ẩn menu trên mobile mặc định */
+.navLinks {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+}
+
+.menuItems {
+  display: flex;
+  align-items: center;
+  width: 70%;
+}
+
+/* Khi ở mobile, menu ẩn và chỉ hiển thị khi toggle */
 @media (max-width: 768px) {
-  .menuItems {
+  .logo {
+    display: none;
+  }
+  .menuToggle {
+    display: flex; /* Chỉ hiển thị trên mobile */
+  }
+  .searchBar {
+    display: none;
+  }
+  .authButtons {
+    display: none;
+  }
+
+  .navLinks {
     display: none;
     flex-direction: column;
     position: absolute;
-    top: 100%;
+    top: 60px;
     left: 0;
     right: 0;
     background-color: #ffffff;
     padding: 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
-
-  .menuItems.open {
+  .navLinks.open {
     display: flex;
-  }
-
-  .searchBar {
-    width: 100%;
-    margin-right: 0;
-    margin-bottom: 1rem;
-  }
-
-  .searchBar input {
-    width: 100%;
-  }
-
-  .authButtons {
-    width: 100%;
-    flex-direction: column;
-  }
-
-  .menuToggle {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    width: 30px;
-    height: 25px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-  }
-
-  .menuToggle span {
-    width: 30px;
-    height: 3px;
-    background-color: #333;
-    transition: all 0.3s linear;
   }
 }

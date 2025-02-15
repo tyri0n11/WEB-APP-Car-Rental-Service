@@ -51,10 +51,10 @@ body {
 
 .button-group {
   display: flex;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
   gap: 10%;
-  flex-wrap: wrap;
 }
 
 .signin-button {
@@ -74,7 +74,7 @@ body {
 }
 
 .signup-button {
-  width: 40%;
+  width: 30%;
   padding: 10px;
   border: none;
   border-radius: 4px;

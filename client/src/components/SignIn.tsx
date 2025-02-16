@@ -1,14 +1,29 @@
 import React, { useState } from "react";
 import "./SignIn.css";
+import { supabase } from "../utils/supabaseClient";
 
 const SignIn: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // State cho lỗi đăng nhập
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Email:", email, "Password:", password);
-    // Add authentication logic here
+    setErrorMessage(""); // Reset lỗi trước khi gửi request
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    });
+
+    if (error) {
+      setErrorMessage(error.message); // Lưu lỗi để hiển thị popup
+      return;
+    }
+
+    if (data.user) {
+      window.location.href = "/dashboard";
+    }
   };
 
   return (
@@ -17,6 +32,13 @@ const SignIn: React.FC = () => {
         <div className="signin-header">
           <h2>Sign In</h2>
         </div>
+        {errorMessage && (
+          <div className="error-popup">
+            <div className="error-content">
+              <p>{errorMessage}</p>
+            </div>
+          </div>
+        )}
 
         <div className="input-group">
           <label>Email</label>

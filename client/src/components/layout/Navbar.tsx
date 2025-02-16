@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Search } from "lucide-react";
 import styles from "./Navbar.module.css";
+import { useAuth } from "../../context/AuthContext";
+import UserMenu from "../menu/UserMenu";
+
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user } = useAuth();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -37,8 +41,14 @@ const Navbar: React.FC = () => {
           </button>
         </div>
         <div className={styles.authButtons}>
-          <Link to="/signin" className={styles.loginButton}>Log In</Link>
-          <Link to="/signup" className={styles.signupButton}>Sign Up</Link>
+        {user ? (
+            <UserMenu />
+          ) : (
+            <>
+              <Link to="/signin" className={styles.loginButton}>Log In</Link>
+              <Link to="/signup" className={styles.signupButton}>Sign Up</Link>
+            </>
+          )}
         </div>
         
       </div>

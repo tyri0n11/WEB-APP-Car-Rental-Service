@@ -90,6 +90,11 @@ body {
   background-color: #0056b3;
   color: #ffffff;
 }
+.error-content {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 5px;
+}
 
 /* Responsive adjustments */
 @media (max-width: 768px) {

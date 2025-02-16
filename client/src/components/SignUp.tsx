@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { supabase } from "../utils/supabase";
+import { supabase } from "../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import "./SignUp.css";
 
@@ -82,7 +82,7 @@ const SignUp: React.FC = () => {
             className="signup-button"
             onClick={() => handleSubmit}
           >
-            Sign Up with Your Email
+            Sign Up
           </button>
         </div>
       </form>

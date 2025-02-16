@@ -6,8 +6,8 @@ import SignUp from "./components/SignUp";
 import Home from "./components/Home"; //
 import Banner from "./components/layout/Banner";
 import Dashboard from "./components/Dashboard";
-
-
+import ProtectedRoute from "./routes/ProtectedRoute";
+import Profile from "./components/Profile";
 function App() {
   return (
     <BrowserRouter>
@@ -18,7 +18,11 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
         </Routes>
       </div>
     </BrowserRouter>

@@ -1,27 +1,42 @@
+/* ✅ NAVBAR STYLES */
 .navbar {
   display: flex;
-  justify-content: space-between;
+  width: inherit;
+  height: 60px;
   align-items: center;
-  padding: 1rem 2rem;
+  justify-items: baseline;
+  justify-content: space-between;
+  padding: 0.75rem 2rem;
   background-color: #ffffff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
+  margin: 0;
+  flex-direction: row;
+  flex-wrap: nowrap;
 }
 
 .navbarContainer {
   display: flex;
-  justify-content: start;
+  justify-content: center;
   align-items: center;
-  margin: 0 auto;
+  width: fit-content;
+  margin: 0 32px;
 }
 
-/* Ensure navigation links are properly styled */
+/* ✅ Menu Items */
+.menuItems {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  width: fit-content;
+  margin: 0 32px;
+}
+
+/* ✅ Navigation Links */
 .navLinks {
   display: flex;
-  justify-content: start;
-  align-items: center;
+  list-style: none;
   gap: 2rem;
-  list-style: none; /* Remove bullet points */
   padding: 0;
 }
 
@@ -29,7 +44,8 @@
   display: inline;
 }
 
-.navLinks a, .authButtons a {
+.navLinks a,
+.authButtons a {
   font-size: 1rem;
   font-weight: bold;
   color: #007bff;
@@ -38,10 +54,12 @@
   transition: color 0.3s ease;
 }
 
-.navLinks a:hover, .authButtons a:hover {
+.navLinks a:hover,
+.authButtons a:hover {
   color: #0056b3;
 }
 
+/* ✅ Logo */
 .logo a {
   font-size: 1.5rem;
   font-weight: bold;
@@ -49,23 +67,17 @@
   text-decoration: none;
 }
 
-.menuItems {
-  display: flex;
-  align-items: center;
-  justify-items: center;
-  justify-content: space-between;
-  width: 100%;
-  margin: auto;
-}
-
+/* ✅ Auth Buttons */
 .authButtons {
   display: flex;
-  justify-content: space-between;
   gap: 10px;
   align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
-.authButtons :link {
+.authButtons .loginButton,
+.authButtons .signupButton {
   padding: 10px 15px;
   border: none;
   cursor: pointer;
@@ -90,12 +102,9 @@
 
 .authButtons .signupButton:hover {
   background-color: #0056b3;
-  color: #ffffff;
 }
 
-
-
-/* Mobile Styles */
+/* ✅ Menu Toggle Button (Mobile) */
 .menuToggle {
   display: none;
   flex-direction: column;
@@ -114,40 +123,18 @@
   transition: all 0.3s ease-in-out;
 }
 
-.menuToggle .barOpen {
-  background-color: #007bff;
-}
-
-/* Ẩn menu trên mobile mặc định */
-.navLinks {
-  display: flex;
-  list-style: none;
-  gap: 2rem;
-}
-
-.menuItems {
-  display: flex;
-  align-items: center;
-  width: 70%;
-}
-
-/* Khi ở mobile, menu ẩn và chỉ hiển thị khi toggle */
+/* ✅ Mobile Navigation */
 @media (max-width: 768px) {
-  .logo {
-    display: none;
-  }
   .menuToggle {
-    display: flex; /* Chỉ hiển thị trên mobile */
+    display: flex; /* Hiển thị nút toggle trên mobile */
   }
-  .searchBar {
-    display: none;
-  }
-  .authButtons {
-    display: none;
+
+  .authButtons,
+  .navLinks {
+    display: none; /* Ẩn menu mặc định */
   }
 
   .navLinks {
-    display: none;
     flex-direction: column;
     position: absolute;
     top: 60px;
@@ -156,7 +143,9 @@
     background-color: #ffffff;
     padding: 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
   }
+
   .navLinks.open {
     display: flex;
   }

@@ -5,10 +5,7 @@ const Banner: React.FC = () => {
   return (
     <div className={styles.banner}>
       <div className={styles.bannerContent}>
-        <span>WELCOME TO WAP &nbsp; ● &nbsp; WELCOME TO WAP &nbsp; ● &nbsp; WELCOME TO WAP ● &nbsp;</span>
-        <span>WELCOME TO WAP &nbsp; ● &nbsp; WELCOME TO WAP &nbsp; ● &nbsp; WELCOME TO WAP ● &nbsp;</span>
-        <span>WELCOME TO WAP &nbsp; ● &nbsp; WELCOME TO WAP &nbsp; ● &nbsp; WELCOME TO WAP ● &nbsp;</span>
-        <span>WELCOME TO WAP &nbsp; ● &nbsp; WELCOME TO WAP &nbsp; ● &nbsp; WELCOME TO WAP ● &nbsp;</span>
+        <span>WELCOME TO WAP &nbsp; ● &nbsp; WELCOME TO WAP &nbsp; ● &nbsp;</span>
       </div>
     </div>
   );

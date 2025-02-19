@@ -1,24 +1,27 @@
+
+/* ✅ BANNER STYLES */
 .banner {
   background-color: #007bff;
   color: white;
-  width: 100%;
-  height: 50px; /* Set a fixed height */
-  overflow: hidden; /* Hide overflowing text */
+  width: inherit;
   display: flex;
   align-items: center;
-  white-space: nowrap;
+  justify-content: center;
+  overflow: hidden;
   font-weight: bold;
-  z-index: 999; /* Ensure it's above other content */
+  
 }
 
+/* ✅ Banner Scrolling Effect */
 .bannerContent {
   display: flex;
   font-size: 1.5rem;
   text-transform: uppercase;
-  animation: marquee 10s linear infinite; /* Smooth infinite scrolling */
-  width: 200%; /* Make sure it has enough space */
+  white-space: nowrap;
+  animation: marquee 10s linear infinite;
 }
 
+/* ✅ Marquee Animation */
 @keyframes marquee {
   from {
     transform: translateX(0);
@@ -28,6 +31,7 @@
   }
 }
 
+/* ✅ Responsive Banner */
 @media (max-width: 768px) {
   .bannerContent {
     font-size: 1.2rem;

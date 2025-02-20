@@ -1,39 +1,47 @@
-
 /* ✅ BANNER STYLES */
 .banner {
-  background-color: #007bff;
+  background-color: #007A33;
   color: white;
-  width: inherit;
+  width: 100%;
+  height: 200px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
   font-weight: bold;
-  
+  font-family: "Pirata One", cursive;
 }
 
-/* ✅ Banner Scrolling Effect */
-.bannerContent {
-  display: flex;
-  font-size: 1.5rem;
+/* ✅ MAIN TITLE (Yonko Uber) */
+.bannerTitle {
+  font-size: 3rem;
+  font-weight: 900;
   text-transform: uppercase;
-  white-space: nowrap;
-  animation: marquee 10s linear infinite;
+  color: #FFD700;
+  /* Gold for pirate treasure theme */
+  text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.6);
 }
 
-/* ✅ Marquee Animation */
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
+/* ✅ SUBTITLE (Tagline) */
+.bannerSubtitle {
+  font-size: 1.8rem;
+  font-weight: 700;
+  font-family: "Roboto", sans-serif;
+  color: #FFFFFF;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
 }
 
-/* ✅ Responsive Banner */
-@media (max-width: 768px) {
-  .bannerContent {
-    font-size: 1.2rem;
-  }
+/* ✅ CONTACT INFO */
+.contact {
+  font-size: 1.2rem;
+  font-family: "Arial", sans-serif;
+  color: #FFFFCC;
+  /* Soft yellow for readability */
+  text-align: center;
+  margin-top: 10px;
+}
+
+.contact i {
+  margin-right: 5px;
+  /* Spacing for icons */
 }

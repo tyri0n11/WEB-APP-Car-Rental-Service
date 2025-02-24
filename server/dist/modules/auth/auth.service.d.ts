@@ -1,2 +1,37 @@
+import { JwtService } from '@nestjs/jwt';
+import { UserService } from '../user/user.service';
+import { ConfigService } from '@nestjs/config';
+import { Cache } from 'cache-manager';
+import { TokenPayload } from './interfaces/token.interface';
+import { EmailService } from '../email/email.service';
+import { TokenService } from '../token/interfaces/token.service';
+import { SignupRequestDTO } from './dto/request/signup.request.dto';
+import { SignupResponseDTO } from './dto/response/signup.response.dto';
+import { LoginResponseDTO } from './dto/response/login.response.dto';
+import { UserResponseDTO } from '../user/dto/response.dto';
+import { ResetPasswordRequestDTO } from './dto/request/resetPassword.dto';
 export declare class AuthService {
+    private readonly userService;
+    private readonly jwtService;
+    private readonly configService;
+    private readonly emailService;
+    private readonly tokenService;
+    private readonly cacheService;
+    private SALT_ROUND;
+    private readonly FORGOT_PASSWORD_EXPIRATION_TIME;
+    private readonly VERIFY_ACCOUNT_EXPIRATION_TIME;
+    private readonly logger;
+    constructor(userService: UserService, jwtService: JwtService, configService: ConfigService, emailService: EmailService, tokenService: TokenService, cacheService: Cache);
+    private verifyPlainContentWithHashedContent;
+    signup(dto: SignupRequestDTO): Promise<SignupResponseDTO>;
+    login(userId: string): Promise<LoginResponseDTO>;
+    getAuthenticatedUser(email: string, password: string): Promise<UserResponseDTO>;
+    getUserIfRefreshTokenMatched(userID: string, refreshToken: string): Promise<UserResponseDTO>;
+    generateAccessToken(payload: TokenPayload): string;
+    generateRefreshToken(payload: TokenPayload): string;
+    storeRefreshToken(user_id: string, token: string): Promise<void>;
+    forgotPassword(email: string): Promise<void>;
+    resetPassword(dto: ResetPasswordRequestDTO): Promise<void>;
+    verifyAccount(token: string): Promise<void>;
+    sendVerificationEmail(email: string): Promise<void>;
 }

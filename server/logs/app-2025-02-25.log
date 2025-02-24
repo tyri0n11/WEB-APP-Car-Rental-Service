@@ -1,0 +1,264 @@
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[NestFactory][39m [32mStarting Nest application...[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[InstanceLoader][39m [32mPassportModule dependencies initialized[39m [33m+1ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[InstanceLoader][39m [32mJwtModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigHostModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[InstanceLoader][39m [32mEmailModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[InstanceLoader][39m [32mDatabaseModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[InstanceLoader][39m [32mJwtModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[InstanceLoader][39m [32mAppModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[InstanceLoader][39m [32mCacheModule dependencies initialized[39m [33m+1ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[InstanceLoader][39m [32mTokenModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[InstanceLoader][39m [32mUserModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[InstanceLoader][39m [32mAuthModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[RoutesResolver][39m [32mAppController {/}:[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/, GET} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[RoutesResolver][39m [32mAuthController {/auth}:[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/signup, POST} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/login, POST} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/me, POST} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/refresh-token, POST} route[39m [33m+1ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/reset-password, POST} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/verify-account, POST} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/email/forgot-password, POST} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/email/verify-account, POST} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[RoutesResolver][39m [32mUserController {/user}:[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/user/:id, GET} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/user/:id, PATCH} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[DatabaseService][39m [32mConnected to database successfully[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[DatabaseService][39m [32mAdmin account is found[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[NestApplication][39m [32mNest application successfully started[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[bootstrap][39m [32mServer running on http://localhost:3000[39m [33m+0ms[39m
+[32m[MyApp][39m [32m17943[39m 25/02/25 00:17:57 [32m    LOG[39m [33m[bootstrap][39m [32mAPI Docs http://localhost:3000/api-docs[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[NestFactory][39m [32mStarting Nest application...[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[InstanceLoader][39m [32mPassportModule dependencies initialized[39m [33m+1ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[InstanceLoader][39m [32mJwtModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigHostModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[InstanceLoader][39m [32mEmailModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[InstanceLoader][39m [32mDatabaseModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[InstanceLoader][39m [32mJwtModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[InstanceLoader][39m [32mAppModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[InstanceLoader][39m [32mCacheModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[InstanceLoader][39m [32mTokenModule dependencies initialized[39m [33m+1ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[InstanceLoader][39m [32mUserModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[InstanceLoader][39m [32mAuthModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[RoutesResolver][39m [32mAppController {/}:[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/, GET} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[RoutesResolver][39m [32mAuthController {/auth}:[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/signup, POST} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/login, POST} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/me, POST} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/refresh-token, POST} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/reset-password, POST} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/verify-account, POST} route[39m [33m+1ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/email/forgot-password, POST} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/email/verify-account, POST} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[RoutesResolver][39m [32mUserController {/user}:[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/user/:id, GET} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/user/:id, PATCH} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[DatabaseService][39m [32mConnected to database successfully[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[DatabaseService][39m [32mAdmin account is found[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[NestApplication][39m [32mNest application successfully started[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[bootstrap][39m [32mServer running on http://localhost:3000[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18088[39m 25/02/25 00:18:43 [32m    LOG[39m [33m[bootstrap][39m [32mAPI Docs http://localhost:3000/api-docs[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[NestFactory][39m [32mStarting Nest application...[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[InstanceLoader][39m [32mPassportModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[InstanceLoader][39m [32mJwtModule dependencies initialized[39m [33m+1ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigHostModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[InstanceLoader][39m [32mEmailModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[InstanceLoader][39m [32mDatabaseModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[InstanceLoader][39m [32mJwtModule dependencies initialized[39m [33m+1ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[InstanceLoader][39m [32mAppModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[InstanceLoader][39m [32mCacheModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[InstanceLoader][39m [32mTokenModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[InstanceLoader][39m [32mUserModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[InstanceLoader][39m [32mAuthModule dependencies initialized[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[RoutesResolver][39m [32mAppController {/}:[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/, GET} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[RoutesResolver][39m [32mAuthController {/auth}:[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/signup, POST} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/login, POST} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/me, POST} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/refresh-token, POST} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/reset-password, POST} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/verify-account, POST} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/email/forgot-password, POST} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/email/verify-account, POST} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[RoutesResolver][39m [32mUserController {/user}:[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/user/:id, GET} route[39m [33m+1ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/user/:id, PATCH} route[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[DatabaseService][39m [32mConnected to database successfully[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[DatabaseService][39m [32mAdmin account is found[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[NestApplication][39m [32mNest application successfully started[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[bootstrap][39m [32mServer running on http://localhost:3000[39m [33m+0ms[39m
+[32m[MyApp][39m [32m18246[39m 25/02/25 00:19:51 [32m    LOG[39m [33m[bootstrap][39m [32mAPI Docs http://localhost:3000/api-docs[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[NestFactory][39m [32mStarting Nest application...[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[InstanceLoader][39m [32mPassportModule dependencies initialized[39m [33m+1ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[InstanceLoader][39m [32mJwtModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigHostModule dependencies initialized[39m [33m+1ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[InstanceLoader][39m [32mEmailModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[InstanceLoader][39m [32mDatabaseModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[InstanceLoader][39m [32mJwtModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[InstanceLoader][39m [32mAppModule dependencies initialized[39m [33m+1ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[InstanceLoader][39m [32mCacheModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[InstanceLoader][39m [32mTokenModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[InstanceLoader][39m [32mUserModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[InstanceLoader][39m [32mAuthModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[RoutesResolver][39m [32mAppController {/}:[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/, GET} route[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[RoutesResolver][39m [32mAuthController {/auth}:[39m [33m+1ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/signup, POST} route[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/login, POST} route[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/me, POST} route[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/refresh-token, POST} route[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/reset-password, POST} route[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/verify-account, POST} route[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/email/forgot-password, POST} route[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/email/verify-account, POST} route[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[RoutesResolver][39m [32mUserController {/user}:[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/user/:id, GET} route[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/user/:id, PATCH} route[39m [33m+1ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[DatabaseService][39m [32mConnected to database successfully[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[DatabaseService][39m [32mAdmin account is found[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[NestApplication][39m [32mNest application successfully started[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[bootstrap][39m [32mServer running on http://localhost:3000[39m [33m+0ms[39m
+[32m[CAR RENTAL SVC][39m [32m18371[39m 25/02/25 00:20:41 [32m    LOG[39m [33m[bootstrap][39m [32mAPI Docs http://localhost:3000/api-docs[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[NestFactory][39m [32mStarting Nest application...[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[InstanceLoader][39m [32mPassportModule dependencies initialized[39m [33m+1ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[InstanceLoader][39m [32mJwtModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigHostModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigModule dependencies initialized[39m [33m+1ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[InstanceLoader][39m [32mEmailModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[InstanceLoader][39m [32mDatabaseModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[InstanceLoader][39m [32mJwtModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[InstanceLoader][39m [32mAppModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[InstanceLoader][39m [32mCacheModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[InstanceLoader][39m [32mTokenModule dependencies initialized[39m [33m+1ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[InstanceLoader][39m [32mUserModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[InstanceLoader][39m [32mAuthModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[RoutesResolver][39m [32mAppController {/}:[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/, GET} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[RoutesResolver][39m [32mAuthController {/auth}:[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/signup, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/login, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/me, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/refresh-token, POST} route[39m [33m+1ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/reset-password, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/verify-account, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/email/forgot-password, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/email/verify-account, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[RoutesResolver][39m [32mUserController {/user}:[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/user/:id, GET} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/user/:id, PATCH} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[DatabaseService][39m [32mConnected to database successfully[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[DatabaseService][39m [32mAdmin account is found[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[NestApplication][39m [32mNest application successfully started[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[bootstrap][39m [32mServer running on http://localhost:3000[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m18433[39m 25/02/25 00:20:56 [32m    LOG[39m [33m[bootstrap][39m [32mAPI Docs http://localhost:3000/api-docs[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[NestFactory][39m [32mStarting Nest application...[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[InstanceLoader][39m [32mPassportModule dependencies initialized[39m [33m+1ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[InstanceLoader][39m [32mJwtModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigHostModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigModule dependencies initialized[39m [33m+1ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[InstanceLoader][39m [32mEmailModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[InstanceLoader][39m [32mDatabaseModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[InstanceLoader][39m [32mJwtModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[InstanceLoader][39m [32mAppModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[InstanceLoader][39m [32mCacheModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[InstanceLoader][39m [32mTokenModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[InstanceLoader][39m [32mUserModule dependencies initialized[39m [33m+1ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[InstanceLoader][39m [32mAuthModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[RoutesResolver][39m [32mAppController {/}:[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/, GET} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[RoutesResolver][39m [32mAuthController {/auth}:[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/signup, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/login, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/me, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/refresh-token, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/reset-password, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/verify-account, POST} route[39m [33m+1ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/email/forgot-password, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/email/verify-account, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[RoutesResolver][39m [32mUserController {/user}:[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/user/:id, GET} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/user/:id, PATCH} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[DatabaseService][39m [32mConnected to database successfully[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[DatabaseService][39m [32mAdmin account is found[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[NestApplication][39m [32mNest application successfully started[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[bootstrap][39m [32mServer running on http://localhost:3000[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19727[39m 25/02/25 00:31:05 [32m    LOG[39m [33m[bootstrap][39m [32mAPI Docs http://localhost:3000/api-docs[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[NestFactory][39m [32mStarting Nest application...[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[InstanceLoader][39m [32mPassportModule dependencies initialized[39m [33m+1ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[InstanceLoader][39m [32mJwtModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigHostModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[InstanceLoader][39m [32mEmailModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[InstanceLoader][39m [32mDatabaseModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[InstanceLoader][39m [32mJwtModule dependencies initialized[39m [33m+1ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[InstanceLoader][39m [32mAppModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[InstanceLoader][39m [32mCacheModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[InstanceLoader][39m [32mTokenModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[InstanceLoader][39m [32mUserModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[InstanceLoader][39m [32mAuthModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[RoutesResolver][39m [32mAppController {/}:[39m [33m+1ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/, GET} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[RoutesResolver][39m [32mAuthController {/auth}:[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/signup, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/login, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/me, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/refresh-token, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/reset-password, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/verify-account, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/email/forgot-password, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/email/verify-account, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[RoutesResolver][39m [32mUserController {/user}:[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/user/:id, GET} route[39m [33m+1ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/user/:id, PATCH} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[DatabaseService][39m [32mConnected to database successfully[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[DatabaseService][39m [32mAdmin account is found[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[NestApplication][39m [32mNest application successfully started[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[bootstrap][39m [32mServer running on http://localhost:3000[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m19968[39m 25/02/25 00:32:19 [32m    LOG[39m [33m[bootstrap][39m [32mAPI Docs http://localhost:3000/api-docs[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[NestFactory][39m [32mStarting Nest application...[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[InstanceLoader][39m [32mPassportModule dependencies initialized[39m [33m+2ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[InstanceLoader][39m [32mJwtModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigHostModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[InstanceLoader][39m [32mConfigModule dependencies initialized[39m [33m+1ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[InstanceLoader][39m [32mEmailModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[InstanceLoader][39m [32mDatabaseModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[InstanceLoader][39m [32mJwtModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[InstanceLoader][39m [32mAppModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[InstanceLoader][39m [32mCacheModule dependencies initialized[39m [33m+1ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[InstanceLoader][39m [32mTokenModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[InstanceLoader][39m [32mUserModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[InstanceLoader][39m [32mAuthModule dependencies initialized[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[RoutesResolver][39m [32mAppController {/}:[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/, GET} route[39m [33m+1ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[RoutesResolver][39m [32mAuthController {/auth}:[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/signup, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/login, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/me, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/refresh-token, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/reset-password, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/verify-account, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/email/forgot-password, POST} route[39m [33m+1ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/auth/email/verify-account, POST} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[RoutesResolver][39m [32mUserController {/user}:[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/user/:id, GET} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[RouterExplorer][39m [32mMapped {/user/:id, PATCH} route[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[DatabaseService][39m [32mConnected to database successfully[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[DatabaseService][39m [32mAdmin account is found[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[NestApplication][39m [32mNest application successfully started[39m [33m+0ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[bootstrap][39m [32mServer running on http://localhost:3000[39m [33m+1ms[39m
+[32m[CAR-RENTAL][39m [32m23706[39m 25/02/25 00:48:42 [32m    LOG[39m [33m[bootstrap][39m [32mAPI Docs http://localhost:3000/api-docs[39m [33m+0ms[39m

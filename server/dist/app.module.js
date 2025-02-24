@@ -12,6 +12,7 @@ const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const config_1 = require("@nestjs/config");
 const Joi = require("joi");
+const redisStore = require("cache-manager-redis-yet");
 const database_config_1 = require("./configs/database.config");
 const auth_module_1 = require("./modules/auth/auth.module");
 const user_module_1 = require("./modules/user/user.module");
@@ -19,6 +20,7 @@ const database_module_1 = require("./modules/database/database.module");
 const core_1 = require("@nestjs/core");
 const globalException_filter_1 = require("./filters/globalException.filter");
 const apiResponse_interceptor_1 = require("./interceptors/apiResponse.interceptor");
+const cache_manager_1 = require("@nestjs/cache-manager");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -40,6 +42,20 @@ exports.AppModule = AppModule = __decorate([
                 load: [database_config_1.databaseConfig],
                 cache: true,
                 expandVariables: true,
+            }),
+            cache_manager_1.CacheModule.registerAsync({
+                isGlobal: true,
+                imports: [config_1.ConfigModule],
+                useFactory: async (configService) => {
+                    const cacheUrl = configService.get('REDIS_URL');
+                    return {
+                        store: redisStore.redisStore,
+                        url: cacheUrl,
+                        ttl: 3600,
+                        connectTimeout: 10000,
+                    };
+                },
+                inject: [config_1.ConfigService],
             }),
             auth_module_1.AuthModule,
             user_module_1.UserModule,

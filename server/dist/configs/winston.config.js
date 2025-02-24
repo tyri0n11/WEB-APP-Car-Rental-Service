@@ -9,7 +9,7 @@ const logDir = 'logs';
 if (!fs.existsSync(logDir)) {
     fs.mkdirSync(logDir);
 }
-const logFormat = winston_1.format.combine(winston_1.format.timestamp({ format: 'DD/MM/YY HH:mm:ss' }), winston_1.format.ms(), nest_winston_1.utilities.format.nestLike('MyApp', {
+const logFormat = winston_1.format.combine(winston_1.format.timestamp({ format: 'DD/MM/YY HH:mm:ss' }), winston_1.format.ms(), nest_winston_1.utilities.format.nestLike('CAR-RENTAL', {
     colors: true,
     prettyPrint: true,
 }));

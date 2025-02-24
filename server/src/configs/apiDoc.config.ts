@@ -3,7 +3,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { SwaggerTheme, SwaggerThemeNameEnum } from 'swagger-themes';
 export function configSwagger(app: INestApplication) {
   const config = new DocumentBuilder()
-    .setTitle('Ticket Bottle')
+    .setTitle('Car Rental API')
     .setDescription('## Description')
     .setVersion('1.0')
     .addBearerAuth(

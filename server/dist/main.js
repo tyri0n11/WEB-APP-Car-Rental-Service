@@ -29,6 +29,7 @@ async function bootstrap() {
             return new common_1.BadRequestException(result);
         },
     }));
+    app.useGlobalInterceptors(new common_1.ClassSerializerInterceptor(app.get(core_1.Reflector)));
     await app.listen(configService.get('PORT'), () => {
         logger.log(`Server running on http://localhost:${configService.get('PORT')}`);
         logger.log(`API Docs http://localhost:${configService.get('PORT')}/api-docs`);

@@ -5,7 +5,7 @@ const swagger_1 = require("@nestjs/swagger");
 const swagger_themes_1 = require("swagger-themes");
 function configSwagger(app) {
     const config = new swagger_1.DocumentBuilder()
-        .setTitle('Ticket Bottle')
+        .setTitle('Car Rental API')
         .setDescription('## Description')
         .setVersion('1.0')
         .addBearerAuth({

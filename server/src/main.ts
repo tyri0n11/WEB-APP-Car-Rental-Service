@@ -1,9 +1,10 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import {
   BadRequestException,
   ValidationPipe,
   Logger as AppLogger,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as morgan from 'morgan';
@@ -23,6 +24,7 @@ async function bootstrap() {
   configSwagger(app);
   const configService = app.get(ConfigService);
   app.use(morgan('dev'));
+
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -36,6 +38,7 @@ async function bootstrap() {
       },
     }),
   );
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   await app.listen(configService.get('PORT'), () => {
     logger.log(

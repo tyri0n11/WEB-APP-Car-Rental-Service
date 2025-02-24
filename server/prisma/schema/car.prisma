@@ -1,0 +1,21 @@
+enum CarStatus {
+    AVAILABLE
+    RENTED
+}
+
+model Car {
+    id           String    @id @default(uuid())
+    make         String
+    model        String
+    year         Int
+    mileage      Int
+    description  String
+    dailyPrice   Float
+    licensePlate String
+    status       CarStatus @default(AVAILABLE)
+    imageUrls    String[]
+    createdAt    DateTime  @default(now())
+    updatedAt    DateTime  @updatedAt
+
+    @@map("cars")
+}

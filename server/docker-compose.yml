@@ -1,31 +1,48 @@
-version: '3.8'
 services:
-  db:
-    image: mysql:8.0
-    container_name: mysql_container
+  mainDB:
+    container_name: postgres
+    image: postgres
     restart: always
+    env_file:
+      - .env
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: my_database
-      MYSQL_USER: devuser
-      MYSQL_PASSWORD: devpassword
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
     ports:
-      - "3306:3306"
+      - ${DATABASE_PORT}:${DATABASE_PORT}
     volumes:
-      - db_data:/var/lib/mysql
+      - ./vol:/db/main
+    networks:
+      - app-network
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'pg_isready',
+          '-U',
+          '${DATABASE_USERNAME}',
+          '-d',
+          '${DATABASE_NAME}',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  web:
-    build: .
-    container_name: web_app
+  redis:
+    container_name: redis
+    image: redis:alpine
+    restart: always
     ports:
-      - "3000:3000"
-    depends_on:
-      - db
-    environment:
-      DB_HOST: db
-      DB_USER: devuser
-      DB_PASSWORD: devpassword
-      DB_NAME: my_database
+      - ${REDIS_PORT}:${REDIS_PORT}
+    networks:
+      - app-network
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-volumes:
-  db_data:
+networks:
+  app-network:
+    driver: bridge

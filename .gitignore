@@ -1,2 +1,11 @@
 /**/node_modules
 /**/.env
+
+/dist
+/node_modules
+/build
+/secure
+/keys
+
+#data
+vol/

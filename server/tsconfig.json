@@ -1,20 +1,30 @@
 {
   "compilerOptions": {
-    "target": "ES6",
     "module": "commonjs",
-    "rootDir": "./src",
-    "resolveJsonModule": true,
+    "moduleResolution": "Node",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2021",
+    "sourceMap": true,
     "outDir": "./dist",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
+    "rootDir": "./src",
+    "tsBuildInfoFile": "./dist/tsconfig.build.tsbuildinfo",
+    "baseUrl": "./",
+    "incremental": true,
     "skipLibCheck": true,
-    "baseUrl": "./",                                  
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@services/*": ["src/services/*"],
-      "@controllers/*": ["src/controllers/*"],
-      "@models/*": ["src/models/*"],
-      "@routes/*": ["src/routes/*"],
-    },
+      "@/*": ["src/*"],
+      "@modules/*": ["src/modules/*"],
+      "@configs/*": ["src/configs/*"],
+      "@repositories/*": ["src/repositories/*"]
+    }
   }
 }

@@ -1,4 +1,4 @@
-/* ✅ GENERAL LAYOUT */
+
 body {
   background-image: url("assets/background.png");
   background-size: cover;
@@ -7,7 +7,7 @@ body {
   padding: 0;
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .wrapper {
@@ -18,9 +18,10 @@ body {
   gap: 0;
   padding: 0;
 }
-
-
-
+.header {
+  top: 0;
+  position: sticky;
+}
 /* ✅ CONTENT STYLES */
 .content {
   margin: 20px 0;

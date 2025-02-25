@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./SignIn.css";
-import { supabase } from "../utils/supabaseClient";
 
 const SignIn: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -9,21 +8,7 @@ const SignIn: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMessage(""); // Reset lỗi trước khi gửi request
-
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    });
-
-    if (error) {
-      setErrorMessage(error.message); // Lưu lỗi để hiển thị popup
-      return;
-    }
-
-    if (data.user) {
-      window.location.href = "/dashboard";
-    }
+    setErrorMessage("");
   };
 
   return (

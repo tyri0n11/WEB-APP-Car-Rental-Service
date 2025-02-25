@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { supabase } from "../utils/supabaseClient";
-import { useNavigate } from "react-router-dom";
 import "./SignUp.css";
 
 const SignUp: React.FC = () => {
@@ -8,37 +6,11 @@ const SignUp: React.FC = () => {
   const [password, setPassword] = useState("");
   const [repassword, setRepassword] = useState("");
   const [message, setMessage] = useState("");
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setMessage("");
-    if (repassword !== password) {
-      setMessage("Passwords do not match");
-      return;
-    }
-    const { data, error } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-      options: {
-        data: {
-          name: 'John',
-        },
-      },
-    });
-
-    if (error) {
-      setMessage(error.message);
-      setEmail("");
-      setPassword("");
-    }
-    if (data) {
-      setMessage("Created Account successfully.");
-      navigate("/dashboard");
-    }
-
-    setEmail("");
-    setPassword("");
+    
   };
 
   return (

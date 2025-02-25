@@ -74,7 +74,9 @@ export class EmailService {
     fullName: string,
     token: string,
   ): Promise<void> {
-    const verificationLink = `${this.configService.get<string>('HOST')}/auth/verify-account?token=${token}`;
+    // const frontendUrl = this.configService.get<string>('FRONTEND_URL');
+    // const verificationLink = `${frontendUrl}/auth/verify-account?token=${token}`;
+    const verificationLink = `http://${this.configService.get<string>('HOST')}:${this.configService.get('PORT')}/auth/verify-account?token=${token}`;
     const currentYear = new Date().getFullYear();
     await this.sendEmail({
       to: email,

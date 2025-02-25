@@ -12,6 +12,8 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { GlobalExceptionFilter } from './filters/globalException.filter';
 import { TransformInterceptor } from './interceptors/apiResponse.interceptor';
 import { CacheModule } from '@nestjs/cache-manager';
+import { EmailModule } from './modules/email/email.module';
+import { TokenModule } from './modules/token/interfaces/token.module';
 
 @Module({
   imports: [
@@ -50,6 +52,8 @@ import { CacheModule } from '@nestjs/cache-manager';
     AuthModule,
     UserModule,
     DatabaseModule,
+    EmailModule,
+    TokenModule,
   ],
   controllers: [AppController],
   providers: [

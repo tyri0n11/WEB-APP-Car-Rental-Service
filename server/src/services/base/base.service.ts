@@ -78,7 +78,10 @@ export abstract class BaseService<T> implements BaseServiceInterface<T> {
     return new this.responseDto(
       await this.prisma[this.model].update({
         where: filter,
-        data,
+        data: {
+          ...data,
+          updatedAt: new Date(),
+        },
         ...options,
       }),
     );

@@ -14,6 +14,9 @@ import { TransformInterceptor } from './interceptors/apiResponse.interceptor';
 import { CacheModule } from '@nestjs/cache-manager';
 import { EmailModule } from './modules/email/email.module';
 import { TokenModule } from './modules/token/interfaces/token.module';
+import { ImageModule } from './modules/image/image.module';
+import { ResourceOwnerGuard } from './guards/base/resourceOwner.guard';
+import { CarModule } from './modules/car/car.module';
 
 @Module({
   imports: [
@@ -54,10 +57,11 @@ import { TokenModule } from './modules/token/interfaces/token.module';
     DatabaseModule,
     EmailModule,
     TokenModule,
+    ImageModule,
+    CarModule,
   ],
   controllers: [AppController],
   providers: [
-    AppService,
     AppService,
     {
       provide: APP_FILTER,

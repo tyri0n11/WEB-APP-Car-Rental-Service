@@ -4,7 +4,7 @@ enum CarStatus {
 }
 
 model Car {
-    id           String    @id @default(uuid())
+    id           String        @id @default(uuid())
     make         String
     model        String
     year         Int
@@ -12,10 +12,49 @@ model Car {
     description  String
     dailyPrice   Float
     licensePlate String
-    status       CarStatus @default(AVAILABLE)
+    status       CarStatus     @default(AVAILABLE)
     imageUrls    String[]
-    createdAt    DateTime  @default(now())
-    updatedAt    DateTime  @updatedAt
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime      @updatedAt
+    CarCategory  CarCategory[]
+    Review       Review[]
 
     @@map("cars")
+}
+
+model Category {
+    id          String        @id @default(uuid())
+    name        String
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+    CarCategory CarCategory[]
+
+    @@map("categories")
+}
+
+model CarCategory {
+    id         String   @id @default(uuid())
+    car        Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+    carId      String
+    category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+    categoryId String
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+
+    @@map("car_categories")
+}
+
+model Review {
+    id        String   @id @default(uuid())
+    rating    Int
+    comment   String?
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    String
+    userName  String
+    car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+    carId     String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("reviews")
 }

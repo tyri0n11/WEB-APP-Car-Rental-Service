@@ -15,6 +15,7 @@
     "@emotion/styled": "^11.14.0",
     "@mui/material": "^6.4.5",
     "@supabase/supabase-js": "^2.48.1",
+    "@types/tailwindcss": "^3.0.11",
     "dotenv": "^16.4.7",
     "lucide-react": "^0.475.0",
     "react": "^19.0.0",

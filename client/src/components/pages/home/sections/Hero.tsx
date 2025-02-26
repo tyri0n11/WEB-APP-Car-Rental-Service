@@ -1,5 +1,5 @@
 import { Box, Typography, Button } from "@mui/material";
-import images from "../../../../assets/index";
+import images from "../../../../assets/images/index";
 
 const Hero: React.FC = () => {
 

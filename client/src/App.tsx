@@ -7,9 +7,12 @@ import Banner from "./components/layout/Banner";
 function App() {
   return (
     <BrowserRouter>
-      <div className="flex flex-col min-h-screen gap-0 p-0 bg-cover bg-center bg-fixed" style={{ backgroundImage: "url('/assets/background.png')" }}>
-        <section className="sticky top-0">
-          <nav className="navbar position-sticky">
+      <div
+        className="flex flex-col min-h-screen gap-0 p-0 bg-cover bg-center bg-fixed"
+        style={{ backgroundImage: "url('/assets/background.png')" }}
+      >
+        <section className="sticky ">
+          <nav className="fixed top-0 left-0 w-full z-50 bg-opacity-90 backdrop-blur-lg">
             <Banner />
             <NavBar />
           </nav>

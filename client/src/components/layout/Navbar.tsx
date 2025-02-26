@@ -1,19 +1,32 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styles from "./Navbar.module.css";
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  // Helper function to navigate and optionally close the menu
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    setIsMenuOpen(false); // Optionally close the menu on navigation
+  };
+
   return (
     <div className={styles.navbar}>
       <div className={styles.navbarContainer}>
-        <div className={styles.logo}>
-          <Link to="/">WAP</Link>
+        <div
+          className={styles.logo}
+          onClick={() => handleNavigation("/")}
+          role="button"
+          tabIndex={0}
+          onKeyPress={(e) => e.key === "Enter" && handleNavigation("/")}
+        >
+          WAP
         </div>
         <button
           className={styles.menuToggle}
@@ -27,27 +40,51 @@ const Navbar: React.FC = () => {
         <div className={`${styles.menuItems} ${isMenuOpen ? styles.open : ""}`}>
           <ul className={`${styles.navLinks} ${isMenuOpen ? styles.open : ""}`}>
             <li>
-              <Link className="" to="/">
+              <button
+                type="button"
+                className={styles.navButton}
+                onClick={() => handleNavigation("/")}
+              >
                 Home
-              </Link>
+              </button>
             </li>
             <li>
-              <Link to="/about">About</Link>
+              <button
+                type="button"
+                className={styles.navButton}
+                onClick={() => handleNavigation("/about")}
+              >
+                About
+              </button>
             </li>
             <li>
-              <Link to="/contact">Contact</Link>
+              <button
+                type="button"
+                className={styles.navButton}
+                onClick={() => handleNavigation("/contact")}
+              >
+                Contact
+              </button>
             </li>
           </ul>
         </div>
       </div>
 
       <div className={styles.authButtons}>
-        <Link to="/signin" className={styles.loginButton}>
+        <button
+          type="button"
+          onClick={() => handleNavigation("/signin")}
+          className={styles.loginButton}
+        >
           Sign In
-        </Link>
-        <Link to="/signup" className={styles.signupButton}>
+        </button>
+        <button
+          type="button"
+          onClick={() => handleNavigation("/signup")}
+          className={styles.signupButton}
+        >
           Sign Up
-        </Link>
+        </button>
       </div>
     </div>
   );

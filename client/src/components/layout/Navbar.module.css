@@ -21,7 +21,13 @@
   width: fit-content;
   margin: 0 32px;
 }
-
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  text-decoration: none;
+  cursor: pointer;
+}
 /* ✅ Menu Items */
 .menuItems {
   display: flex;
@@ -40,11 +46,11 @@
   padding: 0;
 }
 
-.navLinks li {
+.navLinks button {
   display: inline;
 }
 
-.navLinks a,
+.navLinks button,
 .authButtons a {
   font-size: 1rem;
   font-weight: bold;
@@ -53,18 +59,20 @@
   padding: 0.5rem 1rem;
   transition: color 0.3s ease;
 }
-
-.navLinks a:hover,
-.authButtons a:hover {
-  color: #0056b3;
+.navLinks button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
 }
 
-/* ✅ Logo */
-.logo a {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #333;
-  text-decoration: none;
+.navLinks button:focus{
+  color: #007bff;
+  scale: 1.2;
+}
+
+* :focus{
+  outline: none;
+  transition: 400ms;
 }
 
 /* ✅ Auth Buttons */

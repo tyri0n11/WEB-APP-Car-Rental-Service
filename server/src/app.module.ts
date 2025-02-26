@@ -17,6 +17,14 @@ import { TokenModule } from './modules/token/interfaces/token.module';
 import { ImageModule } from './modules/image/image.module';
 import { ResourceOwnerGuard } from './guards/base/resourceOwner.guard';
 import { CarModule } from './modules/car/car.module';
+import { CategoryModule } from './modules/category/category.module';
+import { BookingModule } from './modules/booking/booking.module';
+import { PaymentModule } from './modules/payment/payment.module';
+import { RedisModule } from '@nestjs-modules/ioredis';
+import { BullModule } from '@nestjs/bullmq';
+import { BullBoardModule } from '@bull-board/nestjs';
+import { ExpressAdapter } from '@bull-board/express';
+import { TransactionModule } from './modules/transaction/transaction.module';
 
 @Module({
   imports: [
@@ -52,6 +60,42 @@ import { CarModule } from './modules/car/car.module';
       },
       inject: [ConfigService],
     }),
+
+    RedisModule.forRootAsync({
+      useFactory: async (configService: ConfigService) => {
+        return {
+          type: 'single',
+          url: configService.get<string>('REDIS_URL') + '?family=0',
+          // password: configService.get<string>('REDIS_PASSWORD') || undefined,
+          options: {
+            connectTimeout: 5000,
+            maxRetriesPerRequest: 3,
+          },
+        };
+      },
+      inject: [ConfigService],
+    }),
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => {
+        const host = configService.get<string>('REDIS_HOST');
+        console.log('BullModule REDIS_HOST:', host);
+        return {
+          connection: {
+            family: 0,
+            host: host,
+            port: configService.get<number>('REDIS_PORT'),
+            // password: configService.get<string>('REDIS_PASSWORD') || undefined,
+          },
+        };
+      },
+      inject: [ConfigService],
+    }),
+
+    BullBoardModule.forRoot({
+      route: '/queues',
+      adapter: ExpressAdapter,
+    }),
     AuthModule,
     UserModule,
     DatabaseModule,
@@ -59,6 +103,10 @@ import { CarModule } from './modules/car/car.module';
     TokenModule,
     ImageModule,
     CarModule,
+    CategoryModule,
+    BookingModule,
+    PaymentModule,
+    TransactionModule,
   ],
   controllers: [AppController],
   providers: [

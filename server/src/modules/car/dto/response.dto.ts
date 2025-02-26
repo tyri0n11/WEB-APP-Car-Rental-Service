@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Car, CarStatus } from '@prisma/client';
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose, Type } from 'class-transformer';
 
 export class CarResponseDTO implements Car {
   constructor(partial: Partial<CarResponseDTO>) {
@@ -35,11 +35,23 @@ export class CarResponseDTO implements Car {
   status: CarStatus;
 
   @Expose()
-  imageUrls: string[];
+  @Type(() => CarImageResponseDTO)
+  images: CarImageResponseDTO[];
 
   @Exclude()
   createdAt: Date;
 
   @Exclude()
   updatedAt: Date;
+}
+
+export class CarImageResponseDTO {
+  @Expose()
+  id: string;
+
+  @Expose()
+  url: string;
+
+  @Expose()
+  isMain: boolean;
 }

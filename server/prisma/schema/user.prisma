@@ -13,10 +13,11 @@ model User {
     isVerified       Boolean         @default(false)
     role             Role            @default(CUSTOMER)
     drivingLicence   DrivingLicence? @relation(fields: [drivingLicenceId], references: [id], onDelete: Cascade)
+    reviews          Review[]
+    bookings         Booking[]
     drivingLicenceId String?         @unique
     createdAt        DateTime        @default(now())
     updatedAt        DateTime        @updatedAt
-    Review           Review[]
 
     @@map("users")
 }
@@ -28,7 +29,7 @@ model DrivingLicence {
     expiryDate           DateTime
     createdAt            DateTime @default(now())
     updatedAt            DateTime @updatedAt
-    User                 User?
+    user                 User?
 
     @@map("driving_licences")
 }

@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { CarService } from './car.service';
 import { CreateCarRequestDTO } from './dto/create.request.dto';
@@ -15,13 +16,16 @@ import { RolesGuard } from '@/guards/role.guard';
 import { Roles } from '@/decorators/role.decorator';
 import { Role } from '@prisma/client';
 import { ApiPagination } from '@/decorators/apiPagination.decorator';
+import { ApiCarQueries } from './decorators/findQuery.decorator';
+import { FindManyCarsQueryDTO } from './dto/findMany.request.dto';
+import { JwtAccessGuard } from '../auth/guards/jwt/jwtAccess.guard';
 
 @Controller('car')
 export class CarController {
   constructor(private readonly carService: CarService) {}
 
   @Post()
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAccessGuard, RolesGuard)
   @Roles(Role.ADMIN)
   create(@Body() dto: CreateCarRequestDTO) {
     return this.carService.create(dto);
@@ -29,8 +33,9 @@ export class CarController {
 
   @Get()
   @ApiPagination()
-  findMany() {
-    return this.carService.findMany();
+  @ApiCarQueries()
+  findMany(@Query() query: FindManyCarsQueryDTO) {
+    return this.carService.findManyWithQuery(query);
   }
 
   @Get(':id')
@@ -39,14 +44,14 @@ export class CarController {
   }
 
   @Patch(':id')
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAccessGuard, RolesGuard)
   @Roles(Role.ADMIN)
   update(@Param('id') id: string, @Body() dto: UpdateCarRequestDTO) {
-    return this.carService.update(+id, dto);
+    return this.carService.update(id, dto);
   }
 
   @Delete(':id')
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAccessGuard, RolesGuard)
   @Roles(Role.ADMIN)
   remove(@Param('id') id: string) {
     return this.carService.remove(+id);

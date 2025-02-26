@@ -43,4 +43,10 @@ export class CreateCarRequestDTO {
   @IsArray()
   @IsUrl({}, { each: true })
   imageUrls?: string[];
+
+  @ApiPropertyOptional({ type: [String] })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  categoryIds: string[];
 }

@@ -1,66 +1,48 @@
 import React from 'react';
+import icons from '../../../../assets/icons/index';
+import AnimatedButton from '../../../buttons/AnimatedButton';
+import IconContentCard from '../../../cards/IconContentCard';
+
+const styles = {
+  container: {
+    padding: '2rem',
+    backgroundColor: '#f9f9f9',
+    borderRadius: '8px',
+  },
+  cardContainer: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+    gap: '1rem',
+    justifyContent: 'center',
+  },
+  cardWrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+};
 
 const UniqueValue: React.FC = () => {
-
+  const content: { text: string; icon: string }[] = [
+    { text: 'Affordable Pricing – Competitive rates with no hidden fees', icon: icons.price },
+    { text: 'Well-Maintained Vehicles – Regularly serviced and in top condition', icon: icons.maintenance },
+    { text: 'Flexible Booking – Easy online reservation or walk-in rentals', icon: icons.flexible },
+    { text: '24/7 Customer Support – Assistance whenever you need it', icon: icons.allday },
+    { text: 'Convenient Pickup & Drop-off – Hassle-free locations & delivery options', icon: icons.convenience },
+  ];
 
   return (
-    <div style={styles.containerStyle}>
+    <div style={styles.container}>
       <h4>Why Choose Us?</h4>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center' }}>
-        {[
-          'Affordable Pricing – Competitive rates with no hidden fees',
-          'Well-Maintained Vehicles – Regularly serviced and in top condition',
-          'Flexible Booking – Easy online reservation or walk-in rentals',
-          '24/7 Customer Support – Assistance whenever you need it',
-          'Convenient Pickup & Drop-off – Hassle-free locations & delivery options',
-        ].map((text, index) => (
-          <div style={{ flex: '1 1 calc(50% - 1rem)', maxWidth: 'calc(50% - 1rem)' }} key={index}>
-            <div style={styles.cardStyle}>
-              <span style={styles.iconStyle}>✔️</span>
-              <div>
-                <p>{text}</p>
-              </div>
-            </div>
+      <div style={styles.cardContainer}>
+        {content.map((item, index) => (
+          <div key={index} style={styles.cardWrapper}>
+            <IconContentCard text={item.text} icon={item.icon} />
           </div>
         ))}
       </div>
-      <button style={styles.buttonStyle}>Book Now</button>
+      <AnimatedButton text="Book Now" onClick={() => alert('Button Clicked!')} />
     </div>
   );
 };
-const styles = {
-    containerStyle :{
-        padding: '2rem',
-        backgroundColor: '#f9f9f9',
-        borderRadius: '8px',
-        textAlign: 'center' as 'center',
-      },
-    
-      cardStyle : {
-        display: 'flex',
-        alignItems: 'center',
-        marginBottom: '1rem',
-        padding: '1rem',
-        backgroundColor: 'white',
-        borderRadius: '8px',
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-      },
-    
-      iconStyle: {
-        marginRight: '1rem',
-        fontSize: '1.5rem',
-        color: '#007bff',
-      },
-    
-      buttonStyle: {
-        marginTop: '1rem',
-        padding: '0.5rem 1rem',
-        fontSize: '1rem',
-        color: 'white',
-        backgroundColor: '#007bff',
-        border: 'none',
-        borderRadius: '4px',
-        cursor: 'pointer',
-      },
-}
+
 export default UniqueValue;

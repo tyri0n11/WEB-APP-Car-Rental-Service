@@ -1,34 +1,26 @@
-import { Typography, Button } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-
+import React from 'react';
+import AnimatedButton from '../../../buttons/AnimatedButton';
 const Hero: React.FC = () => {
-  const classes = useStyles();
-
+  const description = "Looking for a reliable and affordable car rental service? At CRS, we offer a wide range of well-maintained vehicles to meet your travel needs.";
   return (
-    <div className={classes.heroContainer}>
-      <div className={classes.backgroundLayer} />
-      <div className={classes.contentLayer}>
-        <Typography variant="h2" component="h1" gutterBottom>
-          Rent Your Dream Car
-        </Typography>
-        <Typography variant="h5" component="p" gutterBottom>
-          Choose from a wide range of luxury and economy cars
-        </Typography>
-        <Button variant="contained" color="primary" size="large" className={classes.button}>
-          Get Started
-        </Button>
+    <div style={styles.heroContainer}>
+      <div style={styles.backgroundLayer} />
+      <div style={styles.contentLayer}>
+        <div style={styles.contentBox}>
+          <h1 style={styles.heading}>Drive with Confidence, Rent with Ease!</h1>
+          <p style={styles.description}>{description}</p>
+          <AnimatedButton text="Get Started" onClick={() => console.log("Get Started")} />
+        </div>
       </div>
     </div>
   );
 };
 
-const useStyles = makeStyles({
+const styles: { [key: string]: React.CSSProperties } = {
   heroContainer: {
-    position: "relative",
-    height: "90vh",
+    height: "100vh",
     overflow: "hidden",
-    margin: "auto",
-    scrollBehavior: "smooth",
+    position: "relative",
   },
   backgroundLayer: {
     position: "absolute",
@@ -54,12 +46,30 @@ const useStyles = makeStyles({
     textAlign: "center",
     zIndex: 1,
   },
+  contentBox: {
+    maxWidth: "70%",
+    padding: "5rem",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    borderRadius: "8px",
+  },
+  heading: {
+    fontSize: "2.5rem",
+    marginBottom: "1rem",
+  },
+  description: {
+    fontSize: "1.25rem",
+    marginBottom: "1.5rem",
+  },
   button: {
     marginTop: "20px",
     padding: "10px 20px",
     fontSize: "1.2rem",
+    color: "white",
+    backgroundColor: "#007bff",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
   },
-});
-
+};
 
 export default Hero;

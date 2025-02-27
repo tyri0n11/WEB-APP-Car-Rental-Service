@@ -13,8 +13,11 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^6.4.6",
     "@mui/material": "^6.4.5",
     "@supabase/supabase-js": "^2.48.1",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
     "@types/tailwindcss": "^3.0.11",
     "dotenv": "^16.4.7",
     "lucide-react": "^0.475.0",
@@ -26,6 +29,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
+    "@mui/styles": "^6.4.6",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react-swc": "^3.5.0",

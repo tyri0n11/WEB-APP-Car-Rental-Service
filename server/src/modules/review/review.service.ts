@@ -15,7 +15,12 @@ export class ReviewService extends BaseService<Review> {
   ) {
     super(databaseService, 'review', ReviewResponseDTO);
   }
-  async create(userId: string, dto: CreateReviewRequestDTO) {
+  async createWithUserData(
+    userId: string,
+    firstName: string,
+    lastName: string,
+    dto: CreateReviewRequestDTO,
+  ) {
     const { bookingId, comment, rating } = dto;
     const foundBooking = await this.bookingService.findOne({
       id: bookingId,
@@ -24,10 +29,12 @@ export class ReviewService extends BaseService<Review> {
     if (!foundBooking) {
       throw new NotFoundException('Booking not found');
     }
-
+    console.log(foundBooking);
+    const userName = firstName + ' ' + lastName;
     return await super.create({
       comment,
       rating,
+      userName,
       car: {
         connect: {
           id: foundBooking.carId,

@@ -19,7 +19,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "db:studio": "npx prisma studio",
-    "docker:compose": "docker-compose -f docker-compose.yml up --build"
+    "docker:compose": "docker-compose -f docker-compose.yml up -d --build",
+    "docker:stop": "docker-compose -f docker-compose.yml down"
   },
   "dependencies": {
     "@bull-board/api": "^6.7.9",

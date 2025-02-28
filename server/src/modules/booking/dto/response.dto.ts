@@ -2,6 +2,9 @@ import { Booking, BookingStatus, PaymentProvider } from '@prisma/client';
 import { Exclude, Expose } from 'class-transformer';
 
 export class BookingResponseDTO implements Booking {
+  constructor(partial: Partial<BookingResponseDTO>) {
+    Object.assign(this, partial);
+  }
   @Expose()
   id: string;
   @Expose()

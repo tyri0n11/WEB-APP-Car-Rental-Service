@@ -2,6 +2,9 @@ import { Review } from '@prisma/client';
 import { Expose } from 'class-transformer';
 
 export class ReviewResponseDTO implements Review {
+  constructor(partial: Partial<ReviewResponseDTO>) {
+    Object.assign(this, partial);
+  }
   @Expose()
   id: string;
   @Expose()

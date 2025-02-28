@@ -48,7 +48,7 @@ const Navbar: React.FC = () => {
                 Home
               </button>
             </li>
-            <li>
+            {/* <li>
               <button
                 type="button"
                 className={styles.navButton}
@@ -65,7 +65,7 @@ const Navbar: React.FC = () => {
               >
                 Contact
               </button>
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>

@@ -1,22 +1,32 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styles from "./Navbar.module.css";
-import { useAuth } from "../../context/AuthContext";
-import UserMenu from "../menu/UserMenu";
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  // Helper function to navigate and optionally close the menu
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    setIsMenuOpen(false); // Optionally close the menu on navigation
+  };
+
   return (
-    <nav className={styles.navbar}>
+    <div className={styles.navbar}>
       <div className={styles.navbarContainer}>
-        <div className={styles.logo}>
-          <Link to="/">WAP</Link>
+        <div
+          className={styles.logo}
+          onClick={() => handleNavigation("/")}
+          role="button"
+          tabIndex={0}
+          onKeyPress={(e) => e.key === "Enter" && handleNavigation("/")}
+        >
+          WAP
         </div>
         <button
           className={styles.menuToggle}
@@ -27,36 +37,56 @@ const Navbar: React.FC = () => {
           <span className={isMenuOpen ? styles.barOpen : ""}></span>
           <span className={isMenuOpen ? styles.barOpen : ""}></span>
         </button>
-      </div>
-
-      <div className={`${styles.menuItems} ${isMenuOpen ? styles.open : ""}`}>
-        <ul className={`${styles.navLinks} ${isMenuOpen ? styles.open : ""}`}>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/about">About</Link>
-          </li>
-          <li>
-            <Link to="/contact">Contact</Link>
-          </li>
-        </ul>
-        <div className={styles.authButtons}>
-          {user ? (
-            <UserMenu />
-          ) : (
-            <>
-              <Link to="/signin" className={styles.loginButton}>
-                Log In
-              </Link>
-              <Link to="/signup" className={styles.signupButton}>
-                Sign Up
-              </Link>
-            </>
-          )}
+        <div className={`${styles.menuItems} ${isMenuOpen ? styles.open : ""}`}>
+          <ul className={`${styles.navLinks} ${isMenuOpen ? styles.open : ""}`}>
+            <li>
+              <button
+                type="button"
+                className={styles.navButton}
+                onClick={() => handleNavigation("/")}
+              >
+                Home
+              </button>
+            </li>
+            {/* <li>
+              <button
+                type="button"
+                className={styles.navButton}
+                onClick={() => handleNavigation("/about")}
+              >
+                About
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                className={styles.navButton}
+                onClick={() => handleNavigation("/contact")}
+              >
+                Contact
+              </button>
+            </li> */}
+          </ul>
         </div>
       </div>
-    </nav>
+
+      <div className={styles.authButtons}>
+        <button
+          type="button"
+          onClick={() => handleNavigation("/signin")}
+          className={styles.loginButton}
+        >
+          Sign In
+        </button>
+        <button
+          type="button"
+          onClick={() => handleNavigation("/signup")}
+          className={styles.signupButton}
+        >
+          Sign Up
+        </button>
+      </div>
+    </div>
   );
 };
 

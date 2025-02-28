@@ -1,34 +1,34 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import NavBar from "./components/layout/Navbar";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import SignIn from "./components/SignIn";
-import SignUp from "./components/SignUp";
-import Home from "./components/Home"; //
 import Banner from "./components/layout/Banner";
-import Dashboard from "./components/Dashboard";
-import ProtectedRoute from "./routes/ProtectedRoute";
-import Profile from "./components/Profile";
+import Footer from "./components/layout/Footer";
+import NavBar from "./components/layout/Navbar";
+import Home from "./components/pages/home/Home";
+
 function App() {
   return (
     <BrowserRouter>
-      <div className="wrapper">
-        <section className="header">
-          <Banner />
-          <NavBar />
+      <div
+        className="flex flex-col min-h-screen gap-0 p-0 bg-cover bg-center bg-fixed"
+        style={{ backgroundImage: "url('/assets/background.png')" }}
+      >
+        <section>
+          <nav>
+            <Banner />
+            <NavBar />
+          </nav>
         </section>
 
-        <section className="content">
+        <section >
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/signup" element={<SignUp />} />
-
-            <Route element={<ProtectedRoute />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/profile" element={<Profile />} />
-            </Route>
           </Routes>
         </section>
+        <section>
+          <Footer/>
+        </section>
+
+        
       </div>
     </BrowserRouter>
   );

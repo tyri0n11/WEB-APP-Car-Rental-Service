@@ -8,6 +8,7 @@ import {
   Delete,
   Req,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { CreateBookingRequestDTO } from './dto/create.request.dto';
@@ -16,7 +17,9 @@ import { ConfigService } from '@nestjs/config';
 import { ApiBookingQueries } from './decorators/findManyQuery.decorator';
 import { ApiPagination } from '@/decorators/apiPagination.decorator';
 import { FindManyBookingsQueryDTO } from './dto/findMany.request.dto';
-
+import { AuthGuard } from '@nestjs/passport';
+import { JwtAccessGuard } from '../auth/guards/jwt/jwtAccess.guard';
+@UseGuards(JwtAccessGuard)
 @Controller('booking')
 export class BookingController {
   constructor(

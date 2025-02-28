@@ -6,6 +6,9 @@ import {
 import { Exclude, Expose } from 'class-transformer';
 
 export class TransactionResponseDTO implements Transaction {
+  constructor(partial: Partial<TransactionResponseDTO>) {
+    Object.assign(this, partial);
+  }
   @Expose()
   id: string;
   @Expose()

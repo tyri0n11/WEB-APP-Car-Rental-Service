@@ -1,12 +1,13 @@
 import { BaseService } from '@/services/base/base.service';
 import { InjectRedis } from '@nestjs-modules/ioredis';
+import { InjectQueue } from '@nestjs/bullmq';
 import {
   BadRequestException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { Booking, BookingStatus, CarStatus } from '@prisma/client';
-import * as crypto from 'crypto';
+import { Queue } from 'bullmq';
 import * as dayjs from 'dayjs';
 import Redis from 'ioredis';
 import { CarService } from '../car/car.service';
@@ -17,11 +18,12 @@ import { CreateTransactionRequestDTO } from '../transaction/dto/create.request.d
 import { TransactionService } from '../transaction/transaction.service';
 import { CreateBookingRequestDTO } from './dto/create.request.dto';
 import { CrearteBookingResponseDTO } from './dto/create.response.dto';
+import { FindManyBookingsQueryDTO } from './dto/findMany.request.dto';
 import {
   BookingResponseDTO,
   BookingResponseOnRedisDTO,
 } from './dto/response.dto';
-import { FindManyBookingsQueryDTO } from './dto/findMany.request.dto';
+import { UnlockCarQueue } from './enums/queue';
 @Injectable()
 export class BookingService extends BaseService<Booking> {
   constructor(
@@ -29,20 +31,14 @@ export class BookingService extends BaseService<Booking> {
     private readonly carService: CarService,
     private readonly paymentService: PaymentService,
     private readonly transactionService: TransactionService,
-
     @InjectRedis() private readonly redisService: Redis,
+    @InjectQueue(UnlockCarQueue.name)
+    private readonly unlockCarQueue: Queue,
   ) {
     super(databaseService, 'booking', BookingResponseDTO);
   }
-  bookingTimeout = 600; // 10 minutes
-  private genBookingCode(): string {
-    const now = dayjs().format('YYMMDD').toString();
-    const randomNumber = crypto
-      .randomInt(0, 10000000000)
-      .toString()
-      .padStart(10, '0');
-    return now + randomNumber;
-  }
+  BOOKING_TIMEOUT = 360000; // 6 minutes - in miliseconds
+
   private readonly genRedisKey = {
     booking: (bookingCode: string) => `booking:${bookingCode}`,
   };
@@ -65,21 +61,20 @@ export class BookingService extends BaseService<Booking> {
       dto.endDate,
     );
 
-    const bookingCode = this.genBookingCode();
+    const bookingCode = car.id;
     const bookingKey = this.genRedisKey.booking(bookingCode);
 
     const bookingData = {
       ...dto,
       userId,
       bookingCode,
-      status: BookingStatus.PENDING,
       totalPrice,
     };
 
     await this.redisService
       .multi()
       .hset(bookingKey, 'data', JSON.stringify(bookingData))
-      .expire(bookingKey, this.bookingTimeout)
+      .expire(bookingKey, this.BOOKING_TIMEOUT)
       .exec();
 
     return { bookingCode, totalPrice };
@@ -90,11 +85,17 @@ export class BookingService extends BaseService<Booking> {
     startDate: Date,
     endDate: Date,
   ): Promise<boolean> {
-    const existingBooking = await this.findMany({
+    const bookingKey = this.genRedisKey.booking(carId);
+    const pendingBooking = await this.redisService.hget(bookingKey, 'data');
+    if (pendingBooking) {
+      return false;
+    }
+
+    const existingBookings = await this.findMany({
       filter: {
         carId,
         status: {
-          in: [BookingStatus.CONFIRMED, BookingStatus.PENDING],
+          in: [BookingStatus.CONFIRMED, BookingStatus.ONGOING],
         },
         OR: [
           {
@@ -105,7 +106,8 @@ export class BookingService extends BaseService<Booking> {
       },
     });
 
-    return !existingBooking;
+    if (existingBookings.length > 0) return false;
+    return true;
   }
 
   async calculateTotalPrice(
@@ -126,9 +128,8 @@ export class BookingService extends BaseService<Booking> {
       userId,
       dto,
     );
-
     const result = await this.paymentService.createPaymentLink(
-      dto.paymentGateway,
+      dto.paymentProvider,
       {
         ip: paymentData.ip,
         host: paymentData.host,
@@ -137,6 +138,7 @@ export class BookingService extends BaseService<Booking> {
         amount: Number(totalPrice),
       },
     );
+
     const paymentUrl = result.url;
 
     const bookingKey = await this.genRedisKey.booking(bookingCode);
@@ -144,6 +146,11 @@ export class BookingService extends BaseService<Booking> {
 
     const bookingData: BookingResponseOnRedisDTO = JSON.parse(bookingDataJson);
 
+    await this.unlockCarQueue.add(
+      UnlockCarQueue.jobName,
+      { bookingCode },
+      { delay: this.BOOKING_TIMEOUT },
+    );
     return { bookingData, paymentUrl };
   }
 
@@ -175,7 +182,7 @@ export class BookingService extends BaseService<Booking> {
             totalPrice: bookingData.totalPrice,
             pickupAddress: bookingData.pickupAddress,
             returnAddress: bookingData.returnAddress,
-            status: BookingStatus.ONGOING,
+            status: BookingStatus.CONFIRMED,
             user: {
               connect: {
                 id: bookingData.userId,
@@ -195,25 +202,28 @@ export class BookingService extends BaseService<Booking> {
         });
       },
     );
+    if (createdBooking) await this.redisService.del(bookingKey);
     return createdBooking;
   }
 
   async processTransaction(bookingCode: string) {
     const bookingKey = await this.genRedisKey.booking(bookingCode);
+    console.log(bookingKey);
     const bookingDataJson = await this.redisService.hget(bookingKey, 'data');
+
     if (!bookingDataJson) {
       throw new BadRequestException('Booking not found or completed');
     }
     const bookingData: BookingResponseOnRedisDTO = JSON.parse(bookingDataJson);
 
-    const transactionData: CreateTransactionRequestDTO = {
+    const transactionData = {
       amount: bookingData.totalPrice,
       discount: 0,
       paymentProvider: bookingData.paymentProvider,
     };
     const createdTransation =
       await this.transactionService.create(transactionData);
-
+    console.log(createdTransation);
     await this.completeBooking(bookingCode, createdTransation.id);
   }
 
@@ -305,5 +315,15 @@ export class BookingService extends BaseService<Booking> {
     }
 
     return await super.update({ id }, { status });
+  }
+
+  async unlockCar(bookingCode: string) {
+    const bookingKey = await this.genRedisKey.booking(bookingCode);
+
+    const bookingDataJson = await this.redisService.hget(bookingKey, 'data');
+    if (!bookingDataJson) {
+      throw new BadRequestException('Booking not found or completed');
+    }
+    await this.redisService.del(bookingKey);
   }
 }

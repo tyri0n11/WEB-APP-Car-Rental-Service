@@ -14,7 +14,7 @@ import { ZalopayCallbackResponseDTO } from '../dto/zaloCallback.response';
 interface ZaloPayRequestConfigInterface {
   amount: number;
   description: string;
-  bookingCode: string;
+  orderCode: string;
   returnUrl: string;
   host: string;
 }
@@ -22,7 +22,7 @@ interface ZaloPayRequestConfigInterface {
 @Injectable()
 export class ZalopayGateWay implements PaymentGatewayInterface {
   private readonly logger = new Logger(ZalopayGateWay.name);
-  private readonly ORDER_TIMEOUT_MINUTES = 10;
+  private readonly ORDER_TIMEOUT_SECONDS = 300; //5 minutes
   private readonly CREATE_ZALOPAY_PAYMENT_LINK_URL =
     'https://sb-openapi.zalopay.vn/v2/create';
   private readonly appID: number;
@@ -54,12 +54,13 @@ export class ZalopayGateWay implements PaymentGatewayInterface {
       app_user: 'user123',
       app_time: now.valueOf(),
       amount: data.amount,
-      app_trans_id: transID + '_' + data.bookingCode,
+      app_trans_id: transID + '_' + data.orderCode,
       embed_data: JSON.stringify({
         preferred_payment_method: [],
         redirecturl: data.returnUrl,
       }),
-      description: data.bookingCode,
+      expire_duration_seconds: this.ORDER_TIMEOUT_SECONDS,
+      description: data.description,
       bank_code: '',
       callback_url: data.host + '/payment/zalopay/callback',
       item: JSON.stringify([]),
@@ -89,7 +90,11 @@ export class ZalopayGateWay implements PaymentGatewayInterface {
   }
 
   async createPaymentLink(dto: any): Promise<string> {
-    const data = this.initZaloPayRequestConfig(dto);
+    const data = this.initZaloPayRequestConfig({
+      description: 'Thanh toan dich vu CarRental',
+      ...dto,
+    });
+    console.log('zalo config req: ', data);
     const res: AxiosResponse = await this.httpService.axiosRef.post(
       this.CREATE_ZALOPAY_PAYMENT_LINK_URL,
       data,
@@ -99,7 +104,7 @@ export class ZalopayGateWay implements PaymentGatewayInterface {
         },
       },
     );
-
+    console.log(res.data);
     if (res.data.return_code !== 1) {
       throw new InternalServerErrorException('There was an error with Zalopay');
     }

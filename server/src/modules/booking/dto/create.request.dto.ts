@@ -1,20 +1,21 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { PaymentProvider } from '@prisma/client';
+import { Transform } from 'class-transformer';
+import { IsDate, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateBookingRequestDTO {
   @IsNotEmpty()
   @IsString()
   carId: string;
 
+  @IsDate()
   @IsNotEmpty()
-  @IsString()
   startDate: Date;
 
-  @IsString()
+  @IsDate()
   @IsNotEmpty()
   endDate: Date;
 
   @IsString()
-  @IsNotEmpty()
   pickupAddress: string;
 
   @IsString()
@@ -23,7 +24,8 @@ export class CreateBookingRequestDTO {
 
   @IsString()
   @IsNotEmpty()
-  paymentGateway: string;
+  @Transform(({ value }) => value.toUpperCase())
+  paymentProvider: PaymentProvider;
 
   @IsString()
   @IsNotEmpty()

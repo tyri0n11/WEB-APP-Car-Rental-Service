@@ -10,6 +10,8 @@ import { CarResponseDTO } from './dto/response.dto';
 import { UpdateCarRequestDTO } from './dto/update.request.dto';
 import { CreateCarRequestDTO } from './dto/create.request.dto';
 import { CarSortBy, FindManyCarsQueryDTO } from './dto/findMany.request.dto';
+import * as crypto from 'crypto';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class CarService extends BaseService<Car> {
@@ -22,7 +24,14 @@ export class CarService extends BaseService<Car> {
       },
     },
   };
-
+  private genCarId(): string {
+    const now = dayjs().format('YYMMDD').toString();
+    const randomNumber = crypto
+      .randomInt(0, 10000000000)
+      .toString()
+      .padStart(10, '0');
+    return now + randomNumber;
+  }
   private getSortOptions(sortBy?: CarSortBy) {
     switch (sortBy) {
       case CarSortBy.PRICE_ASC:
@@ -69,9 +78,10 @@ export class CarService extends BaseService<Car> {
         );
       }
     }
-
-    return super.create(
+    const carId = this.genCarId();
+    return await super.create(
       {
+        id: carId,
         ...carData,
         images: {
           create: imageUrls?.map((url, index) => ({

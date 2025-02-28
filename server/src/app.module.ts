@@ -25,6 +25,7 @@ import { BullModule } from '@nestjs/bullmq';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { ExpressAdapter } from '@bull-board/express';
 import { TransactionModule } from './modules/transaction/transaction.module';
+import { ReviewModule } from './modules/review/review.module';
 
 @Module({
   imports: [
@@ -79,7 +80,6 @@ import { TransactionModule } from './modules/transaction/transaction.module';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
         const host = configService.get<string>('REDIS_HOST');
-        console.log('BullModule REDIS_HOST:', host);
         return {
           connection: {
             family: 0,
@@ -107,6 +107,7 @@ import { TransactionModule } from './modules/transaction/transaction.module';
     BookingModule,
     PaymentModule,
     TransactionModule,
+    ReviewModule,
   ],
   controllers: [AppController],
   providers: [

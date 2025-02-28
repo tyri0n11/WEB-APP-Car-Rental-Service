@@ -61,8 +61,8 @@ model Review {
     id        String   @id @default(uuid())
     rating    Int
     comment   String?
-    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId    String
+    booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+    bookingId String   @unique
     userName  String
     car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
     carId     String

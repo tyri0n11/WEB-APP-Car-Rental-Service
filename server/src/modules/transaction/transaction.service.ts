@@ -10,10 +10,15 @@ export class TransactionService extends BaseService<Transaction> {
   constructor(private readonly databaseService: DatabaseService) {
     super(databaseService, 'transaction', TransactionResponseDTO);
   }
-  create(dto: CreateTransactionRequestDTO): Promise<TransactionResponseDTO> {
-    return super.create({
+
+  async create(
+    dto: CreateTransactionRequestDTO,
+  ): Promise<TransactionResponseDTO> {
+    const transaction = await super.create({
       ...dto,
       paidAt: new Date(),
     });
+    console.log('Created transaction data:', transaction); // Add this log
+    return transaction;
   }
 }

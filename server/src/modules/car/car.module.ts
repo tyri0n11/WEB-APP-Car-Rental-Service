@@ -6,5 +6,6 @@ import { RolesGuard } from '@/guards/role.guard';
 @Module({
   controllers: [CarController],
   providers: [CarService, RolesGuard],
+  exports: [CarService],
 })
 export class CarModule {}

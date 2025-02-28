@@ -13,7 +13,6 @@ model User {
     isVerified       Boolean         @default(false)
     role             Role            @default(CUSTOMER)
     drivingLicence   DrivingLicence? @relation(fields: [drivingLicenceId], references: [id], onDelete: Cascade)
-    reviews          Review[]
     bookings         Booking[]
     drivingLicenceId String?         @unique
     createdAt        DateTime        @default(now())

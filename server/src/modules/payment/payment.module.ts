@@ -5,11 +5,15 @@ import { BullModule } from '@nestjs/bullmq';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { TransactionQueue } from './enums/queue';
+import { PaymentGatewayFactory } from './gateways/gateway.factory';
+import { ZalopayGateWay } from './gateways/zalo.gateway';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   controllers: [PaymentController],
-  providers: [PaymentService],
+  providers: [PaymentService, PaymentGatewayFactory, ZalopayGateWay],
   imports: [
+    HttpModule,
     BullModule.registerQueue({
       name: TransactionQueue.name,
       defaultJobOptions: {
@@ -25,5 +29,7 @@ import { TransactionQueue } from './enums/queue';
       adapter: BullMQAdapter,
     }),
   ],
+
+  exports: [PaymentService],
 })
 export class PaymentModule {}

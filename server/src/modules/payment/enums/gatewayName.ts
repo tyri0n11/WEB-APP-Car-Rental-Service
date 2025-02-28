@@ -1,3 +1,3 @@
 export enum GatewayName {
-  ZALOPAY = 'zalopay',
+  ZALOPAY = 'ZALOPAY',
 }

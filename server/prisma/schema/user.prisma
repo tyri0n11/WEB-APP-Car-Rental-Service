@@ -4,17 +4,31 @@ enum Role {
 }
 
 model User {
-    id             String   @id @default(uuid())
-    email          String   @unique
-    password       String
-    firstName      String
-    lastName       String
-    phoneNumber    String?
-    drivingLicence String?
-    isVerified     Boolean  @default(false)
-    role           Role     @default(CUSTOMER)
-    createdAt      DateTime @default(now())
-    updatedAt      DateTime @updatedAt
+    id               String          @id @default(uuid())
+    email            String          @unique
+    password         String
+    firstName        String
+    lastName         String
+    phoneNumber      String?
+    isVerified       Boolean         @default(false)
+    role             Role            @default(CUSTOMER)
+    drivingLicence   DrivingLicence? @relation(fields: [drivingLicenceId], references: [id], onDelete: Cascade)
+    bookings         Booking[]
+    drivingLicenceId String?         @unique
+    createdAt        DateTime        @default(now())
+    updatedAt        DateTime        @updatedAt
 
     @@map("users")
+}
+
+model DrivingLicence {
+    id                   String   @id @default(uuid())
+    licenceNumber        String
+    drivingLicenseImages String[]
+    expiryDate           DateTime
+    createdAt            DateTime @default(now())
+    updatedAt            DateTime @updatedAt
+    user                 User?
+
+    @@map("driving_licences")
 }

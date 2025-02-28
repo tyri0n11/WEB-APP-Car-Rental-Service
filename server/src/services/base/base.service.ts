@@ -66,22 +66,23 @@ export abstract class BaseService<T> implements BaseServiceInterface<T> {
   }
 
   async create(data: any, options?: any) {
-    return new this.responseDto(
-      await this.prisma[this.model].create({
-        data,
-        ...options,
-      }),
-    );
+    const createdEntiyy = await this.prisma[this.model].create({
+      data,
+      ...options,
+    });
+    return new this.responseDto(createdEntiyy);
   }
 
   async update(filter: any, data: any, options?: any) {
-    return new this.responseDto(
-      await this.prisma[this.model].update({
-        where: filter,
-        data,
-        ...options,
-      }),
-    );
+    const updatedEntity = await this.prisma[this.model].update({
+      where: filter,
+      data: {
+        ...data,
+        updatedAt: new Date(),
+      },
+      ...options,
+    });
+    return new this.responseDto(updatedEntity);
   }
 
   async remove(filter: any) {

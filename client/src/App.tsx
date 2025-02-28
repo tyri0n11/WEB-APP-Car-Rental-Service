@@ -1,8 +1,9 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import NavBar from "./components/layout/Navbar";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./components/pages/home/Home";
 import Banner from "./components/layout/Banner";
+import Footer from "./components/layout/Footer";
+import NavBar from "./components/layout/Navbar";
+import Home from "./components/pages/home/Home";
 
 function App() {
   return (
@@ -11,18 +12,23 @@ function App() {
         className="flex flex-col min-h-screen gap-0 p-0 bg-cover bg-center bg-fixed"
         style={{ backgroundImage: "url('/assets/background.png')" }}
       >
-        <section className="sticky ">
-          <nav className="fixed top-0 left-0 w-full z-50 bg-opacity-90 backdrop-blur-lg">
+        <section>
+          <nav>
             <Banner />
             <NavBar />
           </nav>
         </section>
 
-        <section className="m-5 p-8 bg-white bg-opacity-90 shadow-md">
+        <section >
           <Routes>
             <Route path="/" element={<Home />} />
           </Routes>
         </section>
+        <section>
+          <Footer/>
+        </section>
+
+        
       </div>
     </BrowserRouter>
   );

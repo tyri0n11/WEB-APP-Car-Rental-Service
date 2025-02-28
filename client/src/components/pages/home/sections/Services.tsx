@@ -1,70 +1,71 @@
 import React from 'react';
-import { Button, Card, CardContent, Typography, Grid } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import AnimatedButton from '../../../buttons/AnimatedButton';
+import TitleContentCard from '../../../cards/TitleContentCard';
+
+const styles:  { [key: string]: React.CSSProperties }  = {
+  servicesContainer: {
+    padding: '2rem',
+    backgroundColor: '#f5f5f5',
+    justifyContent: 'center',
+    textAlign: 'center',
+    alignItems: 'center',
+  },
+  serviceCardContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    padding: '2rem',
+    gap: '3rem'
+  },
+  serviceTitle: {
+    marginBottom: '1rem',
+    fontSize: '3rem',
+  },
+  serviceDescription: {
+    marginBottom: '1rem',
+    fontSize: '1rem',
+  },
+  rentalPlans: {
+    marginTop: '2rem',
+    fontSize: '1.25rem',
+  },
+  viewAllButton: {
+    marginTop: '1rem',
+    padding: '10px 20px',
+    fontSize: '1rem',
+    color: 'white',
+    backgroundColor: '#007bff',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s ease',
+  },
+  viewAllButtonHover: {
+    backgroundColor: '#0056b3',
+  },
+};
 
 const Services: React.FC = () => {
-  const classes = useStyles();
+  const services = [
+    { title: 'Economy Cars', description: 'Budget-friendly and fuel-efficient' },
+    { title: 'Sedans', description: 'Comfortable and stylish for business or family use' },
+    { title: 'SUVs & 4x4s', description: 'Power and space for long trips and rough terrains' },
+    { title: 'Luxury & Sports Cars', description: 'Drive in style with high-end vehicles' },
+    { title: 'Vans & Minibuses', description: 'Perfect for group travels' },
+  ];
 
   return (
-    <div className={classes.servicesContainer}>
-      <Typography variant="h4" gutterBottom>
-        Our Fleet – Choose Your Ride
-      </Typography>
-      <Typography variant="body1" gutterBottom>
-        We offer a diverse selection of vehicles to suit every journey:
-      </Typography>
-      <Grid container spacing={3}>
-        {[
-          { title: 'Economy Cars', description: 'Budget-friendly and fuel-efficient' },
-          { title: 'Sedans', description: 'Comfortable and stylish for business or family use' },
-          { title: 'SUVs & 4x4s', description: 'Power and space for long trips and rough terrains' },
-          { title: 'Luxury & Sports Cars', description: 'Drive in style with high-end vehicles' },
-          { title: 'Vans & Minibuses', description: 'Perfect for group travels' },
-        ].map((service, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card className={classes.serviceCard}>
-              <CardContent>
-                <Typography variant="h6" className={classes.serviceTitle}>
-                  {service.title}
-                </Typography>
-                <Typography variant="body2" className={classes.serviceDescription}>
-                  {service.description}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
+    <div style={styles.servicesContainer}>
+      <h4 style={styles.serviceTitle}>Choose Your Ride</h4>
+      <p>We offer a diverse selection of vehicles to suit every journey</p>
+      <div style={styles.serviceCardContainer}>
+        {services.map((service, index) => (
+          <TitleContentCard title={service.title} content={service.description} key={index} />
         ))}
-      </Grid>
-      <Typography variant="h6" className={classes.rentalPlans}>
-        🎯 Flexible Rental Plans – Daily, weekly, and monthly options available!
-      </Typography>
-      <Button variant="contained" color="primary" className={classes.viewAllButton}>
-        View All Cars
-      </Button>
+      </div>
+      <AnimatedButton text="View all cars" onClick={() => console.log("View all cars")}/>
     </div>
   );
 };
 
-const useStyles = makeStyles({
-    servicesContainer: {
-      padding: '2rem',
-      backgroundColor: '#f5f5f5',
-    },
-    serviceCard: {
-      height: '100%',
-    },
-    serviceTitle: {
-      marginBottom: '1rem',
-    },
-    serviceDescription: {
-      marginBottom: '1rem',
-    },
-    rentalPlans: {
-      marginTop: '2rem',
-    },
-    viewAllButton: {
-      marginTop: '1rem',
-    },
-  });
-  
 export default Services;

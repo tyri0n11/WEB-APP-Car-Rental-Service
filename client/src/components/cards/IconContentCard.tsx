@@ -14,6 +14,7 @@ const styles = {
     backgroundColor: 'white',
     borderRadius: '8px',
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    gap: '1rem',
   },
   icon: {
     width: '40px',

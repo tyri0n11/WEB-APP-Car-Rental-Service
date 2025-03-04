@@ -21,6 +21,7 @@
   width: fit-content;
   margin: 0 32px;
 }
+
 .logo {
   font-size: 1.5rem;
   font-weight: bold;
@@ -28,6 +29,7 @@
   text-decoration: none;
   cursor: pointer;
 }
+
 /* ✅ Menu Items */
 .menuItems {
   display: flex;
@@ -59,18 +61,19 @@
   padding: 0.5rem 1rem;
   transition: color 0.3s ease;
 }
+
 .navLinks button {
   background: transparent;
   border: none;
   cursor: pointer;
 }
 
-.navLinks button:focus{
+.navLinks button:focus {
   color: #007bff;
   scale: 1.2;
 }
 
-* :focus{
+* :focus {
   outline: none;
   transition: 400ms;
 }
@@ -92,6 +95,33 @@
   font-size: 16px;
   border-radius: 6px;
   transition: background 0.3s ease;
+}
+
+.authButtons .signinButton {
+  background: none;
+  color: #007bff;
+  padding: 10px 15px;
+  font-weight: bold;
+  border: 2px solid;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+}
+
+.signin-button:hover {
+  background: linear-gradient(135deg, #0056b3, #003f80);
+  /* Darker Blue */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(0, 91, 187, 0.3);
+}
+
+/* Hover Effect */
+.signin-button:hover {
+  color: #0056b3;
+}
+
+/* Active Effect */
+.signin-button:active {
+  color: #003f80;
 }
 
 .authButtons .loginButton {
@@ -134,12 +164,14 @@
 /* ✅ Mobile Navigation */
 @media (max-width: 768px) {
   .menuToggle {
-    display: flex; /* Hiển thị nút toggle trên mobile */
+    display: flex;
+    /* Hiển thị nút toggle trên mobile */
   }
 
   .authButtons,
   .navLinks {
-    display: none; /* Ẩn menu mặc định */
+    display: none;
+    /* Ẩn menu mặc định */
   }
 
   .navLinks {

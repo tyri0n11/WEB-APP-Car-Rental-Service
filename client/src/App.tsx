@@ -25,10 +25,10 @@ function App() {
           </Routes>
         </section>
         <section>
-          <Footer/>
+          <Footer />
         </section>
 
-        
+
       </div>
     </BrowserRouter>
   );

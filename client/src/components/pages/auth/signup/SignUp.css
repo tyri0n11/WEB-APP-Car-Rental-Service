@@ -6,11 +6,13 @@
   width: 440px;
   text-align: center;
 }
+
 .signup-form .message {
   margin: 10px 0;
   color: #fc3f3f;
   font-size: 0.9rem;
 }
+
 .signup-form h2 {
   margin-bottom: 20px;
   color: #333;

@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Navbar.module.css";
+import Login from "../pages/auth/login/login";
 
 const Navbar: React.FC = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false); //Menu
+  const [isSignInOpen, setIsSignInOpen] = useState(false); //Sign In
   const navigate = useNavigate();
 
   const toggleMenu = () => {
@@ -73,20 +75,23 @@ const Navbar: React.FC = () => {
       <div className={styles.authButtons}>
         <button
           type="button"
-          onClick={() => handleNavigation("/signin")}
-          className={styles.loginButton}
+          onClick={() => setIsSignInOpen(true)}
+          className={styles.signinButton}
         >
-          Sign In
+          Login
         </button>
         <button
           type="button"
-          onClick={() => handleNavigation("/signup")}
+          onClick={() => handleNavigation("/login")}
           className={styles.signupButton}
         >
           Sign Up
         </button>
       </div>
+      <Login isOpen={isSignInOpen} onClose={() => setIsSignInOpen(false)} />
     </div>
+
+
   );
 };
 

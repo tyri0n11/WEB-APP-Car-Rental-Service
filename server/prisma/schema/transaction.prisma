@@ -1,0 +1,25 @@
+enum TransactionStatus {
+    COMPLETED
+    REFUNDED
+}
+
+enum PaymentProvider {
+    STRIPE
+    PAYPAL
+    ZALOPAY
+}
+
+model Transaction {
+    id              String             @id @default(uuid())
+    amount          Float
+    discount        Float?
+    paymentProvider PaymentProvider
+    status          TransactionStatus @default(COMPLETED)
+    paidAt          DateTime?
+    refundedAt      DateTime?
+    createdAt       DateTime           @default(now())
+    updatedAt       DateTime           @updatedAt
+    booking         Booking?
+    bookingId       String?            @unique
+    @@map("transactions")
+}

@@ -1,0 +1,40 @@
+
+body {
+  background-image: url("assets/background.png");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  padding: 0;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+h1,h2,h3,h4,h5,h6 {
+  font: Arial, sans-serif;
+  font-weight: 600;
+  color: #007bff;
+}
+p, a {
+  font: Arial, sans-serif;
+  font-weight: 400;
+  color: #333;
+}
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  gap: 0;
+  padding: 0;
+}
+.header {
+  top: 0;
+  position: sticky;
+}
+
+.content {
+  margin: 20px 0;
+  padding: 20px 32px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}

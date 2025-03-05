@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Navbar.module.css";
 
-const Navbar: React.FC = () => {
+const Navbar: React.FC<{ onSignInClick: () => void; onSignUpClick: () => void }> = ({ onSignInClick, onSignUpClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -10,10 +10,9 @@ const Navbar: React.FC = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  // Helper function to navigate and optionally close the menu
   const handleNavigation = (path: string) => {
     navigate(path);
-    setIsMenuOpen(false); // Optionally close the menu on navigation
+    setIsMenuOpen(false);
   };
 
   return (
@@ -26,7 +25,7 @@ const Navbar: React.FC = () => {
           tabIndex={0}
           onKeyPress={(e) => e.key === "Enter" && handleNavigation("/")}
         >
-          WAP
+          <img src="/logo.png" width={100} height={50} />
         </div>
         <button
           className={styles.menuToggle}
@@ -38,49 +37,61 @@ const Navbar: React.FC = () => {
           <span className={isMenuOpen ? styles.barOpen : ""}></span>
         </button>
         <div className={`${styles.menuItems} ${isMenuOpen ? styles.open : ""}`}>
-          <ul className={`${styles.navLinks} ${isMenuOpen ? styles.open : ""}`}>
-            <li>
-              <button
-                type="button"
-                className={styles.navButton}
-                onClick={() => handleNavigation("/")}
-              >
-                Home
-              </button>
-            </li>
-            {/* <li>
-              <button
-                type="button"
-                className={styles.navButton}
-                onClick={() => handleNavigation("/about")}
-              >
-                About
-              </button>
-            </li>
-            <li>
-              <button
-                type="button"
-                className={styles.navButton}
-                onClick={() => handleNavigation("/contact")}
-              >
-                Contact
-              </button>
-            </li> */}
-          </ul>
-        </div>
+  <ul className={`${styles.navLinks} ${isMenuOpen ? styles.open : ""}`}>
+    <li>
+      <button
+        type="button"
+        className={styles.navButton}
+        onClick={() => handleNavigation("/")}
+      >
+        Home
+      </button>
+    </li>
+    <li>
+      <button
+        type="button"
+        className={styles.navButton}
+        onClick={() => handleNavigation("/about")}
+      >
+        About
+      </button>
+    </li>
+    <li>
+      <button
+        type="button"
+        className={styles.navButton}
+        onClick={() => handleNavigation("/services")}
+      >
+        Services
+      </button>
+    </li>
+    <li>
+      <button
+        type="button"
+        className={styles.navButton}
+        onClick={() => handleNavigation("/contact")}
+      >
+        Contact
+      </button>
+    </li>
+  </ul>
+</div>
+
       </div>
+
+      
 
       <div className={styles.authButtons}>
         <button
           type="button"
-          onClick={() => handleNavigation("/signin")}
+          onClick={onSignInClick} 
           className={styles.loginButton}
         >
           Sign In
         </button>
         <button
           type="button"
-          onClick={() => handleNavigation("/signup")}
+          onClick={onSignUpClick} 
           className={styles.signupButton}
         >
           Sign Up
@@ -89,5 +100,7 @@ const Navbar: React.FC = () => {
     </div>
   );
 };
+
+
 
 export default Navbar;

@@ -68,6 +68,6 @@ export class DatabaseService extends PrismaClient implements OnModuleInit {
         role: 'ADMIN',
       },
     });
-    this.logger.log('Create admin account successfully');
+    this.logger.log('Created admin account successfully');
   }
 }

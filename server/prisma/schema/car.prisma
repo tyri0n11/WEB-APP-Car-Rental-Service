@@ -3,15 +3,26 @@ enum CarStatus {
     RENTED
 }
 
+enum FuelType {
+    DIESEL
+    PETROL
+    ELECTRIC
+    HYBRID
+}
+
 model Car {
     id            String        @id @default(uuid())
     make          String
     model         String
     year          Int
-    mileage       Int
+    kilometers    Int
     description   String
     dailyPrice    Float
     licensePlate  String
+    numSeats      Int
+    address       String
+    autoGearbox   Boolean
+    fuelType      FuelType
     status        CarStatus     @default(AVAILABLE)
     carCategories CarCategory[]
     reviews       Review[]

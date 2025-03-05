@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -26,6 +26,7 @@ import { BullBoardModule } from '@bull-board/nestjs';
 import { ExpressAdapter } from '@bull-board/express';
 import { TransactionModule } from './modules/transaction/transaction.module';
 import { ReviewModule } from './modules/review/review.module';
+import { LoggerMiddleware } from './middlewares/logger.middleware';
 
 @Module({
   imports: [
@@ -122,4 +123,8 @@ import { ReviewModule } from './modules/review/review.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}

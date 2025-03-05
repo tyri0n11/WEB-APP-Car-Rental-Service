@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Car, CarStatus } from '@prisma/client';
+import { $Enums, Car, CarStatus, FuelType } from '@prisma/client';
 import { Exclude, Expose, Type } from 'class-transformer';
 
 export class CarResponseDTO implements Car {
@@ -19,7 +19,7 @@ export class CarResponseDTO implements Car {
   year: number;
 
   @Expose()
-  mileage: number;
+  kilometers: number;
 
   @Expose()
   description: string;
@@ -29,6 +29,19 @@ export class CarResponseDTO implements Car {
 
   @Expose()
   licensePlate: string;
+
+  @Expose()
+  @ApiProperty({ enum: FuelType, enumName: 'fuelType' })
+  fuelType: FuelType;
+
+  @Expose()
+  address: string;
+
+  @Expose()
+  numSeats: number;
+
+  @Expose()
+  autoGearbox: boolean;
 
   @Expose()
   @ApiProperty({ enum: CarStatus, enumName: 'carStatus' })

@@ -21,9 +21,16 @@ async function bootstrap() {
     }),
   });
 
-  configSwagger(app);
   const configService = app.get(ConfigService);
-  app.use(morgan('dev'));
+
+  app.enableCors({
+    origin: configService.get('FRONTEND_URL') || 'http://localhost:5173',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
+
+  configSwagger(app);
+  // app.use(morgan('dev'));
 
   app.useGlobalPipes(
     new ValidationPipe({

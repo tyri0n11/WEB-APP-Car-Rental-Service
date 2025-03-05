@@ -1,7 +1,9 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { CarStatus } from '@prisma/client';
+import { CarStatus, FuelType } from '@prisma/client';
 import {
   IsArray,
+  IsBoolean,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -24,7 +26,7 @@ export class CreateCarRequestDTO {
 
   @IsNotEmpty()
   @IsNumber()
-  mileage: number;
+  kilometers: number;
 
   @IsOptional()
   @IsString()
@@ -38,6 +40,22 @@ export class CreateCarRequestDTO {
   @IsString()
   licensePlate: string;
 
+  @IsEnum(FuelType)
+  @IsNotEmpty()
+  fuelType: FuelType;
+
+  @IsNotEmpty()
+  @IsString()
+  address: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  numSeats: number;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  autoGearbox: boolean;
+
   @ApiPropertyOptional({ type: [String] })
   @IsOptional()
   @IsArray()
@@ -48,5 +66,5 @@ export class CreateCarRequestDTO {
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
-  categoryIds: string[];
+  categoryIds?: string[];
 }

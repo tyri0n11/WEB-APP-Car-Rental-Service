@@ -7,6 +7,7 @@ import NavBar from "./components/layout/Navbar";
 import Home from "./components/pages/home/Home";
 import SignUp from "./components/pages/auth/signup/SignUp";
 import SignIn from "./components/pages/auth/signin/SignIn";
+import Contact from "./components/pages/home/sections/Contact";
 
 function App() {
   return (
@@ -39,6 +40,12 @@ const MainLayout = () => {
       <section>
         <Routes>
           <Route path="/" element={<Home />} />
+        </Routes>
+      </section>
+
+      <section>
+        <Routes>
+          <Route path="/" element={<Contact />} />
         </Routes>
       </section>
 

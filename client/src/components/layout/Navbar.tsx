@@ -25,7 +25,7 @@ const Navbar: React.FC<{ onSignInClick: () => void; onSignUpClick: () => void }>
           tabIndex={0}
           onKeyPress={(e) => e.key === "Enter" && handleNavigation("/")}
         >
-          WAP
+          <img src="/logo.png" width={100} height={50} />
         </div>
         <button
           className={styles.menuToggle}
@@ -37,19 +37,49 @@ const Navbar: React.FC<{ onSignInClick: () => void; onSignUpClick: () => void }>
           <span className={isMenuOpen ? styles.barOpen : ""}></span>
         </button>
         <div className={`${styles.menuItems} ${isMenuOpen ? styles.open : ""}`}>
-          <ul className={`${styles.navLinks} ${isMenuOpen ? styles.open : ""}`}>
-            <li>
-              <button
-                type="button"
-                className={styles.navButton}
-                onClick={() => handleNavigation("/")}
-              >
-                Home
-              </button>
-            </li>
-          </ul>
-        </div>
+  <ul className={`${styles.navLinks} ${isMenuOpen ? styles.open : ""}`}>
+    <li>
+      <button
+        type="button"
+        className={styles.navButton}
+        onClick={() => handleNavigation("/")}
+      >
+        Home
+      </button>
+    </li>
+    <li>
+      <button
+        type="button"
+        className={styles.navButton}
+        onClick={() => handleNavigation("/about")}
+      >
+        About
+      </button>
+    </li>
+    <li>
+      <button
+        type="button"
+        className={styles.navButton}
+        onClick={() => handleNavigation("/services")}
+      >
+        Services
+      </button>
+    </li>
+    <li>
+      <button
+        type="button"
+        className={styles.navButton}
+        onClick={() => handleNavigation("/contact")}
+      >
+        Contact
+      </button>
+    </li>
+  </ul>
+</div>
+
       </div>
+
+      
 
       <div className={styles.authButtons}>
         <button

@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import "./SignIn.css";
-import { FaUser, FaLock, FaEnvelope, FaTimes } from "react-icons/fa";
+import { FaLock, FaEnvelope, FaTimes } from "react-icons/fa";
 
 const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = ({ onClose, onSwitchToSignUp }) => {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault();        
     setErrorMessage("");
   };
 
@@ -22,17 +21,6 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
           <form onSubmit={handleSubmit}>
             <h1>Sign In</h1>
             {errorMessage && <p className="error-message">{errorMessage}</p>}
-            
-            <div className="input-box">
-              <label>User Name</label>
-              <input 
-                type="text" 
-                placeholder="Enter your name" 
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required/>
-              <FaUser className="icon"/>
-            </div>
 
             <div className="input-box">
               <label>Email</label>

@@ -1,15 +1,39 @@
 import React, { useState } from "react";
+import { FaEnvelope, FaLock, FaTimes } from "react-icons/fa";
 import "./SignIn.css";
-import { FaLock, FaEnvelope, FaTimes } from "react-icons/fa";
 
 const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = ({ onClose, onSwitchToSignUp }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  const checkValid = () => {
+    if (email.length < 5 || !email.includes("@") || !email.includes(".") || email.length > 89) {
+      setErrorMessage("Invalid email format");
+      return false;
+    }
+    return true
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();        
     setErrorMessage("");
+    if (!checkValid()) {
+      console.log("Invalid input");
+      return;
+    }
+    const data = {
+      email,
+      password,
+    };
+    try {
+      // const response = await signin(data);
+      // setMessage("Account created successfully");
+      // console.log(response);
+      setErrorMessage("Account created successfully");
+    }catch (error) {
+      console.error(error);
+      setErrorMessage("Error signing in");
+    }
   };
 
   return (

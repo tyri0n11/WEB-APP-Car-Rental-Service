@@ -19,6 +19,9 @@ p, a {
   font-weight: 400;
   color: #333;
 }
+.no-scroll {
+  overflow: hidden;
+}
 .wrapper {
   display: flex;
   flex-direction: column;

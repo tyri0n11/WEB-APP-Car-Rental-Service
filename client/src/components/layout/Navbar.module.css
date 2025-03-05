@@ -58,11 +58,12 @@
   border: none;
   cursor: pointer;
 }
-
-.navLinks button:focus{
-  color: #007bff;
-  scale: 1.2;
+.navLinks button:hover {
+  color: #0056b3;
+  transform: translateY(-2px);
+  animation-duration: 600ms;
 }
+
 
 * :focus{
   outline: none;

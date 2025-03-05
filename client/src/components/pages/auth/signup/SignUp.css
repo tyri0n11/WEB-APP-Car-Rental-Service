@@ -1,56 +1,48 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Poppins', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-}
-
 .modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  overflow-y: auto;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
-  align-items: center;
   z-index: 1000;
-  flex-direction: column;
 }
-
+.message {
+  text-align: center;
+  color: crimson;
+  font-size: 14px;
+  margin: 10px 0;
+}
 .wrapper {
-  position: fixed;
-  width: 450px;
-  height: 450px;
+  margin: 5% 0;
+  width: 90%;
+  max-width: 450px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px 24px;
+  position: relative;
+
   background: white;
   border: 2px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: none;
   border-radius: 15px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  overflow: hidden;
-  transition: height 0.2s ease;
-  padding: 24px;
-  top: 50%;
-  margin-top: 50px;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  
+}
+
+.form-box {
+  width: 100%;
+  
 }
 
 .close-btn {
+  width: 22px;
+  height: 22px;
   position: absolute;
   top: 10px;
   right: 10px;
@@ -64,62 +56,45 @@ body {
   color: #029cea;
 }
 
-
-form h1 {
-  font-size: 36px;
-  text-align: center;
-  margin-bottom: 20px;
-  color: #029cea;
+.input-box {
+  display: flex;
+  flex-direction: column;
 }
-
-form .input-box {
-  position: relative;
-  width: 100%;
-  
-  height: 50px;
-  margin: 30px 0;
-}
-
 .input-box label {
-  font-size: 14px;
+  font-size: 18px;
   display: block;
-  margin-bottom: 5px;
   color: #5e5d5d;
-  
+  margin-bottom: 0.5rem;
 }
 
 .input-box input {
   width: 100%;
   height: 100%;
   outline: none;
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 40px;
+  border-radius: 8px;
   font-size: 16px;
-  color: #333;
-  padding: 20px 45px 20px 20px;
-  box-shadow: 0 0 10px  rgba(0, 0, 0, 0.221);
-  
+  border: 1px solid #ccc;
+  padding: 20px 40px 20px 20px;
 }
 
-.input-box input:focus {
-  background: #83bde9;
-  border: 2px solid rgba(255, 255, 255, 0.1);
-}
 
 .input-box input::placeholder {
-  color: #333;
+  color: #5e5d5d;
 }
-
+.modal form .input-box {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  margin: 30px 0;
+}
 .input-box .icon {
   position: absolute;
-  right: 20px;
-  top: 100%;
-  translate: 0 -50%;
+  right: 15px;
   font-size: 18px;
   color: #333;
 }
 
-form .remember-forgot {
+.modal form .remember-forgot {
   display: flex;
   justify-content: space-between;
   font-size: 14.5px;
@@ -146,12 +121,10 @@ form .remember-forgot {
   text-decoration: underline;
 }
 
-form button {
+.modal form button {
   width: 100%;
-  height: 45px;
+  height: 38px;
   background: linear-gradient(135deg, #029cea, #629af5);
-  border: none;
-  outline: none;
   border-radius: 40px;
   box-shadow: 0 0 10px rgba(130, 190, 242, 0.1);
   cursor: pointer;
@@ -161,19 +134,11 @@ form button {
   color: white;
 }
 
-button:hover {
-  background: #0495dd;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 15px rgba(167, 224, 248, 0.6);
+.modal form button:hover {
+  transform: scale(1.05);
 }
 
-button:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-
-form .login-link {
+.modal form .login-link {
   font-size: 14.5px;
   text-align: center;
   margin: 20px 0 15px;
@@ -182,16 +147,16 @@ form .login-link {
 .login-link p {
   color: #333;
   text-decoration: none;
+  cursor: default;
 }
 
 .login-link p span {
   color: #029cea;
   text-decoration: none;
+  cursor: pointer;
   font-weight: 600;
 }
 
 .login-link p span:hover {
   text-decoration: underline;
 }
-
-

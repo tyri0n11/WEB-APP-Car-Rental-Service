@@ -1,12 +1,12 @@
+import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { useState } from "react";
 import "./App.css";
 import Banner from "./components/layout/Banner";
 import Footer from "./components/layout/Footer";
 import NavBar from "./components/layout/Navbar";
-import Home from "./components/pages/home/Home";
-import SignUp from "./components/pages/auth/signup/SignUp";
 import SignIn from "./components/pages/auth/signin/SignIn";
+import SignUp from "./components/pages/auth/signup/SignUp";
+import Home from "./components/pages/home/Home";
 import Contact from "./components/pages/home/sections/Contact";
 
 function App() {
@@ -21,17 +21,25 @@ const MainLayout = () => {
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
 
+  useEffect(() => {
+    if (showSignIn || showSignUp) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+  }, [showSignIn, showSignUp]);
+
   return (
     <div className="flex flex-col min-h-screen bg-cover bg-center">
       <nav>
         <Banner />
         <NavBar
           onSignInClick={() => {
-            setShowSignIn(true); 
+            setShowSignIn(true);
             setShowSignUp(false);
           }}
           onSignUpClick={() => {
-            setShowSignUp(true); 
+            setShowSignUp(true);
             setShowSignIn(false);
           }}
         />
@@ -48,28 +56,26 @@ const MainLayout = () => {
           <Route path="/" element={<Contact />} />
         </Routes>
       </section>
-
-      <Footer />
-
       {showSignIn && (
-  <SignIn 
-    onClose={() => setShowSignIn(false)} 
-    onSwitchToSignUp={() => {
-      setShowSignIn(false);
-      setShowSignUp(true);
-    }}
-  />
-)}
-      
+        <SignIn
+          onClose={() => setShowSignIn(false)}
+          onSwitchToSignUp={() => {
+            setShowSignIn(false);
+            setShowSignUp(true);
+          }}
+        />
+      )}
+
       {showSignUp && (
-  <SignUp 
-    onClose={() => setShowSignUp(false)} 
-    onSwitchToSignIn={() => {
-      setShowSignUp(false);
-      setShowSignIn(true);
-    }}
-  />
-)}
+        <SignUp
+          onClose={() => setShowSignUp(false)}
+          onSwitchToSignIn={() => {
+            setShowSignUp(false);
+            setShowSignIn(true);
+          }}
+        />
+      )}
+      <Footer />
     </div>
   );
 };

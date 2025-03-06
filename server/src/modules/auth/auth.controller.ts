@@ -42,7 +42,7 @@ export class AuthController {
       'User signed up successfully. Please check your email to verify your account',
   })
   async signup(@Body() dto: SignupRequestDTO) {
-    return await this.authService.signup(dto);
+    await this.authService.signup(dto);
   }
 
   @ApiPost({ path: 'login' })

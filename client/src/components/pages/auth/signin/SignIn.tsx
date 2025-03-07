@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import { FaEnvelope, FaLock, FaTimes } from "react-icons/fa";
-import "./SignIn.css";
-
+import '../signup/SignUp.css';
 const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = ({ onClose, onSwitchToSignUp }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [message, setErrorMessage] = useState("");
 
   const checkValid = () => {
     if (email.length < 5 || !email.includes("@") || !email.includes(".") || email.length > 89) {
@@ -38,13 +36,12 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
 
   return (
     <div className="modal">
+      <span className="close-btn" onClick={onClose}>&times;</span>
       <div className="wrapper">
-        <FaTimes className="close-btn" onClick={onClose} />
-
-        <div className="form-box signin">
+        <div className="form-box">
           <form onSubmit={handleSubmit}>
             <h1>Sign In</h1>
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            {message && <p className="message">{message}</p>}
 
             <div className="input-box">
               <label>Email</label>
@@ -55,7 +52,6 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-              <FaEnvelope className="icon" />
             </div>
 
             <div className="input-box">
@@ -67,7 +63,6 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-              <FaLock className="icon" />
             </div>
 
             <div className="remember-forgot">

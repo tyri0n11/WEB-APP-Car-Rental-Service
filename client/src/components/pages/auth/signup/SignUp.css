@@ -17,38 +17,28 @@
   margin: 10px 0;
 }
 .wrapper {
-  margin: 5% 0;
-  width: 90%;
+  margin: 40px auto; /* Added margin on the y-axis */
   max-width: 450px;
-  height: fit-content;
+  padding: 20px 32px;
+  height: auto; /* Changed from fit-content to auto */
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 40px 24px;
   position: relative;
-
   background: white;
   border: 2px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: none;
   border-radius: 15px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  
 }
 
-.form-box {
-  width: 100%;
-  
-}
 
 .close-btn {
-  width: 22px;
-  height: 22px;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 18px;
+  padding: 0;
+  height: 32px;
+  font-size: 32px;
   cursor: pointer;
-  color: #333;
+  color: #4f4d4d;
   transition: color 0.3s ease-in-out;
 }
 
@@ -59,34 +49,42 @@
 .input-box {
   display: flex;
   flex-direction: column;
+  margin: 0;
 }
 .input-box label {
-  font-size: 18px;
+  font-size: 14px;
   display: block;
-  color: #5e5d5d;
+  color: black;
   margin-bottom: 0.5rem;
 }
-
+.name-box {
+  display: flex;
+  justify-content: space-between;
+  direction: row;
+  gap: 8px;
+}
+.button-box {
+  display: flex;
+  justify-content: center;
+  direction: row;
+  gap: 8px;
+}
 .input-box input {
   width: 100%;
   height: 100%;
   outline: none;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 12px;
   border: 1px solid #ccc;
-  padding: 20px 40px 20px 20px;
+  padding: 10px 10px;
+  margin-bottom: 10px;
 }
 
 
 .input-box input::placeholder {
-  color: #5e5d5d;
+  color: #838282;
 }
-.modal form .input-box {
-  position: relative;
-  width: 100%;
-  height: 50px;
-  margin: 30px 0;
-}
+
 .input-box .icon {
   position: absolute;
   right: 15px;
@@ -122,7 +120,7 @@
 }
 
 .modal form button {
-  width: 100%;
+  width: 70%;
   height: 38px;
   background: linear-gradient(135deg, #029cea, #629af5);
   border-radius: 40px;

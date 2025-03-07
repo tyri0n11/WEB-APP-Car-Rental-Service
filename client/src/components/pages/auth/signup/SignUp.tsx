@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { FaEnvelope, FaLock, FaPhone, FaTimes, FaUser } from "react-icons/fa";
 import signup from "../../../../apis/auth-signup";
 import "./SignUp.css";
 
@@ -65,62 +64,56 @@ const SignUp: React.FC<{ onClose: () => void; onSwitchToSignIn: () => void }> = 
 
   return (
     <div className="modal">
+              <span className="close-btn" onClick={onClose}>&times;</span> 
+
       <div className="wrapper">
-        <FaTimes className="close-btn" onClick={onClose} />
         <div className="form-box signup">
           <form onSubmit={handleSubmit}>
             <h1>Sign Up</h1>
             {message && <p className="message">{message}</p>}
-
-            <div className="input-box">
-              <label>First Name</label>
-              <input
-                type="text"
-                placeholder="Enter your first name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                required
-              />
-              <FaUser className="icon" />
+            <div className="name-box">
+              <div className="input-box">
+                <label>First Name</label>
+                <input
+                  type="text"
+                  placeholder="First name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="input-box">
+                <label>Last Name</label>
+                <input
+                  type="text"
+                  placeholder="Last name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                />
+              </div>
             </div>
-
-            <div className="input-box">
-              <label>Last Name</label>
-              <input
-                type="text"
-                placeholder="Enter your last name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                required
-              />
-              <FaUser className="icon" />
-            </div>
-
             <div className="input-box">
               <label>Email</label>
               <input
                 type="email"
-                placeholder="Enter your email"
+                placeholder="example@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 maxLength={89}
               />
-              <FaEnvelope className="icon" />
             </div>
-
             <div className="input-box">
               <label>Password</label>
               <input
                 type="password"
-                placeholder="Enter your password"
+                placeholder="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-              <FaLock className="icon" />
             </div>
-
             <div className="input-box">
               <label>Retype Password</label>
               <input
@@ -130,9 +123,7 @@ const SignUp: React.FC<{ onClose: () => void; onSwitchToSignIn: () => void }> = 
                 onChange={(e) => setRepassword(e.target.value)}
                 required
               />
-              <FaLock className="icon" />
             </div>
-
             <div className="input-box">
               <label>Phone Number</label>
               <input
@@ -142,17 +133,15 @@ const SignUp: React.FC<{ onClose: () => void; onSwitchToSignIn: () => void }> = 
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 required
               />
-              <FaPhone className="icon" />
             </div>
-
             <div className="remember-forgot">
               <label>
                 <input type="checkbox" /> I agree to the terms and policies
               </label>
             </div>
-
+            <div className="button-box">
             <button type="submit">Sign Up</button>
-
+            </div>
             <div className="login-link">
               <p>
                 Already have an account?{" "}

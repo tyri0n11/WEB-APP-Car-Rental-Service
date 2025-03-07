@@ -49,7 +49,7 @@ const SignUp: React.FC<{ onClose: () => void; onSwitchToSignIn: () => void }> = 
       console.log(response);
     } catch (error) {
       console.error(error);
-      setMessage("Error creating account");
+      setMessage((error as any).response.data.message);
     }
   };
 

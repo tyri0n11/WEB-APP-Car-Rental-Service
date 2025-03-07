@@ -62,10 +62,11 @@ export class AuthService {
 
     const newUser = await this.userService.create({
       ...dto,
+      isVerified: true, // for testing
       password: hashedPassword,
     });
 
-    await this.sendVerificationEmail(newUser.email);
+    // await this.sendVerificationEmail(newUser.email);
     return newUser;
   }
 

@@ -2,13 +2,11 @@ import React, { CSSProperties } from 'react';
 
 const styles: { [key: string]: CSSProperties } = {
     footer: {
-        display: 'flex',
+        display: 'absolute',
         flexDirection: 'row',
         color: '#fff',
         textAlign: 'center',
         padding: '1rem',
-        position: 'absolute',
-        bottom: '0',
         width: '100%',
     },
     footerContent: {

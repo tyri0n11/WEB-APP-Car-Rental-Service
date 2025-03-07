@@ -1,26 +1,56 @@
-import React, { useState } from "react";
-import "./SignIn.css";
-import { FaLock, FaEnvelope, FaTimes } from "react-icons/fa";
-
+import React, { useEffect, useState } from "react";
+import signin from "../../../../apis/auth-signin";
+import '../signup/SignUp.css';
 const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = ({ onClose, onSwitchToSignUp }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [message, setMessage] = useState("");
 
+  const checkValid = () => {
+    if (email.length < 5 || !email.includes("@") || !email.includes(".") || email.length > 89) {
+      setMessage("Invalid email format");
+      return false;
+    }
+    return true
+  };
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();        
-    setErrorMessage("");
+    e.preventDefault();
+    setMessage("");
+    if (!checkValid()) {
+      console.log("Invalid input");
+      return;
+    }
+    const data = {
+      email,
+      password,
+    };
+    try {
+      const response = await signin(data);
+      console.log(response);
+      alert('Welcome to Cristiano Ronaldo SupaChok')
+    }catch (error) {
+      console.error(error);
+      setMessage((error as any).response.data.message);
+    }
   };
 
+  useEffect(() => {
+      const closeOnEscape = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          onClose();
+        }
+      };
+      window.addEventListener("keydown", closeOnEscape);
+      return () => window.removeEventListener("keydown", closeOnEscape);
+    }, [onClose, email, password]);
   return (
     <div className="modal">
+      <span className="close-btn" onClick={onClose}>&times;</span>
       <div className="wrapper">
-        <FaTimes className="close-btn" onClick={onClose} />
-
-        <div className="form-box signin">
+        <div className="form-box">
           <form onSubmit={handleSubmit}>
             <h1>Sign In</h1>
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            {message && <p className="message">{message}</p>}
 
             <div className="input-box">
               <label>Email</label>
@@ -31,7 +61,6 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-              <FaEnvelope className="icon" />
             </div>
 
             <div className="input-box">
@@ -43,7 +72,6 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-              <FaLock className="icon" />
             </div>
 
             <div className="remember-forgot">
@@ -52,10 +80,10 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
               </label>
               <a href="#">Forgot password?</a>
             </div>
-
+            <div className="button-box">
             <button type="submit">Sign In</button>
-
-            <div className="register-link">
+            </div>
+            <div className="login-link">
               <p>
               Don't have an account?{" "}
             <span className="link" onClick={onSwitchToSignUp} role="button" tabIndex={0}>

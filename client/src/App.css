@@ -19,13 +19,14 @@ p, a {
   font-weight: 400;
   color: #333;
 }
+.no-scroll {
+  overflow: hidden;
+}
 .wrapper {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
   margin: 0;
   gap: 0;
-  padding: 0;
 }
 .header {
   top: 0;

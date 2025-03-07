@@ -1,20 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import signin from "../../../../apis/auth-signin";
 import '../signup/SignUp.css';
 const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = ({ onClose, onSwitchToSignUp }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setErrorMessage] = useState("");
+  const [message, setMessage] = useState("");
 
   const checkValid = () => {
     if (email.length < 5 || !email.includes("@") || !email.includes(".") || email.length > 89) {
-      setErrorMessage("Invalid email format");
+      setMessage("Invalid email format");
       return false;
     }
     return true
   };
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();        
-    setErrorMessage("");
+    e.preventDefault();
+    setMessage("");
     if (!checkValid()) {
       console.log("Invalid input");
       return;
@@ -24,16 +25,24 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
       password,
     };
     try {
-      // const response = await signin(data);
-      // setMessage("Account created successfully");
-      // console.log(response);
-      setErrorMessage("Account created successfully");
+      const response = await signin(data);
+      console.log(response);
+      alert('Welcome to Cristiano Ronaldo SupaChok')
     }catch (error) {
       console.error(error);
-      setErrorMessage("Error signing in");
+      setMessage((error as any).response.data.message);
     }
   };
 
+  useEffect(() => {
+      const closeOnEscape = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          onClose();
+        }
+      };
+      window.addEventListener("keydown", closeOnEscape);
+      return () => window.removeEventListener("keydown", closeOnEscape);
+    }, [onClose, email, password]);
   return (
     <div className="modal">
       <span className="close-btn" onClick={onClose}>&times;</span>
@@ -71,10 +80,10 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
               </label>
               <a href="#">Forgot password?</a>
             </div>
-
+            <div className="button-box">
             <button type="submit">Sign In</button>
-
-            <div className="register-link">
+            </div>
+            <div className="login-link">
               <p>
               Don't have an account?{" "}
             <span className="link" onClick={onSwitchToSignUp} role="button" tabIndex={0}>

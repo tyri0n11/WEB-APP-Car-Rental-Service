@@ -8,6 +8,7 @@
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
+  align-items: center;
   z-index: 1000;
 }
 .message {
@@ -18,9 +19,11 @@
 }
 .wrapper {
   margin: 40px auto; /* Added margin on the y-axis */
+  width: 100%;
   max-width: 450px;
   padding: 20px 32px;
-  height: auto; /* Changed from fit-content to auto */
+  min-height: 400px;
+  max-height: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -31,10 +34,21 @@
   border-radius: 15px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
+.form-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
-
+.form-box h1 {
+  margin-bottom: 20px;
+  text-align: center;
+}
 .close-btn {
+  position: absolute;
   padding: 0;
+  top: 0;
+  right: 8px;
   height: 32px;
   font-size: 32px;
   cursor: pointer;
@@ -80,6 +94,9 @@
   margin-bottom: 10px;
 }
 
+.input-box input.invalid {
+  border-color: crimson;
+}
 
 .input-box input::placeholder {
   color: #838282;

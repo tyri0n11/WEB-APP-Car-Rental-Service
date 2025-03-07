@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import signin from "../../../../apis/auth-signin";
 import signup from "../../../../apis/auth-signup";
 import "./SignUp.css";
 
@@ -44,8 +45,12 @@ const SignUp: React.FC<{ onClose: () => void; onSwitchToSignIn: () => void }> = 
 
     try {
       const response = await signup(data);
-      setMessage("Account created successfully");
-      console.log(response);
+      const loginData = {
+        email: response.email,
+        password: response.password,
+      }
+      signin(loginData);
+      alert("Welcome to Cristiano Ronaldo SupaChok");
     } catch (error) {
       console.error(error);
       setMessage((error as any).response.data.message);
@@ -64,8 +69,7 @@ const SignUp: React.FC<{ onClose: () => void; onSwitchToSignIn: () => void }> = 
 
   return (
     <div className="modal">
-              <span className="close-btn" onClick={onClose}>&times;</span> 
-
+      <span className="close-btn" onClick={onClose}>&times;</span> 
       <div className="wrapper">
         <div className="form-box signup">
           <form onSubmit={handleSubmit}>

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import signin from "../../../../apis/auth-signin";
+import { useAuth } from "../../../../context/AuthContext";
 import '../signup/SignUp.css';
 const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = ({ onClose, onSwitchToSignUp }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const { login } =  useAuth();
 
   const checkValid = () => {
     if (email.length < 5 || !email.includes("@") || !email.includes(".") || email.length > 89) {
@@ -20,14 +21,9 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
       console.log("Invalid input");
       return;
     }
-    const data = {
-      email,
-      password,
-    };
     try {
-      const response = await signin(data);
-      console.log(response);
-      alert('Welcome to Cristiano Ronaldo SupaChok')
+      const response = await login(email, password);
+      console.log('Signin response:', response);
     }catch (error) {
       console.error(error);
       setMessage((error as any).response.data.message);

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import signin from "../../../../apis/auth-signin";
-import signup from "../../../../apis/auth-signup";
+import { useAuth } from "../../../../context/AuthContext";
 import "./SignUp.css";
 
 const SignUp: React.FC<{ onClose: () => void; onSwitchToSignIn: () => void }> = ({ onClose, onSwitchToSignIn }) => {
@@ -11,6 +10,7 @@ const SignUp: React.FC<{ onClose: () => void; onSwitchToSignIn: () => void }> = 
   const [repassword, setRepassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [message, setMessage] = useState("");
+  const { signup } = useAuth();
 
   const checkValid = () => {
     if (email.length < 5 || !email.includes("@") || !email.includes(".") || email.length > 89) {
@@ -45,12 +45,7 @@ const SignUp: React.FC<{ onClose: () => void; onSwitchToSignIn: () => void }> = 
 
     try {
       const response = await signup(data);
-      const loginData = {
-        email: response.email,
-        password: response.password,
-      }
-      signin(loginData);
-      alert("Welcome to Cristiano Ronaldo SupaChok");
+      console.log("Signup response:", response);
     } catch (error) {
       console.error(error);
       setMessage((error as any).response.data.message);

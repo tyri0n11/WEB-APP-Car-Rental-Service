@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useAuth } from "../../../../context/AuthContext";
+import { useAuth } from "../../../../hooks/useAuth";
 import "./SignUp.css";
 
 const SignUp: React.FC<{ onClose: () => void; onSwitchToSignIn: () => void }> = ({ onClose, onSwitchToSignIn }) => {

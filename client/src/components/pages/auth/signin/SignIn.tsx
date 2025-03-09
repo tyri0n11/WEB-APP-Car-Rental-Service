@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import signin from "../../../../apis/auth-signin";
-import '../signup/SignUp.css';
+import './signin.css';
 const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = ({ onClose, onSwitchToSignUp }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,35 +28,36 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
       const response = await signin(data);
       console.log(response);
       alert('Welcome to Cristiano Ronaldo SupaChok')
-    }catch (error) {
+    } catch (error) {
       console.error(error);
       setMessage((error as any).response.data.message);
     }
   };
 
   useEffect(() => {
-      const closeOnEscape = (e: KeyboardEvent) => {
-        if (e.key === "Escape") {
-          onClose();
-        }
-      };
-      window.addEventListener("keydown", closeOnEscape);
-      return () => window.removeEventListener("keydown", closeOnEscape);
-    }, [onClose, email, password]);
+    const closeOnEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [onClose, email, password]);
+
   return (
     <div className="modal">
-      <span className="close-btn" onClick={onClose}>&times;</span>
       <div className="wrapper">
+        <span className="close-btn" onClick={onClose}>&times;</span>
         <div className="form-box">
           <form onSubmit={handleSubmit}>
-            <h1>Sign In</h1>
+            <h1>Login</h1>
             {message && <p className="message">{message}</p>}
 
             <div className="input-box">
-              <label>Email</label>
-              <input 
-                type="email" 
-                placeholder="Enter your email" 
+              <label>Email:</label>
+              <input
+                type="email"
+                placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -64,10 +65,10 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
             </div>
 
             <div className="input-box">
-              <label>Password</label>
-              <input 
-                type="password" 
-                placeholder="Enter your password" 
+              <label>Password:</label>
+              <input
+                type="password"
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -80,17 +81,20 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
               </label>
               <a href="#">Forgot password?</a>
             </div>
+
             <div className="button-box">
-            <button type="submit">Sign In</button>
+              <button type="submit">Login</button>
             </div>
+
             <div className="login-link">
               <p>
-              Don't have an account?{" "}
-            <span className="link" onClick={onSwitchToSignUp} role="button" tabIndex={0}>
-              Sign Up
-            </span>
-          </p>
+                Don't have an account?{" "}
+                <span className="link" onClick={onSwitchToSignUp} role="button" tabIndex={0}>
+                  Sign Up
+                </span>
+              </p>
             </div>
+
           </form>
         </div>
       </div>

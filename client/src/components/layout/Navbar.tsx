@@ -37,64 +37,62 @@ const Navbar: React.FC<{ onSignInClick: () => void; onSignUpClick: () => void }>
           <span className={isMenuOpen ? styles.barOpen : ""}></span>
         </button>
         <div className={`${styles.menuItems} ${isMenuOpen ? styles.open : ""}`}>
-  <ul className={`${styles.navLinks} ${isMenuOpen ? styles.open : ""}`}>
-    <li>
-      <button
-        type="button"
-        className={styles.navButton}
-        onClick={() => handleNavigation("/")}
-      >
-        Home
-      </button>
-    </li>
-    <li>
-      <button
-        type="button"
-        className={styles.navButton}
-        onClick={() => handleNavigation("/about")}
-      >
-        About
-      </button>
-    </li>
-    <li>
-      <button
-        type="button"
-        className={styles.navButton}
-        onClick={() => handleNavigation("/services")}
-      >
-        Services
-      </button>
-    </li>
-    <li>
-      <button
-        type="button"
-        className={styles.navButton}
-        onClick={() => handleNavigation("/contact")}
-      >
-        Contact
-      </button>
-    </li>
-  </ul>
-</div>
+          <ul className={`${styles.navLinks} ${isMenuOpen ? styles.open : ""}`}>
+            <li>
+              <button
+                type="button"
+                className={styles.navButton}
+                onClick={() => handleNavigation("/")}
+              >
+                Home
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                className={styles.navButton}
+                onClick={() => handleNavigation("/about")}
+              >About</button>
+            </li>
+            <li>
+              <button
+                type="button"
+                className={styles.navButton}
+                onClick={() => handleNavigation("/services")}
+              >
+                Services
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                className={styles.navButton}
+                onClick={() => handleNavigation("/contact")}
+              >
+                Contact
+              </button>
+            </li>
+          </ul>
+        </div>
 
       </div>
 
-      
+
 
       <div className={styles.authButtons}>
         <button
           type="button"
-          onClick={onSignInClick} 
+          onClick={onSignInClick}
           className={styles.loginButton}
         >
-          Sign In
+          Login
         </button>
         <button
           type="button"
-          onClick={onSignUpClick} 
+          onClick={onSignUpClick}
           className={styles.signupButton}
         >
-          Sign Up
+          Register
         </button>
       </div>
     </div>

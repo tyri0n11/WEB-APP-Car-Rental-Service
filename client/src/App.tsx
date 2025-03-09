@@ -8,6 +8,8 @@ import SignIn from "./components/pages/auth/signin/SignIn";
 import SignUp from "./components/pages/auth/signup/SignUp";
 import Home from "./components/pages/home/Home";
 import Contact from "./components/pages/home/sections/Contact";
+import About from "./components/pages/about/About";
+
 
 function App() {
   return (
@@ -53,9 +55,17 @@ const MainLayout = () => {
 
       <section>
         <Routes>
+          <Route path="/about" element={<About />} />
+        </Routes>
+      </section>
+
+      <section>
+        <Routes>
           <Route path="/" element={<Contact />} />
         </Routes>
       </section>
+
+
       {showSignIn && (
         <SignIn
           onClose={() => setShowSignIn(false)}

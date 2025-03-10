@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useAuth } from "../../../../hooks/useAuth";
+import signin from "../../../../apis/auth-signin";
+import signup from "../../../../apis/auth-signup";
 import "./SignUp.css";
 
 const SignUp: React.FC<{ onClose: () => void; onSwitchToSignIn: () => void }> = ({ onClose, onSwitchToSignIn }) => {
@@ -64,15 +65,16 @@ const SignUp: React.FC<{ onClose: () => void; onSwitchToSignIn: () => void }> = 
 
   return (
     <div className="modal">
-      <span className="close-btn" onClick={onClose}>&times;</span> 
       <div className="wrapper">
+        <span className="close-btn" onClick={onClose}>&times;</span>
         <div className="form-box signup">
           <form onSubmit={handleSubmit}>
-            <h1>Sign Up</h1>
+            <h1>Register</h1>
             {message && <p className="message">{message}</p>}
+
             <div className="name-box">
               <div className="input-box">
-                <label>First Name</label>
+                <label>First Name:</label>
                 <input
                   type="text"
                   placeholder="First name"
@@ -81,8 +83,9 @@ const SignUp: React.FC<{ onClose: () => void; onSwitchToSignIn: () => void }> = 
                   required
                 />
               </div>
+
               <div className="input-box">
-                <label>Last Name</label>
+                <label>Last Name:</label>
                 <input
                   type="text"
                   placeholder="Last name"
@@ -92,8 +95,9 @@ const SignUp: React.FC<{ onClose: () => void; onSwitchToSignIn: () => void }> = 
                 />
               </div>
             </div>
+
             <div className="input-box">
-              <label>Email</label>
+              <label>Email:</label>
               <input
                 type="email"
                 placeholder="example@example.com"
@@ -103,28 +107,31 @@ const SignUp: React.FC<{ onClose: () => void; onSwitchToSignIn: () => void }> = 
                 maxLength={89}
               />
             </div>
+
             <div className="input-box">
-              <label>Password</label>
+              <label>Password:</label>
               <input
                 type="password"
-                placeholder="password"
+                placeholder="Enter password here"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>
+
             <div className="input-box">
-              <label>Retype Password</label>
+              <label>Re-type Password:</label>
               <input
                 type="password"
-                placeholder="Retype your password"
+                placeholder="Re-type your password"
                 value={repassword}
                 onChange={(e) => setRepassword(e.target.value)}
                 required
               />
             </div>
+
             <div className="input-box">
-              <label>Phone Number</label>
+              <label>Phone:</label>
               <input
                 type="text"
                 placeholder="Enter your phone number"
@@ -133,14 +140,17 @@ const SignUp: React.FC<{ onClose: () => void; onSwitchToSignIn: () => void }> = 
                 required
               />
             </div>
+
             <div className="remember-forgot">
               <label>
                 <input type="checkbox" /> I agree to the terms and policies
               </label>
             </div>
+
             <div className="button-box">
-            <button type="submit">Sign Up</button>
+              <button type="submit">Register</button>
             </div>
+
             <div className="login-link">
               <p>
                 Already have an account?{" "}
@@ -149,6 +159,7 @@ const SignUp: React.FC<{ onClose: () => void; onSwitchToSignIn: () => void }> = 
                 </span>
               </p>
             </div>
+
           </form>
         </div>
       </div>

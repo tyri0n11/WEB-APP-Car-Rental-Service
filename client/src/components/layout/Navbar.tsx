@@ -14,7 +14,7 @@ const Navbar: React.FC<{ onSignInClick: () => void; onSignUpClick: () => void }>
   const handleLogout = () => {
     logout();
     setIsMenuOpen(false);
-    
+
   };
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -45,49 +45,64 @@ const Navbar: React.FC<{ onSignInClick: () => void; onSignUpClick: () => void }>
         <div className={`${styles.menuItems} ${isMenuOpen ? styles.open : ""}`}>
           <ul className={`${styles.navLinks} ${isMenuOpen ? styles.open : ""}`}>
             <li>
-              <button type="button" className={styles.navButton} onClick={() => handleNavigation("/")}>
+              <button
+                type="button"
+                className={styles.navButton}
+                onClick={() => handleNavigation("/")}
+              >
                 Home
               </button>
             </li>
             <li>
-              <button type="button" className={styles.navButton} onClick={() => handleNavigation("/about")}>
+              <button
+                type="button"
+                className={styles.navButton}
+                onClick={() => handleNavigation("/about")}
+              >
                 About
               </button>
             </li>
             <li>
-              <button type="button" className={styles.navButton} onClick={() => handleNavigation("/services")}>
+              <button
+                type="button"
+                className={styles.navButton}
+                onClick={() => handleNavigation("/services")}
+              >
                 Services
               </button>
             </li>
             <li>
-              <button type="button" className={styles.navButton} onClick={() => handleNavigation("/contact")}>
+              <button
+                type="button"
+                className={styles.navButton}
+                onClick={() => handleNavigation("/contact")}
+              >
                 Contact
               </button>
             </li>
           </ul>
         </div>
+
       </div>
 
-      {user ? (
-        <div className={styles.authButtons}>
-          {/* <button type="button" onClick={() => handleNavigation("/profile")} className={styles.profileButton}>
-            {user.firstName}
-          </button> */}
-          <button type="button" onClick={handleLogout} className={styles.loginButton}>
-            Logout
-          </button>
-        </div>
-      ) : (
-        // Show Sign In and Sign Up Buttons if User is Not Logged In
-        <div className={styles.authButtons}>
-          <button type="button" onClick={onSignInClick} className={styles.loginButton}>
-            Sign In
-          </button>
-          <button type="button" onClick={onSignUpClick} className={styles.signupButton}>
-            Sign Up
-          </button>
-        </div>
-      )}
+
+
+      <div className={styles.authButtons}>
+        <button
+          type="button"
+          onClick={onSignInClick}
+          className={styles.loginButton}
+        >
+          Sign In
+        </button>
+        <button
+          type="button"
+          onClick={onSignUpClick}
+          className={styles.signupButton}
+        >
+          Sign Up
+        </button>
+      </div>
     </div>
   );
 };

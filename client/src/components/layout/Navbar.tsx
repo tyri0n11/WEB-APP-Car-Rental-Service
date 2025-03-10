@@ -77,34 +77,42 @@ const Navbar: React.FC<{
         </div>
       </div>
 
-      <div className={styles.authButtons}>
-        {user ? (
+      {user ? (
+        <div className={styles.privateContainer}>
           <button
             type="button"
             onClick={handleLogout}
-            className={styles.loginButton}
+            className={styles.logoutButton}
           >
             Logout
           </button>
-        ) : (
-          <>
-            <button
-              type="button"
-              onClick={onSignInClick}
-              className={styles.loginButton}
-            >
-              Sign In
-            </button>
-            <button
-              type="button"
-              onClick={onSignUpClick}
-              className={styles.signupButton}
-            >
-              Sign Up
-            </button>
-          </>
-        )}
-      </div>
+          <span className={styles.userContainer}>
+            <img
+              className={styles.userAvatar}
+              src={"https://cdn-icons-png.flaticon.com/128/1077/1077012.png"}
+              alt="User Avatar"
+            />
+            <p className={styles.userGreet}>Welcome, {user.lastName}</p>
+          </span>
+        </div>
+      ) : (
+        <div className={styles.authButtons}>
+          <button
+            type="button"
+            onClick={onSignInClick}
+            className={styles.loginButton}
+          >
+            Sign In
+          </button>
+          <button
+            type="button"
+            onClick={onSignUpClick}
+            className={styles.signupButton}
+          >
+            Sign Up
+          </button>
+        </div>
+      )}
     </div>
   );
 };

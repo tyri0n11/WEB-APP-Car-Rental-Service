@@ -31,7 +31,9 @@ interface AuthProviderProps {
   children: React.ReactNode;
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined
+);
 
 const authReducer = (
   state: AuthState,
@@ -63,13 +65,32 @@ const fetchUser = async (accessToken: string): Promise<User | null> => {
         "Content-Type": "application/json",
       },
     });
+
     if (!response.ok) throw new Error("Failed to fetch user");
-    return await response.json();
+
+    const result = await response.json();
+
+    if (result?.statusCode === 200 && result?.data) {
+      const user: User = {
+        role: result.data.role,
+        id: result.data.id,
+        email: result.data.email,
+        firstName: result.data.firstName,
+        lastName: result.data.lastName,
+        phoneNumber: result.data.phoneNumber,
+        isVerified: result.data.isVerified,
+        drivingLicenceId: result.data.drivingLicenceId ?? "", // Handle null case
+      };
+      return user;
+    } else {
+      throw new Error("Invalid user data structure");
+    }
   } catch (error) {
-    console.error(error);
+    console.error("Fetch user error:", error);
     return null;
   }
 };
+
 const refreshToken = async (): Promise<{ access_token: string } | null> => {
   try {
     const refreshToken = localStorage.getItem("refresh_token");
@@ -100,6 +121,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       if (state.accessToken) {
         const user = await fetchUser(state.accessToken);
         if (user) {
+          console.log("User fetched:", user);
           dispatch({ type: "SET_USER", payload: user });
         } else {
           const newTokens = await refreshToken();
@@ -157,7 +179,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const refresh = data?.data?.refreshToken;
       localStorage.setItem("access_token", access);
       localStorage.setItem("refresh_token", refresh);
-      console.log("Login response:", data);
       const user = await fetchUser(access);
       if (!user) throw new Error("Failed to fetch user");
       dispatch({
@@ -183,4 +204,3 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     </AuthContext.Provider>
   );
 };
-

@@ -1,15 +1,21 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 import styles from "./Navbar.module.css";
 
 const Navbar: React.FC<{ onSignInClick: () => void; onSignUpClick: () => void }> = ({ onSignInClick, onSignUpClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { user, logout } = useAuth(); // Get user and logout function
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+  const handleLogout = () => {
+    logout();
+    setIsMenuOpen(false);
 
+  };
   const handleNavigation = (path: string) => {
     navigate(path);
     setIsMenuOpen(false);
@@ -25,7 +31,7 @@ const Navbar: React.FC<{ onSignInClick: () => void; onSignUpClick: () => void }>
           tabIndex={0}
           onKeyPress={(e) => e.key === "Enter" && handleNavigation("/")}
         >
-          <img src="/logo.png" width={100} height={50} />
+          <img src="/logo.png" width={100} height={50} alt="Logo" />
         </div>
         <button
           className={styles.menuToggle}
@@ -52,7 +58,9 @@ const Navbar: React.FC<{ onSignInClick: () => void; onSignUpClick: () => void }>
                 type="button"
                 className={styles.navButton}
                 onClick={() => handleNavigation("/about")}
-              >About</button>
+              >
+                About
+              </button>
             </li>
             <li>
               <button
@@ -85,20 +93,18 @@ const Navbar: React.FC<{ onSignInClick: () => void; onSignUpClick: () => void }>
           onClick={onSignInClick}
           className={styles.loginButton}
         >
-          Login
+          Sign In
         </button>
         <button
           type="button"
           onClick={onSignUpClick}
           className={styles.signupButton}
         >
-          Register
+          Sign Up
         </button>
       </div>
     </div>
   );
 };
-
-
 
 export default Navbar;

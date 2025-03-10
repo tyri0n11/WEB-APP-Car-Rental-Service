@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import signin from "../../../../apis/auth-signin";
-import './signin.css';
+import '../signup/SignUp.css';
 const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = ({ onClose, onSwitchToSignUp }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const checkValid = () => {
     if (email.length < 5 || !email.includes("@") || !email.includes(".") || email.length > 89) {
@@ -20,10 +22,6 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
       console.log("Invalid input");
       return;
     }
-    const data = {
-      email,
-      password,
-    };
     try {
       const response = await signin(data);
       console.log(response);
@@ -52,9 +50,8 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
           <form onSubmit={handleSubmit}>
             <h1>Login</h1>
             {message && <p className="message">{message}</p>}
-
             <div className="input-box">
-              <label>Email:</label>
+              <label>Email</label>
               <input
                 type="email"
                 placeholder="Enter your email"
@@ -63,9 +60,8 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
                 required
               />
             </div>
-
             <div className="input-box">
-              <label>Password:</label>
+              <label>Password</label>
               <input
                 type="password"
                 placeholder="Enter your password"
@@ -74,7 +70,6 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
                 required
               />
             </div>
-
             <div className="remember-forgot">
               <label>
                 <input type="checkbox" /> Remember me

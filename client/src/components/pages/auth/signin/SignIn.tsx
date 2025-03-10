@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import signin from "../../../../apis/auth-signin";
+import { useAuth } from "../../../../hooks/useAuth";
+
 import '../signup/SignUp.css';
 const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = ({ onClose, onSwitchToSignUp }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const { login } = useAuth();
-  const navigate = useNavigate();
 
   const checkValid = () => {
     if (email.length < 5 || !email.includes("@") || !email.includes(".") || email.length > 89) {
@@ -23,9 +23,8 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
       return;
     }
     try {
-      const response = await signin(data);
-      console.log(response);
-      alert('Welcome to Cristiano Ronaldo SupaChok')
+      await login(email, password);
+      onClose();
     } catch (error) {
       console.error(error);
       setMessage((error as any).response.data.message);
@@ -48,7 +47,7 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
         <span className="close-btn" onClick={onClose}>&times;</span>
         <div className="form-box">
           <form onSubmit={handleSubmit}>
-            <h1>Login</h1>
+            <h1>Sign In</h1>
             {message && <p className="message">{message}</p>}
             <div className="input-box">
               <label>Email</label>

@@ -58,7 +58,6 @@
 }
 .navLinks button:hover {
   color: #0056b3;
-  transform: translateY(-2px);
   animation-duration: 600ms;
 }
 
@@ -96,7 +95,7 @@
 }
 
 .authButtons .loginButton:hover {
-  background-color: #e0e0e0;
+  text-decoration: underline;
 }
 
 .authButtons .signupButton:hover {

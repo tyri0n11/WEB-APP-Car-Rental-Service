@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import signin from "../../../../apis/auth-signin";
-import signup from "../../../../apis/auth-signup";
+import { useAuth } from "../../../../hooks/useAuth";
 import "./SignUp.css";
 
 const SignUp: React.FC<{ onClose: () => void; onSwitchToSignIn: () => void }> = ({ onClose, onSwitchToSignIn }) => {
@@ -47,6 +46,7 @@ const SignUp: React.FC<{ onClose: () => void; onSwitchToSignIn: () => void }> = 
     try {
       const response = await signup(data);
       console.log("Signup response:", response);
+      onClose();
     } catch (error) {
       console.error(error);
       setMessage((error as any).response.data.message);
@@ -69,7 +69,7 @@ const SignUp: React.FC<{ onClose: () => void; onSwitchToSignIn: () => void }> = 
         <span className="close-btn" onClick={onClose}>&times;</span>
         <div className="form-box signup">
           <form onSubmit={handleSubmit}>
-            <h1>Register</h1>
+            <h1>Sign Up</h1>
             {message && <p className="message">{message}</p>}
 
             <div className="name-box">

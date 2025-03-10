@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import styles from "./Navbar.module.css";
 
-const Navbar: React.FC<{ onSignInClick: () => void; onSignUpClick: () => void }> = ({ onSignInClick, onSignUpClick }) => {
+const Navbar: React.FC<{
+  onSignInClick: () => void;
+  onSignUpClick: () => void;
+}> = ({ onSignInClick, onSignUpClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { user, logout } = useAuth(); // Get user and logout function
@@ -14,7 +17,6 @@ const Navbar: React.FC<{ onSignInClick: () => void; onSignUpClick: () => void }>
   const handleLogout = () => {
     logout();
     setIsMenuOpen(false);
-
   };
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -48,15 +50,6 @@ const Navbar: React.FC<{ onSignInClick: () => void; onSignUpClick: () => void }>
               <button
                 type="button"
                 className={styles.navButton}
-                onClick={() => handleNavigation("/")}
-              >
-                Home
-              </button>
-            </li>
-            <li>
-              <button
-                type="button"
-                className={styles.navButton}
                 onClick={() => handleNavigation("/about")}
               >
                 About
@@ -82,26 +75,35 @@ const Navbar: React.FC<{ onSignInClick: () => void; onSignUpClick: () => void }>
             </li>
           </ul>
         </div>
-
       </div>
 
-
-
       <div className={styles.authButtons}>
-        <button
-          type="button"
-          onClick={onSignInClick}
-          className={styles.loginButton}
-        >
-          Sign In
-        </button>
-        <button
-          type="button"
-          onClick={onSignUpClick}
-          className={styles.signupButton}
-        >
-          Sign Up
-        </button>
+        {user ? (
+          <button
+            type="button"
+            onClick={handleLogout}
+            className={styles.loginButton}
+          >
+            Logout
+          </button>
+        ) : (
+          <>
+            <button
+              type="button"
+              onClick={onSignInClick}
+              className={styles.loginButton}
+            >
+              Sign In
+            </button>
+            <button
+              type="button"
+              onClick={onSignUpClick}
+              className={styles.signupButton}
+            >
+              Sign Up
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

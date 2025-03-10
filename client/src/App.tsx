@@ -32,8 +32,8 @@ const MainLayout = () => {
   }, [showSignIn, showSignUp]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-cover bg-center">
-      <nav>
+    <div className="App">
+      <nav className="navbar">
         <Banner />
         <NavBar
           onSignInClick={() => {
@@ -47,11 +47,10 @@ const MainLayout = () => {
         />
       </nav>
 
-      <section>
+      <section className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/contact" element={<Contact />} />
-          
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />

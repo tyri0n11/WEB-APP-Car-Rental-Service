@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import ProtectedRoute from "../src/routes/ProtectedRoute";
 import "./App.css";
 import Banner from "./components/layout/Banner";
 import Footer from "./components/layout/Footer";
@@ -8,7 +9,10 @@ import SignIn from "./components/pages/auth/signin/SignIn";
 import SignUp from "./components/pages/auth/signup/SignUp";
 import Dashboard from "./components/pages/dashboard/Dashboard";
 import Home from "./components/pages/home/Home";
+import About from "./components/pages/home/sections/About";
 import Contact from "./components/pages/home/sections/Contact";
+import Profile from "./components/pages/profile/Profile";
+import { useAuth } from "./hooks/useAuth";
 
 function App() {
   return (
@@ -17,9 +21,11 @@ function App() {
     </BrowserRouter>
   );
 }
+
 const MainLayout = () => {
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     if (showSignIn || showSignUp) {
@@ -61,12 +67,7 @@ const MainLayout = () => {
           <Route path="/about" element={<About />} />
         </Routes>
       </section>
-
-      <section>
-        <Routes>
-          <Route path="/" element={<Contact />} />
-        </Routes>
-      </section>
+      
       {showSignIn && (
         <SignIn
           onClose={() => setShowSignIn(false)}

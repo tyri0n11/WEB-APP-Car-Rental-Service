@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
-import signin from "../../../../apis/auth-signin";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../../hooks/useAuth";
 import '../signup/SignUp.css';
 const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = ({ onClose, onSwitchToSignUp }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const { login } =  useAuth();
+  const navigate = useNavigate();
 
   const checkValid = () => {
     if (email.length < 5 || !email.includes("@") || !email.includes(".") || email.length > 89) {
@@ -20,14 +23,11 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
       console.log("Invalid input");
       return;
     }
-    const data = {
-      email,
-      password,
-    };
     try {
-      const response = await signin(data);
-      console.log(response);
-      alert('Welcome to Cristiano Ronaldo SupaChok')
+      const response = await login(email, password);
+      console.log('Signin response:', response);
+      onClose();
+      navigate("/");
     }catch (error) {
       console.error(error);
       setMessage((error as any).response.data.message);
@@ -51,29 +51,26 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
           <form onSubmit={handleSubmit}>
             <h1>Sign In</h1>
             {message && <p className="message">{message}</p>}
-
             <div className="input-box">
               <label>Email</label>
-              <input 
-                type="email" 
-                placeholder="Enter your email" 
+              <input
+                type="email"
+                placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
-
             <div className="input-box">
               <label>Password</label>
-              <input 
-                type="password" 
-                placeholder="Enter your password" 
+              <input
+                type="password"
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>
-
             <div className="remember-forgot">
               <label>
                 <input type="checkbox" /> Remember me

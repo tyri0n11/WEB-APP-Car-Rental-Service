@@ -6,8 +6,11 @@ import Footer from "./components/layout/Footer";
 import NavBar from "./components/layout/Navbar";
 import SignIn from "./components/pages/auth/signin/SignIn";
 import SignUp from "./components/pages/auth/signup/SignUp";
+import Dashboard from "./components/pages/dashboard/Dashboard";
 import Home from "./components/pages/home/Home";
 import Contact from "./components/pages/home/sections/Contact";
+import Profile from "./components/pages/profile/Profile";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 function App() {
   return (
@@ -16,7 +19,6 @@ function App() {
     </BrowserRouter>
   );
 }
-
 const MainLayout = () => {
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
@@ -48,14 +50,15 @@ const MainLayout = () => {
       <section>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/contact" element={<Contact />} />
+          
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
         </Routes>
       </section>
 
-      <section>
-        <Routes>
-          <Route path="/" element={<Contact />} />
-        </Routes>
-      </section>
       {showSignIn && (
         <SignIn
           onClose={() => setShowSignIn(false)}

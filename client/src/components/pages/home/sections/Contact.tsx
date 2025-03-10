@@ -40,6 +40,7 @@ const styles = {
 
 const Contact: React.FC = () => {
   return (
+    <div>
     <div style={styles.contactContainer}>
       <h4 style={styles.heading}>📍 Contact Us</h4>
       <h6 style={styles.subheading}>📌 Location: [Your Garage Address]</h6>
@@ -65,6 +66,7 @@ const Contact: React.FC = () => {
           <img src="path/to/instagram-icon.png" alt="Instagram" style={styles.socialIcon} />
         </a>
       </div>
+    </div>
     </div>
   );
 };

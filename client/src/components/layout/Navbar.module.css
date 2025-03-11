@@ -81,7 +81,8 @@
 
 .authButtons .loginButton,
 .authButtons .signupButton,
-.privateContainer .logoutButton {
+.privateContainer .dropdownItemLogout,
+.dropdownItem {
   padding: 10px 15px;
   border: none;
   cursor: pointer;
@@ -107,7 +108,7 @@
   display: flex;
   align-items: center;
 }
-.privateContainer .logoutButton {
+.privateContainer .dropdownItemLogout {
   color: #dc3545;
 }
 .userContainer {
@@ -116,6 +117,36 @@
   align-items: center;
   padding: 5px;
   border-radius: 12px;
+}
+.dropdownButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.dropdown {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  }
+.dropdownContent {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+.dropdownItem, .dropdownItemLogout {
+  width: 100%;
+}
+.dropdown:hover .dropdownContent {
+  display: block;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  border: none;
 }
 .userAvatar {
   width: 24px;
@@ -130,7 +161,8 @@
 }
 
 .authButtons .loginButton:hover,
-.privateContainer .logoutButton:hover {
+.privateContainer .dropdownItemLogout:hover,
+.dropdownItem:hover {
   text-decoration: underline;
 }
 

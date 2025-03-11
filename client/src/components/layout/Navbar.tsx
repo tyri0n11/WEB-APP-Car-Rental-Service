@@ -79,21 +79,32 @@ const Navbar: React.FC<{
 
       {user ? (
         <div className={styles.privateContainer}>
-          <button
-            type="button"
-            onClick={handleLogout}
-            className={styles.logoutButton}
-          >
-            Logout
-          </button>
-          <span className={styles.userContainer}>
-            <img
-              className={styles.userAvatar}
-              src={"https://cdn-icons-png.flaticon.com/128/1077/1077012.png"}
-              alt="User Avatar"
-            />
-            <p className={styles.userGreet}>Welcome, {user.lastName}</p>
-          </span>
+          <div className={styles.dropdown}>
+            <button className={styles.dropdownButton}>
+              <img
+                className={styles.userAvatar}
+                src={"https://cdn-icons-png.flaticon.com/128/1077/1077012.png"}
+                alt="User Avatar"
+              />
+              <p className={styles.userGreet}>Welcome, {user.lastName}</p>
+            </button>
+            <div className={styles.dropdownContent}>
+              <button
+                type="button"
+                className={styles.dropdownItem}
+                onClick={() => handleNavigation("/profile")}
+              >
+                Profile
+              </button>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className={styles.dropdownItemLogout}
+              >
+                Logout
+              </button>
+            </div>
+          </div>
         </div>
       ) : (
         <div className={styles.authButtons}>

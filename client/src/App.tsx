@@ -1,37 +1,95 @@
+import { useEffect, useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import ProtectedRoute from "../src/routes/ProtectedRoute";
 import "./App.css";
-import NavBar from "./components/layout/Navbar";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import SignIn from "./components/SignIn";
-import SignUp from "./components/SignUp";
-import Home from "./components/Home"; //
 import Banner from "./components/layout/Banner";
-import Dashboard from "./components/Dashboard";
-import ProtectedRoute from "./routes/ProtectedRoute";
-import Profile from "./components/Profile";
+import Footer from "./components/layout/Footer";
+import NavBar from "./components/layout/Navbar";
+import SignIn from "./components/pages/auth/signin/SignIn";
+import SignUp from "./components/pages/auth/signup/SignUp";
+import Dashboard from "./components/pages/dashboard/Dashboard";
+import Home from "./components/pages/home/Home";
+import About from "./components/pages/home/sections/About";
+import Contact from "./components/pages/home/sections/Contact";
+import Profile from "./components/pages/profile/Profile";
+import { useAuth } from "./hooks/useAuth";
+
 function App() {
   return (
     <BrowserRouter>
-      <div className="wrapper">
-        <section className="header">
-          <Banner />
-          <NavBar />
-        </section>
-
-        <section className="content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/signup" element={<SignUp />} />
-
-            <Route element={<ProtectedRoute />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/profile" element={<Profile />} />
-            </Route>
-          </Routes>
-        </section>
-      </div>
+      <MainLayout />
     </BrowserRouter>
   );
 }
+
+const MainLayout = () => {
+  const [showSignIn, setShowSignIn] = useState(false);
+  const [showSignUp, setShowSignUp] = useState(false);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (showSignIn || showSignUp) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+  }, [showSignIn, showSignUp]);
+
+  return (
+    <div className="App">
+      <nav className="navbar">
+        <Banner />
+        <NavBar
+          onSignInClick={() => {
+            setShowSignIn(true);
+            setShowSignUp(false);
+          }}
+          onSignUpClick={() => {
+            setShowSignUp(true);
+            setShowSignIn(false);
+          }}
+        />
+      </nav>
+
+      <section className="main-content">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
+        </Routes>
+      </section>
+
+      <section>
+        <Routes>
+          <Route path="/about" element={<About />} />
+        </Routes>
+      </section>
+      
+      {showSignIn && (
+        <SignIn
+          onClose={() => setShowSignIn(false)}
+          onSwitchToSignUp={() => {
+            setShowSignIn(false);
+            setShowSignUp(true);
+          }}
+        />
+      )}
+
+      {showSignUp && (
+        <SignUp
+          onClose={() => setShowSignUp(false)}
+          onSwitchToSignIn={() => {
+            setShowSignUp(false);
+            setShowSignIn(true);
+          }}
+        />
+      )}
+      <Footer />
+    </div>
+  );
+};
 
 export default App;

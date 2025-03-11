@@ -47,7 +47,7 @@
 .navLinks button,
 .authButtons a {
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 600;
   color: #007bff;
   text-decoration: none;
   padding: 0.5rem 1rem;

@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { CarStatus } from '@prisma/client';
+import { CarStatus, FuelType } from '@prisma/client';
 import { Type } from 'class-transformer';
 import { IsEnum, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
@@ -54,6 +54,13 @@ export class FindManyCarsQueryDTO {
   @IsOptional()
   @IsString()
   model?: string;
+
+  @ApiPropertyOptional({
+    enum: FuelType,
+  })
+  @IsOptional()
+  @IsEnum(FuelType)
+  fuelType?: FuelType;
 
   @ApiPropertyOptional({
     enum: CarStatus,

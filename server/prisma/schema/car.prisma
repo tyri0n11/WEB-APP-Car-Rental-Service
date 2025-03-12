@@ -11,25 +11,26 @@ enum FuelType {
 }
 
 model Car {
-    id            String        @id @default(uuid())
-    make          String
-    model         String
-    year          Int
-    kilometers    Int
-    description   String
-    dailyPrice    Float
-    licensePlate  String
-    numSeats      Int
-    address       String
-    autoGearbox   Boolean
-    fuelType      FuelType
-    status        CarStatus     @default(AVAILABLE)
-    carCategories CarCategory[]
-    reviews       Review[]
-    images        CarImage[]
-    bookings      Booking[]
-    createdAt     DateTime      @default(now())
-    updatedAt     DateTime      @updatedAt
+    id           String        @id @default(uuid())
+    make         String
+    model        String
+    year         Int
+    kilometers   Int
+    description  String
+    dailyPrice   Float
+    licensePlate String
+    numSeats     Int
+    address      String
+    autoGearbox  Boolean
+    fuelType     FuelType
+    status       CarStatus     @default(AVAILABLE)
+    categories   CarCategory[]
+    reviews      Review[]
+    images       CarImage[]
+    bookings     Booking[]
+    userActions  UserAction[]
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime      @updatedAt
 
     @@map("cars")
 }

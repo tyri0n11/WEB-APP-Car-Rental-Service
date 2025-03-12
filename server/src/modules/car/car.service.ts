@@ -6,7 +6,10 @@ import {
 } from '@nestjs/common';
 import { Car, Prisma } from '@prisma/client';
 import { DatabaseService } from '../database/database.service';
-import { CarResponseDTO } from './dto/response.dto';
+import {
+  CarResponseDTO,
+  CarsWithPaginationResponseDTO,
+} from './dto/response.dto';
 import { UpdateCarRequestDTO } from './dto/update.request.dto';
 import { CreateCarRequestDTO } from './dto/create.request.dto';
 import { CarSortBy, FindManyCarsQueryDTO } from './dto/findMany.request.dto';
@@ -124,6 +127,7 @@ export class CarService extends BaseService<Car> {
       priceTo,
       make,
       model,
+      fuelType,
       status,
       yearFrom,
       yearTo,
@@ -137,7 +141,7 @@ export class CarService extends BaseService<Car> {
           { description: { contains: q, mode: 'insensitive' } },
           { licensePlate: { contains: q, mode: 'insensitive' } },
           {
-            carCategories: {
+            categories: {
               some: {
                 category: {
                   name: { contains: q, mode: 'insensitive' },
@@ -152,11 +156,12 @@ export class CarService extends BaseService<Car> {
       ...(make && { make: { contains: make, mode: 'insensitive' } }),
       ...(model && { model: { contains: model, mode: 'insensitive' } }),
       ...(status && { status }),
+      ...(fuelType && { fuelType }),
       ...(yearFrom && { year: { gte: yearFrom } }),
       ...(yearTo && { year: { lte: yearTo } }),
     };
 
-    return super.findManyWithPagination({
+    const result = await super.findManyWithPagination({
       filter,
       orderBy: this.getSortOptions(sortBy),
       page,
@@ -183,6 +188,18 @@ export class CarService extends BaseService<Car> {
             },
           },
         },
+      },
+    });
+
+    return new CarsWithPaginationResponseDTO({
+      cars: result.data,
+      pagination: {
+        total: result.total,
+        lastPage: result.lastPage,
+        currentPage: result.currentPage,
+        perPage: result.perPage,
+        prev: result.prev,
+        next: result.next,
       },
     });
   }

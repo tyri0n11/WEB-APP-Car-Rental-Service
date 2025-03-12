@@ -59,7 +59,7 @@
   background: white;
   border: 1px solid #ccc;
   border-radius: 50%;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
   transition: background 0.3s, transform 0.2s ease-in-out;
   z-index: 1001;
 }
@@ -89,6 +89,7 @@
   direction: row;
   gap: 8px;
 }
+
 .name-box input {
   width: 90%;
 }
@@ -110,9 +111,11 @@
   padding: 10px 10px;
   margin-bottom: 10px;
 }
+
 .input-box input:focus {
   border-color: #029cea;
 }
+
 .input-box input.invalid {
   border-color: crimson;
 }

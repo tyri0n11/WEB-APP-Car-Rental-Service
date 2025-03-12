@@ -1,8 +1,7 @@
 import React from 'react';
 import AnimatedButton from '../../../buttons/AnimatedButton';
 import TitleContentCard from '../../../cards/TitleContentCard';
-
-const styles:  { [key: string]: React.CSSProperties }  = {
+const styles: { [key: string]: React.CSSProperties } = {
   servicesContainer: {
     padding: '2rem',
     backgroundColor: '#f5f5f5',
@@ -63,7 +62,7 @@ const Services: React.FC = () => {
           <TitleContentCard title={service.title} content={service.description} key={index} />
         ))}
       </div>
-      <AnimatedButton text="View all cars" onClick={() => console.log("View all cars")}/>
+      <AnimatedButton text="View all cars" onClick={() => console.log("View all cars")} />
     </div>
   );
 };

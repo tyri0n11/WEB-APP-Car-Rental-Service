@@ -1,15 +1,20 @@
 import React from "react";
+
+import Card from "./sections/Card";
 import Intro from "./sections/Intro";
-import WhyUs from "./sections/WhyUs";
-import Mission from "./sections/Mission";
+import Hero from "./sections/Hero";
+import Value from "./sections/Value";
+import Location from "./sections/Location";
 
 const AboutUs: React.FC = () => {
     return (
         <div>
+            <Hero />
             <Intro />
-            <WhyUs />
-            <Mission />
-        </div>
+            <Value />
+            <Card />
+            <Location />
+        </div >
     );
 };
 

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "../src/routes/ProtectedRoute";
-import "./App.css";
 import Banner from "./components/layout/Banner";
 import Footer from "./components/layout/Footer";
 import NavBar from "./components/layout/Navbar";
@@ -9,10 +8,12 @@ import SignIn from "./components/pages/auth/signin/SignIn";
 import SignUp from "./components/pages/auth/signup/SignUp";
 import Dashboard from "./components/pages/dashboard/Dashboard";
 import Home from "./components/pages/home/Home";
-import About from "./components/pages/home/sections/About";
+import About from "./components/pages/about/About";
 import Contact from "./components/pages/home/sections/Contact";
 import Profile from "./components/pages/profile/Profile";
 import { useAuth } from "./hooks/useAuth";
+
+import "./App.css";
 
 function App() {
   return (
@@ -54,6 +55,7 @@ const MainLayout = () => {
       <section className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
@@ -62,12 +64,6 @@ const MainLayout = () => {
         </Routes>
       </section>
 
-      <section>
-        <Routes>
-          <Route path="/about" element={<About />} />
-        </Routes>
-      </section>
-      
       {showSignIn && (
         <SignIn
           onClose={() => setShowSignIn(false)}

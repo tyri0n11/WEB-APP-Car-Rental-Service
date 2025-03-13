@@ -1,5 +1,5 @@
 import React from 'react';
-import icons from '../../../../assets/icons/index';
+import icons from '../../../../assets/icons/icons';
 import AnimatedButton from '../../../buttons/AnimatedButton';
 import IconContentCard from '../../../cards/IconContentCard';
 
@@ -37,11 +37,11 @@ const styles: { [key: string]: React.CSSProperties } = {
 
 const UniqueValue: React.FC = () => {
   const content: { text: string; icon: string }[] = [
-    { text: 'Affordable Pricing', icon: icons.price },
-    { text: 'Well-Maintained Vehicles', icon: icons.maintenance },
-    { text: 'Flexible Booking', icon: icons.flexible },
-    { text: '24/7 Customer Support', icon: icons.allday },
-    { text: 'Convenient Pickup & Drop-off', icon: icons.convenience },
+    { text: 'Affordable Pricing', icon: icons.icon[0] },
+    { text: 'Well-Maintained Vehicles', icon: icons.icon[1] },
+    { text: 'Flexible Booking', icon: icons.icon[2] },
+    { text: '24/7 Customer Support', icon: icons.icon[3] },
+    { text: 'Convenient Pickup & Drop-off', icon: icons.icon[4] },
   ];
 
   return (

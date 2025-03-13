@@ -1,4 +1,5 @@
 import React from "react";
+import images from "../../../../assets/images/images";
 
 const styles: { [key: string]: React.CSSProperties } = {
     servicesContainer: {
@@ -95,7 +96,7 @@ const Location: React.FC = () => {
                 {/* Left Card */}
                 <div style={styles.card}>
                     <img
-                        src="../about/saigon_line.jpg"
+                        src={images.about_locations[1]}
                         alt="Steering Wheel"
                         style={styles.cardImage}
                     />
@@ -119,7 +120,7 @@ const Location: React.FC = () => {
                 {/* Right Card */}
                 <div style={styles.card}>
                     <img
-                        src="../about/hanoi_line.jpg"
+                        src={images.about_locations[0]}
                         alt="Car with Person"
                         style={styles.cardImage}
                     />

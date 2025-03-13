@@ -8,13 +8,24 @@ import Location from "./sections/Location";
 
 const AboutUs: React.FC = () => {
     return (
-        <div>
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                maxWidth: "100vw",
+                overflowX: "hidden",
+                margin: 0,
+                padding: 0,
+                boxSizing: "border-box",
+                width: "100%",
+            }}
+        >
             <Hero />
             <Intro />
             <Value />
             <Card />
             <Location />
-        </div >
+        </div>
     );
 };
 

@@ -11,7 +11,6 @@ import Home from "./components/pages/home/Home";
 import About from "./components/pages/about/About";
 import Contact from "./components/pages/home/sections/Contact";
 import Profile from "./components/pages/profile/Profile";
-import { useAuth } from "./hooks/useAuth";
 
 import "./App.css";
 
@@ -26,7 +25,6 @@ function App() {
 const MainLayout = () => {
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
-  const { user } = useAuth();
 
   useEffect(() => {
     if (showSignIn || showSignUp) {

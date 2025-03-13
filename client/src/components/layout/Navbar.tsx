@@ -77,34 +77,53 @@ const Navbar: React.FC<{
         </div>
       </div>
 
-      <div className={styles.authButtons}>
-        {user ? (
+      {user ? (
+        <div className={styles.privateContainer}>
+          <div className={styles.dropdown}>
+            <button className={styles.dropdownButton}>
+              <img
+                className={styles.userAvatar}
+                src={"https://cdn-icons-png.flaticon.com/128/1077/1077012.png"}
+                alt="User Avatar"
+              />
+              <p className={styles.userGreet}>Welcome, {user.lastName}</p>
+            </button>
+            <div className={styles.dropdownContent}>
+              <button
+                type="button"
+                className={styles.dropdownItem}
+                onClick={() => handleNavigation("/profile")}
+              >
+                Profile
+              </button>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className={styles.dropdownItemLogout}
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className={styles.authButtons}>
           <button
             type="button"
-            onClick={handleLogout}
+            onClick={onSignInClick}
             className={styles.loginButton}
           >
-            Logout
+            Sign In
           </button>
-        ) : (
-          <>
-            <button
-              type="button"
-              onClick={onSignInClick}
-              className={styles.loginButton}
-            >
-              Sign In
-            </button>
-            <button
-              type="button"
-              onClick={onSignUpClick}
-              className={styles.signupButton}
-            >
-              Sign Up
-            </button>
-          </>
-        )}
-      </div>
+          <button
+            type="button"
+            onClick={onSignUpClick}
+            className={styles.signupButton}
+          >
+            Sign Up
+          </button>
+        </div>
+      )}
     </div>
   );
 };

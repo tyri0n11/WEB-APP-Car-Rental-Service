@@ -1,14 +1,30 @@
 import React from "react";
+
+import Card from "./sections/Card";
 import Intro from "./sections/Intro";
-import WhyUs from "./sections/WhyUs";
-import Mission from "./sections/Mission";
+import Hero from "./sections/Hero";
+import Value from "./sections/Value";
+import Location from "./sections/Location";
 
 const AboutUs: React.FC = () => {
     return (
-        <div>
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                maxWidth: "100vw",
+                overflowX: "hidden",
+                margin: 0,
+                padding: 0,
+                boxSizing: "border-box",
+                width: "100%",
+            }}
+        >
+            <Hero />
             <Intro />
-            <WhyUs />
-            <Mission />
+            <Value />
+            <Card />
+            <Location />
         </div>
     );
 };

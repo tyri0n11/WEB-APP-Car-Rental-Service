@@ -9,6 +9,7 @@ import {
   Req,
   Query,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { CreateBookingRequestDTO } from './dto/create.request.dto';

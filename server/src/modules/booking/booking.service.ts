@@ -6,7 +6,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Booking, BookingStatus, CarStatus } from '@prisma/client';
+import { Booking, BookingStatus, CarStatus, User } from '@prisma/client';
 import { Queue } from 'bullmq';
 import * as dayjs from 'dayjs';
 import Redis from 'ioredis';
@@ -24,6 +24,7 @@ import {
   BookingResponseOnRedisDTO,
 } from './dto/response.dto';
 import { UnlockCarQueue } from './enums/queue';
+import { UserActionService } from '../user-action/user-action.service';
 @Injectable()
 export class BookingService extends BaseService<Booking> {
   constructor(
@@ -31,9 +32,9 @@ export class BookingService extends BaseService<Booking> {
     private readonly carService: CarService,
     private readonly paymentService: PaymentService,
     private readonly transactionService: TransactionService,
+    private readonly userActionService: UserActionService,
     @InjectRedis() private readonly redisService: Redis,
-    @InjectQueue(UnlockCarQueue.name)
-    private readonly unlockCarQueue: Queue,
+    @InjectQueue(UnlockCarQueue.name) private readonly unlockCarQueue: Queue,
   ) {
     super(databaseService, 'booking', BookingResponseDTO);
   }
@@ -202,6 +203,16 @@ export class BookingService extends BaseService<Booking> {
         });
       },
     );
+
+    await this.userActionService.trackBooking({
+      userId: bookingData.userId,
+      carId: bookingData.carId,
+      metadata: {
+        startDate: bookingData.startDate,
+        endDate: bookingData.endDate,
+      },
+    });
+
     if (createdBooking) await this.redisService.del(bookingKey);
     return createdBooking;
   }

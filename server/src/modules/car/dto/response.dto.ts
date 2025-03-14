@@ -1,3 +1,4 @@
+import { CategoryResponseDTO } from '@/modules/category/dto/response.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { $Enums, Car, CarStatus, FuelType } from '@prisma/client';
 import { Exclude, Expose, Type } from 'class-transformer';
@@ -51,6 +52,10 @@ export class CarResponseDTO implements Car {
   @Type(() => CarImageResponseDTO)
   images: CarImageResponseDTO[];
 
+  @Expose()
+  @Type(() => CategoryResponseDTO)
+  categories: CategoryResponseDTO[];
+
   @Exclude()
   createdAt: Date;
 
@@ -67,4 +72,24 @@ export class CarImageResponseDTO {
 
   @Expose()
   isMain: boolean;
+}
+
+class PaginatedResult {
+  total: number;
+  lastPage: number;
+  currentPage: number;
+  perPage: number;
+  prev: number | null;
+  next: number | null;
+}
+
+export class CarsWithPaginationResponseDTO {
+  constructor(partial: Partial<CarsWithPaginationResponseDTO>) {
+    Object.assign(this, partial);
+  }
+  @Expose()
+  pagination: PaginatedResult;
+
+  @Expose()
+  cars: CarResponseDTO[];
 }

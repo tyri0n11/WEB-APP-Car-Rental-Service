@@ -74,7 +74,7 @@ export class AuthController {
   }
 
   @UseGuards(JwtAccessGuard)
-  @ApiPost({ path: 'me' })
+  @Get('me')
   @ApiOkResponse({ type: UserResponseDTO })
   async getMe(@Req() request: RequestWithUser) {
     const { user } = request;

@@ -4,13 +4,14 @@ import ProtectedRoute from "../src/routes/ProtectedRoute";
 import Banner from "./components/layout/Banner";
 import Footer from "./components/layout/Footer";
 import NavBar from "./components/layout/Navbar";
+import About from "./components/pages/about/About";
 import SignIn from "./components/pages/auth/signin/SignIn";
 import SignUp from "./components/pages/auth/signup/SignUp";
 import Dashboard from "./components/pages/dashboard/Dashboard";
 import Home from "./components/pages/home/Home";
-import About from "./components/pages/about/About";
 import Contact from "./components/pages/home/sections/Contact";
 import Profile from "./components/pages/profile/Profile";
+import Services from "./components/pages/service/Services";
 
 import "./App.css";
 
@@ -34,9 +35,25 @@ const MainLayout = () => {
     }
   }, [showSignIn, showSignUp]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar?.classList.add('scrolled');
+      } else {
+        navbar?.classList.remove('scrolled');
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
     <div className="App">
-      <nav className="navbar">
+      <header className="navbar">
         <Banner />
         <NavBar
           onSignInClick={() => {
@@ -48,13 +65,14 @@ const MainLayout = () => {
             setShowSignIn(false);
           }}
         />
-      </nav>
+      </header>
 
       <section className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="services" element={<Services />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />

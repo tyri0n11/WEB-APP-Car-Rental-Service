@@ -79,7 +79,7 @@ const fetchUser = async (accessToken: string): Promise<User | null> => {
         lastName: result.data.lastName,
         phoneNumber: result.data.phoneNumber,
         isVerified: result.data.isVerified,
-        drivingLicenceId: result.data.drivingLicenceId ?? "", // Handle null case
+        drivingLicenceId: result.data.drivingLicenceId ?? "Not validate yet", // Handle null case
       };
       return user;
     } else {

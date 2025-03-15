@@ -1,0 +1,198 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    transition: 0.8s;
+}
+
+.modal {
+  position: relative;
+  bottom: 50%;
+  left: 50%;
+  width: 450px;
+  height: 450px;
+  max-width: 90%; 
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  flex-direction: column;
+}
+
+.wrapper {
+    display: flex;
+    position: fixed;
+    width: 500px;
+    height: 400px;
+    background: white;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: none;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    overflow: hidden;
+    transition: height 0.2s ease;
+    padding: 10px;
+  
+    margin-top: 50px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.3s ease-in-out;
+}
+
+.close-btn:hover {
+  color: #029cea;
+}
+
+form h1 {
+  font-size: 36px;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #029cea;
+}
+
+form .input-box {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  margin: 30px 0;
+}
+
+.input-box label {
+  font-size: 14px;
+  display: block;
+  margin-bottom: 5px;
+  color: #2d2d2d;
+  
+}
+
+.input-box input {
+  width: 100%;
+  height: 100%;
+  outline: none;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  font-size: 16px;
+  color: #d5d5d5;
+  padding: 20px 45px 20px 20px;
+  box-shadow: 0 0 5px  rgba(129, 129, 129, 0.221);
+  
+}
+
+.input-box input:focus {
+  background: #e4f1fb;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.input-box input::placeholder {
+  color: #8f8e8e;
+}
+
+.input-box .icon {
+  position: absolute;
+  right: 20px;
+  top: 100%;
+  translate: 0 -50%;
+  font-size: 18px;
+  color: #8f8e8e;
+}
+
+form .remember-forgot {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14.5px;
+  align-items: center;
+  margin: 10px 0 15px;
+}
+
+.remember-forgot label input {
+  accent-color: #333;
+  margin-right: 4px;
+}
+
+.remember-forgot label {
+  color: #333;
+  text-decoration: none;
+}
+
+.remember-forgot a {
+  color: #333;
+  text-decoration: none;
+}
+
+.remember-forgot a:hover {
+  text-decoration: underline;
+}
+
+form button {
+  width: 100%;
+  height: 45px;
+  background: linear-gradient(135deg, #029cea, #629af5);
+  border: none;
+  outline: none;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(130, 190, 242, 0.1);
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+  color: white;
+}
+
+button:hover {
+  background: #0495dd;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(167, 224, 248, 0.6);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+form .register-link {
+  font-size: 14.5px;
+  text-align: center;
+  margin: 20px 0 15px;
+  margin-top: 20px;
+}
+
+.register-link p {
+  color: #333;
+  text-decoration: none;
+}
+
+.register-link p span {
+  color: #029cea;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.register-link p span:hover {
+  text-decoration: underline;
+}
+

@@ -12,13 +12,14 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    transition: 0.8s;
 }
 
 .modal {
-  position: fixed;
+  position: relative;
   bottom: 50%;
   left: 50%;
-  width: 700px;
+  width: 450px;
   height: 450px;
   max-width: 90%; 
   background: rgba(0, 0, 0, 0.5);
@@ -30,25 +31,26 @@ body {
 }
 
 .wrapper {
-  position: fixed;
-  width: 450px;
-  height: 450px;
-  background: white;
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: none;
-  border-radius: 15px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  overflow: hidden;
-  transition: height 0.2s ease;
-  padding: 24px;
-  top: 50%;
-  margin-top: 50px;
-  left: 50%;
-  transform: translate(-50%, -50%);
+    display: flex;
+    position: fixed;
+    width: 500px;
+    height: 400px;
+    background: white;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: none;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    overflow: hidden;
+    transition: height 0.2s ease;
+    padding: 10px;
+  
+    margin-top: 50px;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .close-btn {
@@ -65,7 +67,6 @@ body {
   color: #029cea;
 }
 
-
 form h1 {
   font-size: 36px;
   text-align: center;
@@ -76,7 +77,6 @@ form h1 {
 form .input-box {
   position: relative;
   width: 100%;
-  
   height: 50px;
   margin: 30px 0;
 }
@@ -85,7 +85,7 @@ form .input-box {
   font-size: 14px;
   display: block;
   margin-bottom: 5px;
-  color: #5e5d5d;
+  color: #2d2d2d;
   
 }
 
@@ -94,21 +94,21 @@ form .input-box {
   height: 100%;
   outline: none;
   border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 40px;
+  border-radius: 15px;
   font-size: 16px;
-  color: #333;
+  color: #d5d5d5;
   padding: 20px 45px 20px 20px;
-  box-shadow: 0 0 10px  rgba(0, 0, 0, 0.221);
+  box-shadow: 0 0 5px  rgba(129, 129, 129, 0.221);
   
 }
 
 .input-box input:focus {
-  background: #83bde9;
+  background: #e4f1fb;
   border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 .input-box input::placeholder {
-  color: #333;
+  color: #8f8e8e;
 }
 
 .input-box .icon {
@@ -117,7 +117,7 @@ form .input-box {
   top: 100%;
   translate: 0 -50%;
   font-size: 18px;
-  color: #333;
+  color: #8f8e8e;
 }
 
 form .remember-forgot {
@@ -153,7 +153,7 @@ form button {
   background: linear-gradient(135deg, #029cea, #629af5);
   border: none;
   outline: none;
-  border-radius: 40px;
+  border-radius: 15px;
   box-shadow: 0 0 10px rgba(130, 190, 242, 0.1);
   cursor: pointer;
   font-size: 17px;
@@ -174,25 +174,25 @@ button:active {
 }
 
 
-form .login-link {
+form .register-link {
   font-size: 14.5px;
   text-align: center;
   margin: 20px 0 15px;
+  margin-top: 20px;
 }
 
-.login-link p {
+.register-link p {
   color: #333;
   text-decoration: none;
 }
 
-.login-link p span {
+.register-link p span {
   color: #029cea;
   text-decoration: none;
   font-weight: 600;
 }
 
-.login-link p span:hover {
+.register-link p span:hover {
   text-decoration: underline;
 }
-
 

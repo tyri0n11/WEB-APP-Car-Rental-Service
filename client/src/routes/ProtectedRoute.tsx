@@ -1,10 +1,12 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../../src/hooks/useAuth"; // Đảm bảo bạn có AuthContext.tsx
+import { useAuth } from "../contexts/AuthContext";
 
-const PrivateRoute = () => {
-    const { user } = useAuth(); 
+const ProtectedRoute = () => {
+  const { user, loading } = useAuth();
 
-    return user ? <Outlet /> : <Navigate to="/" />; 
+  if (loading) return <p>Loading...</p>; 
+
+  return user ? <Outlet /> : <Navigate to="/signin" replace />;
 };
 
-export default PrivateRoute;
+export default ProtectedRoute;

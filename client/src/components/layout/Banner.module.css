@@ -24,7 +24,7 @@
 /* ✅ Marquee Animation */
 @keyframes marquee {
   from {
-    transform: translateX(0);
+    transform: translateX(200%);
   }
   to {
     transform: translateX(-200%);

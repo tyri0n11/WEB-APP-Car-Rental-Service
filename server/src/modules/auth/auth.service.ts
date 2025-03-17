@@ -146,6 +146,10 @@ export class AuthService {
     );
   }
 
+  async deleteRefreshToken(user_id: string): Promise<void> {
+    await this.cacheService.del(user_id);
+  }
+
   async forgotPassword(email: string): Promise<void> {
     const user = await this.userService.findByEmail(email);
     const payload: ResetPasswordTokenPayload = {
@@ -158,9 +162,13 @@ export class AuthService {
       exp: this.FORGOT_PASSWORD_EXPIRATION_TIME,
     });
 
-    console.log('resetPasswordToken', resetPasswordToken);
+    const fullName = `${user.firstName} ${user.lastName}`;
 
-    await this.emailService.sendForgotPasswordEmail(email, resetPasswordToken);
+    await this.emailService.sendForgotPasswordEmail(
+      fullName,
+      email,
+      resetPasswordToken,
+    );
   }
 
   async resetPassword(dto: ResetPasswordRequestDTO): Promise<void> {
@@ -184,6 +192,9 @@ export class AuthService {
       { id: user.id },
       { password: hashedPassword },
     );
+
+    this.logger.log(`Password reset for user ${user.id}`);
+    await this.deleteRefreshToken(user.id);
   }
 
   async verifyAccount(token: string): Promise<void> {

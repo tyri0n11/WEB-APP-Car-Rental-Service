@@ -24,8 +24,13 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
       return;
     }
     try {
-      await login(email, password);
-      onClose();
+      const state = await login(email, password);
+      if (state) {
+        onClose();
+      } else {
+        window.alert("Login failed");
+        onClose();
+      }
     } catch (error) {
       console.error(error);
       setMessage((error as any).response.data.message);

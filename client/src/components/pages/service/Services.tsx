@@ -3,7 +3,6 @@ import React from 'react';
 const Services: React.FC = () => {
   return (
       <main className="main-content">
-        {/* Introduction */}
         <section className="introduction">
           <h1>Our Rental Car Fleet</h1>
           <p>

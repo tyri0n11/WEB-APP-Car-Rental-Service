@@ -20,7 +20,6 @@ const styles: { [key: string]: React.CSSProperties } = {
   heroContainer: {
     height: "100vh",
     overflow: "hidden",
-    position: "relative",
   },
   backgroundLayer: {
     position: "absolute",

@@ -158,10 +158,9 @@ export class AuthService {
       exp: this.FORGOT_PASSWORD_EXPIRATION_TIME,
     });
 
-    await this.emailService.sendUserResetPasswordEmail(
-      email,
-      resetPasswordToken,
-    );
+    console.log('resetPasswordToken', resetPasswordToken);
+
+    await this.emailService.sendForgotPasswordEmail(email, resetPasswordToken);
   }
 
   async resetPassword(dto: ResetPasswordRequestDTO): Promise<void> {
@@ -226,6 +225,6 @@ export class AuthService {
       exp: this.VERIFY_ACCOUNT_EXPIRATION_TIME,
     });
 
-    await this.emailService.sendUserVerifyEmail(email, fullName, verifyToken);
+    await this.emailService.sendVerifyEmail(email, fullName, verifyToken);
   }
 }

@@ -58,26 +58,18 @@ export class EmailService {
       ...data,
     });
   }
-  async sendForgotPasswordEmail(
-    name: string,
+  async sendUserResetPasswordEmail(
     email: string,
     token: string,
   ): Promise<void> {
-    const frontendUrl = this.configService.get<string>('FRONTEND_URL');
-    const resetPasswordLink = `${frontendUrl}/auth/reset-password?token=${token}`;
-    console.log('resetPasswordLink', resetPasswordLink);
     await this.sendEmail({
       to: email,
       subject: 'Reset your password',
-      html: this.convertToHTML('auth/forgotPassword', {
-        email,
-        name,
-        resetPasswordLink,
-      }),
+      html: this.convertToHTML('auth/forgotPassword', { token }),
     });
   }
 
-  async sendVerifyEmail(
+  async sendUserVerifyEmail(
     email: string,
     fullName: string,
     token: string,

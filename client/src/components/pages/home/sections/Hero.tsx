@@ -1,37 +1,26 @@
 import React from 'react';
-import SearchBar from "./SearchBar";
-/*import AnimatedButton from '../../../buttons/AnimatedButton';*/
+import AnimatedButton from '../../../buttons/AnimatedButton';
 const Hero: React.FC = () => {
   const description = "Looking for a reliable and affordable car rental service? At CRS, we offer a wide range of well-maintained vehicles to meet your travel needs.";
   return (
     <div style={styles.heroContainer}>
       <div style={styles.backgroundLayer} />
-      <div style={styles.overlay} />
       <div style={styles.contentLayer}>
         <div style={styles.contentBox}>
-          <h1 style={styles.heading}>CRS - Accompanying You on Every Ride</h1>
-          <hr style={styles.divider}/>
+          <h1 style={styles.heading}>Drive with Confidence, Rent with Ease!</h1>
           <p style={styles.description}>{description}</p>
-          {/*<AnimatedButton text="Get Started" onClick={() => console.log("Get Started")} />*/}
-          
+          <AnimatedButton text="Get Started" onClick={() => console.log("Get Started")} />
         </div>
-        <SearchBar />
       </div>
-      
     </div>
   );
 };
 
 const styles: { [key: string]: React.CSSProperties } = {
   heroContainer: {
-    width: "80%",
-    height: "90vh",
+    height: "100vh",
     overflow: "hidden",
     position: "relative",
-    padding: "0 8%",
-    margin: "0 auto",
-    borderRadius: "15px",
-
   },
   backgroundLayer: {
     position: "absolute",
@@ -41,24 +30,11 @@ const styles: { [key: string]: React.CSSProperties } = {
     height: "100vh",
     transform: "translate(-50%, -50%)",
     backgroundImage:
-      'url("https://s7d1.scene7.com/is/image/bridgestone/road-trip-blog-images-2022-07-jul-fcac-web-bsro?scl=1")',
+      'url("https://static.wixstatic.com/media/c54d35_10dddcb64dc84f3ba1d610c0344bc59a~mv2.jpg/v1/fill/w_1612,h_1390,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/c54d35_10dddcb64dc84f3ba1d610c0344bc59a~mv2.jpg")',
     backgroundSize: "cover",
     backgroundPosition: "50% 50%",
-    backgroundRepeat: "no-repeat",
-    zIndex: -2,
-    borderRadius: "15px",
-  },
-
-  overlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", 
     zIndex: -1,
   },
-
   contentLayer: {
     position: "relative",
     display: "flex",
@@ -66,34 +42,25 @@ const styles: { [key: string]: React.CSSProperties } = {
     alignItems: "center",
     justifyContent: "center",
     height: "100%",
-    color: "#fff",
+    color: "#007bff",
     textAlign: "center",
     zIndex: 1,
   },
   contentBox: {
-    maxWidth: "80%",
+    maxWidth: "70%",
     padding: "5rem",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
     borderRadius: "8px",
   },
   heading: {
-    fontSize: "3rem",
-    marginBottom: "2rem",
-    color: "#FFD700",
-    textShadow: "2px 2px 5px rgba(0, 0, 0, 0.7)",
-  },
-  divider: {
-    width: "150px", 
-    height: "0.1px", 
-    backgroundColor: "#ffffff",
-    margin: "30px auto",
-    border: "none",
+    fontSize: "2.5rem",
+    marginBottom: "1rem",
   },
   description: {
     fontSize: "1.25rem",
     marginBottom: "1.5rem",
-    color: "#fff",
   },
-  /*button: {
+  button: {
     marginTop: "20px",
     padding: "10px 20px",
     fontSize: "1.2rem",
@@ -102,7 +69,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     border: "none",
     borderRadius: "4px",
     cursor: "pointer",
-  },*/
+  },
 };
 
 export default Hero;

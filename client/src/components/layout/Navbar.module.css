@@ -1,11 +1,11 @@
 /* ✅ NAVBAR STYLES */
 .navbar {
   display: flex;
-  width: 100vw;
+  flex-direction: row;
+  width: 100%;
   height: 60px;
   align-items: center;
-  justify-content: space-between;
-  padding: 0.75rem 2rem;
+  justify-content: space-evenly;
   background-color: #ffffff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   flex-direction: row;
@@ -13,12 +13,14 @@
 }
 
 .navbarContainer {
+  position: absolute;
+  left: 3%;
   display: flex;
   align-items: center;
   gap: 30px;
 }
 .logo {
-  height: 50px; 
+  height: 50px;
   cursor: pointer;
 }
 /* ✅ Menu Items */
@@ -26,7 +28,6 @@
   display: flex;
   align-items: center;
   gap: 2rem;
-  flex-grow: 1;
 }
 
 /* ✅ Navigation Links */
@@ -37,7 +38,6 @@
   padding: 0;
   font-weight: bold;
   margin: 0;
-
 }
 
 .navLinks button {
@@ -47,7 +47,7 @@
 .navLinks button,
 .authButtons a {
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 600;
   color: #007bff;
   text-decoration: none;
   padding: 0.5rem 1rem;
@@ -58,34 +58,38 @@
   border: none;
   cursor: pointer;
 }
-
-.navLinks button:focus{
-  color: #007bff;
-  scale: 1.2;
+.navLinks button:hover {
+  color: #0056b3;
+  animation-duration: 600ms;
 }
 
-* :focus{
+* :focus {
   outline: none;
   transition: 400ms;
 }
 
 /* ✅ Auth Buttons */
 .authButtons {
+  position: absolute;
+  right: 3%;
   display: flex;
-  gap: 10px;
   align-items: center;
   justify-content: flex-end;
-  width: 100%;
+  width: fit-content;
+  right: 10%;
 }
 
 .authButtons .loginButton,
-.authButtons .signupButton {
+.authButtons .signupButton,
+.privateContainer .dropdownItemLogout,
+.dropdownItem {
   padding: 10px 15px;
   border: none;
   cursor: pointer;
   font-size: 16px;
   border-radius: 6px;
   transition: background 0.3s ease;
+  background-color: transparent;
 }
 
 .authButtons .loginButton {
@@ -97,9 +101,69 @@
   background-color: #007bff;
   color: #ffffff;
 }
+.privateContainer {
+  position: absolute;
+  right: 3%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.privateContainer .dropdownItemLogout {
+  color: #dc3545;
+}
+.userContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px;
+  border-radius: 12px;
+}
+.dropdownButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.dropdown {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  }
+.dropdownContent {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+.dropdownItem, .dropdownItemLogout {
+  width: 100%;
+}
+.dropdown:hover .dropdownContent {
+  display: block;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  border: none;
+}
+.userAvatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+.userGreet {
+  text-align: center;
+  font-size: 12px;
+  color: #333;
+  
+}
 
-.authButtons .loginButton:hover {
-  background-color: #e0e0e0;
+.authButtons .loginButton:hover,
+.privateContainer .dropdownItemLogout:hover,
+.dropdownItem:hover {
+  text-decoration: underline;
 }
 
 .authButtons .signupButton:hover {

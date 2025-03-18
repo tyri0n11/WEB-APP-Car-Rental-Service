@@ -40,6 +40,7 @@ const styles = {
 
 const Contact: React.FC = () => {
   return (
+    <div>
     <div style={styles.contactContainer}>
       <h4 style={styles.heading}>📍 Contact Us</h4>
       <h6 style={styles.subheading}>📌 Location: [Your Garage Address]</h6>
@@ -56,15 +57,16 @@ const Contact: React.FC = () => {
       <h6 style={styles.subheading}>Follow us on:</h6>
       <div style={styles.socialLinks}>
         <a href="[Facebook Link]" target="_blank" rel="noopener noreferrer">
-          <img src="https://cdn2.iconfinder.com/data/icons/social-icons-33/128/Facebook-512.png" alt="Facebook" style={styles.socialIcon} />
+          <img src="path/to/facebook-icon.png" alt="Facebook" style={styles.socialIcon} />
         </a>
         <a href="[Twitter Link]" target="_blank" rel="noopener noreferrer">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Logo_of_Twitter.svg/1245px-Logo_of_Twitter.svg.png" alt="Twitter" style={styles.socialIcon} />
+          <img src="path/to/twitter-icon.png" alt="Twitter" style={styles.socialIcon} />
         </a>
         <a href="[Instagram Link]" target="_blank" rel="noopener noreferrer">
-          <img src="https://www.citypng.com/public/uploads/preview/square-instagram-logo-photos-social-media-701751694793082uj6ej5fkfx.png" alt="Instagram" style={styles.socialIcon} />
+          <img src="path/to/instagram-icon.png" alt="Instagram" style={styles.socialIcon} />
         </a>
       </div>
+    </div>
     </div>
   );
 };

@@ -73,6 +73,22 @@ const Navbar: React.FC<{
                 Contact
               </button>
             </li>
+            <li>
+              <button
+                type="button"
+                className={styles.navButton}
+                onClick={() => handleNavigation("auth/password/forgotPassword")}
+              >
+                Forgot
+              </button>
+              <button
+                type="button"
+                className={styles.navButton}
+                onClick={() => handleNavigation("auth/password/resetPassword")}
+              >
+                Reset
+              </button>
+            </li>
           </ul>
         </div>
       </div>

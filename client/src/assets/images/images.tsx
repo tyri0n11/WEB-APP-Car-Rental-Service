@@ -13,6 +13,8 @@ const images = {
         "https://i.imgur.com/cgm9oIq.jpeg"
     ],
 
+    background: "https://i.imgur.com/rv2IJ3z.jpeg",
+
 };
 
 export default images;

@@ -23,7 +23,12 @@ const Forgot: React.FC = () => {
         }
 
         try {
-            const API_URL = "http://localhost:3000/auth/email/forgot-password"; // Correct endpoint
+            // Read host and path from environment variables
+            const API_HOST = import.meta.env.HOST || "http://localhost:3000";
+            const FP_PATH = import.meta.env.FP_PATH || "/auth/email/forgot-password";
+            const API_URL = `${API_HOST}${FP_PATH}`;
+
+            // Log debug info
             setDebugInfo(
                 `API URL: ${API_URL}\nBody: ${JSON.stringify({ email }, null, 2)}`
             );

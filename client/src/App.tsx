@@ -71,9 +71,6 @@ function App() {
           </Route>
         </Routes>
       </section>
-
-      <Footer />
-
       {showSignIn && (
         <SignIn
           onClose={() => setShowSignIn(false)}
@@ -93,6 +90,8 @@ function App() {
           }}
         />
       )}
+
+      <Footer />
     </div>
   );
 }

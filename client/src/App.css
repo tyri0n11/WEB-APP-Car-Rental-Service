@@ -25,21 +25,6 @@ p, a {
   color: #333;
 }
 
-.modal {
-  position: fixed;
-  bottom: 50%;
-  left: 50%;
-  width: 700px;
-  height: 450px;
-  max-width: 90%; 
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  flex-direction: column;
-}
-
 .modal-open {
   overflow: hidden;
 }

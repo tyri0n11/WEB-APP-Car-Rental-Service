@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import { FaEnvelope, FaLock, FaPhone, FaTimes, FaUser } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 import "../AuthStyles.css";
 
-const SignUp: React.FC<{onClose: () => void; onSwitchToSignIn: () => void}> = ({ onClose, onSwitchToSignIn }) => {
+const SignUp: React.FC<{
+  onClose: () => void;
+  onSwitchToSignIn: () => void;
+}> = ({ onClose, onSwitchToSignIn }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -29,29 +32,28 @@ const SignUp: React.FC<{onClose: () => void; onSwitchToSignIn: () => void}> = ({
           <form onSubmit={handleSubmit}>
             <h1>Sign Up</h1>
             {message && <p className="message">{message}</p>}
+            <div className="name-box">
+              <div className="input-box">
+                <label>First Name</label>
+                <input
+                  type="text"
+                  placeholder="First name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                />
+              </div>
 
-            <div className="input-box">
-              <label>First Name</label>
-              <input
-                type="text"
-                placeholder="Enter your first name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                required
-              />
-              <FaUser className="icon" />
-            </div>
-
-            <div className="input-box">
-              <label>Last Name</label>
-              <input
-                type="text"
-                placeholder="Enter your last name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                required
-              />
-              <FaUser className="icon" />
+              <div className="input-box">
+                <label>Last Name</label>
+                <input
+                  type="text"
+                  placeholder="Last name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                />
+              </div>
             </div>
 
             <div className="input-box">
@@ -63,7 +65,6 @@ const SignUp: React.FC<{onClose: () => void; onSwitchToSignIn: () => void}> = ({
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-              <FaEnvelope className="icon" />
             </div>
 
             <div className="input-box">
@@ -75,7 +76,6 @@ const SignUp: React.FC<{onClose: () => void; onSwitchToSignIn: () => void}> = ({
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 required
               />
-              <FaPhone className="icon" />
             </div>
 
             <div className="input-box">
@@ -87,7 +87,6 @@ const SignUp: React.FC<{onClose: () => void; onSwitchToSignIn: () => void}> = ({
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-              <FaLock className="icon" />
             </div>
 
             <div className="input-box">
@@ -99,7 +98,6 @@ const SignUp: React.FC<{onClose: () => void; onSwitchToSignIn: () => void}> = ({
                 onChange={(e) => setRepassword(e.target.value)}
                 required
               />
-              <FaLock className="icon" />
             </div>
 
             <div className="remember-forgot">
@@ -113,7 +111,12 @@ const SignUp: React.FC<{onClose: () => void; onSwitchToSignIn: () => void}> = ({
             <div className="login-link">
               <p>
                 Already have an account?{" "}
-                <span className="link" onClick={onSwitchToSignIn} role="button" tabIndex={0}>
+                <span
+                  className="link"
+                  onClick={onSwitchToSignIn}
+                  role="button"
+                  tabIndex={0}
+                >
                   Sign In
                 </span>
               </p>

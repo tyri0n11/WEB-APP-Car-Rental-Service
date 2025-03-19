@@ -17,7 +17,8 @@ const SignIn: React.FC<{
       else if (password === "") setErrorMessage("Password is required");
       else {
         setErrorMessage("Please fill in all fields");
-        if (email.length < 5 || email.length > 89) setErrorMessage("Invalid email");
+        if (email.length < 5 || email.length > 89)
+          setErrorMessage("Invalid email");
       }
       setErrorMessage("Please fill in all fields");
       return false;
@@ -57,9 +58,9 @@ const SignIn: React.FC<{
 
             <div className="input-box">
               <label>Email</label>
-              <input 
-                type="email" 
-                placeholder="Enter your email" 
+              <input
+                type="email"
+                placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -68,9 +69,9 @@ const SignIn: React.FC<{
 
             <div className="input-box">
               <label>Password</label>
-              <input 
-                type="password" 
-                placeholder="Enter your password" 
+              <input
+                type="password"
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required

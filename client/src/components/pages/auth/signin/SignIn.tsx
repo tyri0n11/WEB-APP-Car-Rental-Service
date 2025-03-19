@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { FaEnvelope, FaLock, FaTimes } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 import { useAuth } from "../../../../hooks/useAuth";
-import "./SignIn.css";
-
+import "../auth_styles.css";
 const SignIn: React.FC<{
   onClose: () => void;
   onSwitchToSignUp: () => void;
@@ -53,7 +52,7 @@ const SignIn: React.FC<{
         <div className="form-box signin">
           <form onSubmit={handleSubmit}>
             <h1>Sign In</h1>
-            {message && <p className="error-message">{message}</p>}
+            {message && <p className="message">{message}</p>}
 
             <div className="input-box">
               <label>Email</label>
@@ -64,7 +63,6 @@ const SignIn: React.FC<{
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-              <FaEnvelope className="icon" />
             </div>
 
             <div className="input-box">
@@ -76,7 +74,6 @@ const SignIn: React.FC<{
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-              <FaLock className="icon" />
             </div>
 
             <div className="remember-forgot">
@@ -85,10 +82,11 @@ const SignIn: React.FC<{
               </label>
               <a href="#">Forgot password?</a>
             </div>
+            <div className="button-box">
+              <button type="submit">Sign In</button>
+            </div>
 
-            <button type="submit">Sign In</button>
-
-            <div className="register-link">
+            <div className="login-link">
               <p>
                 Don't have an account?{" "}
                 <span

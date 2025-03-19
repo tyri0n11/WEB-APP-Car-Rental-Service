@@ -31,16 +31,6 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
     }
   };
 
-  useEffect(() => {
-    const closeOnEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        onClose();
-      }
-    };
-    window.addEventListener("keydown", closeOnEscape);
-    return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [onClose, email, password]);
-
   return (
     <div className="modal">
       <div className="wrapper">

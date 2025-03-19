@@ -1,7 +1,7 @@
 import React from "react";
-import { FaGasPump, FaMapMarkerAlt, FaStar, FaTachometerAlt, FaUsers, FaChargingStation } from "react-icons/fa";
-import { TbAutomaticGearboxFilled, TbManualGearboxFilled } from "react-icons/tb";
 import { BsFillFuelPumpDieselFill } from "react-icons/bs";
+import { FaChargingStation, FaGasPump, FaMapMarkerAlt, FaStar, FaTachometerAlt, FaUsers } from "react-icons/fa";
+import { TbAutomaticGearboxFilled, TbManualGearboxFilled } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 
 interface Car {

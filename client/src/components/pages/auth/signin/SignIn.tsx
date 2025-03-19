@@ -47,7 +47,7 @@ const SignIn: React.FC<{
 
   return (
     <div className="modal">
-      <div className="wrapper">
+      <div className="signin-wrapper">
         <FaTimes className="close-btn" onClick={onClose} />
 
         <div className="form-box signin">

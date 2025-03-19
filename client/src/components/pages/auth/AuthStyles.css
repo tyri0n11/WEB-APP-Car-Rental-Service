@@ -29,7 +29,7 @@ body {
   flex-direction: column;
 }
 
-.wrapper {
+.signup-wrapper, .signin-wrapper {
   position: fixed;
   width: 450px;
   height: 450px;
@@ -65,18 +65,16 @@ body {
   color: #029cea;
 }
 
-
-form h1 {
+.form-box h1 {
   font-size: 36px;
   text-align: center;
   margin-bottom: 20px;
   color: #029cea;
 }
 
-form .input-box {
+.form-box .input-box {
   position: relative;
   width: 100%;
-  
   height: 50px;
   margin: 30px 0;
 }
@@ -86,7 +84,6 @@ form .input-box {
   display: block;
   margin-bottom: 5px;
   color: #5e5d5d;
-  
 }
 
 .input-box input {
@@ -98,8 +95,7 @@ form .input-box {
   font-size: 16px;
   color: #333;
   padding: 20px 45px 20px 20px;
-  box-shadow: 0 0 10px  rgba(0, 0, 0, 0.221);
-  
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.221);
 }
 
 .input-box input:focus {
@@ -120,7 +116,7 @@ form .input-box {
   color: #333;
 }
 
-form .remember-forgot {
+.form-box .remember-forgot {
   display: flex;
   justify-content: space-between;
   font-size: 14.5px;
@@ -147,7 +143,7 @@ form .remember-forgot {
   text-decoration: underline;
 }
 
-form button {
+.form-box button {
   width: 100%;
   height: 45px;
   background: linear-gradient(135deg, #029cea, #629af5);
@@ -162,36 +158,24 @@ form button {
   color: white;
 }
 
-button:hover {
-  background: #0495dd;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 15px rgba(167, 224, 248, 0.6);
-}
-
-button:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-
-form .login-link {
+.form-box .login-link, .form-box .register-link {
   font-size: 14.5px;
   text-align: center;
   margin: 20px 0 15px;
 }
 
-.login-link p {
+.login-link p, .register-link p {
   color: #333;
   text-decoration: none;
 }
 
-.login-link p span {
+.login-link p span, .register-link p span {
   color: #029cea;
   text-decoration: none;
   font-weight: 600;
 }
 
-.login-link p span:hover {
+.login-link p span:hover, .register-link p span:hover {
   text-decoration: underline;
 }
 

@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
-import CarCard from "./CarCard";
 import carsData from "../../../.././utils/dummy/cars.json";
+import CarCard from "./CarCard";
 
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
@@ -50,7 +50,7 @@ const CarList: React.FC = () => {
           key={car.id}
           style={styles.gridItem}
           onMouseEnter={(e) => {
-            const width = e.currentTarget.clientWidth; // Lấy kích thước của card
+            const width = e.currentTarget.clientWidth;
             e.currentTarget.style.boxShadow = `0px ${width * 0.05}px ${width * 0.1}px rgba(0, 0, 0, 0.2)`;
             e.currentTarget.style.transform = "scale(1.05)";
           }}

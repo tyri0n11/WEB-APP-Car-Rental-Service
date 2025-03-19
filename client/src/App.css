@@ -6,7 +6,6 @@
   align-items: center;
   width: 100%;
   background-color: #fff;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
   z-index: 1000;
 
 }

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import images from "../../../../assets/images/images"; // Import your images object
 
-const ResetPassword: React.FC = () => {
+const Reset: React.FC = () => {
     const [newPassword, setNewPassword] = useState("");
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
@@ -197,4 +197,4 @@ const ResetPassword: React.FC = () => {
     );
 };
 
-export default ResetPassword;
+export default Reset;

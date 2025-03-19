@@ -34,7 +34,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly userService: UserService,
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
   @ApiPost({
     path: 'signup',
@@ -113,6 +113,7 @@ export class AuthController {
 
   @ApiPost({ path: '/email/forgot-password' })
   async forgotPassword(@Body() dto: ForgotPasswordRequestDTO) {
+    console.log('Received Forgot Password Request:', dto);
     return await this.authService.forgotPassword(dto.email);
   }
 

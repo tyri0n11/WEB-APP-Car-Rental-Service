@@ -1,3 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
 .modal {
   position: fixed;
   top: 0;
@@ -10,128 +26,101 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
-}
-
-.message {
-  text-align: center;
-  color: crimson;
-  font-size: 14px;
-  margin: 10px 0;
-}
-
-.wrapper {
-  position: relative;
-  margin: 40px auto;
-  width: 100%;
-  max-width: 450px;
-  padding: 20px 32px;
-  min-height: 400px;
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-}
-
-.form-box {
-  width: 100%;
-  display: flex;
   flex-direction: column;
 }
 
-.form-box h1 {
-  color: #029cea;
-  margin-bottom: 20px;
-  text-align: center;
+.wrapper {
+  position: fixed;
+  width: 450px;
+  height: 450px;
+  background: white;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: none;
+  border-radius: 15px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  overflow: hidden;
+  transition: height 0.2s ease;
+  padding: 24px;
+  top: 50%;
+  margin-top: 50px;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .close-btn {
   position: absolute;
   top: 10px;
   right: 10px;
-  height: 30px;
-  width: 30px;
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-size: 18px;
   cursor: pointer;
-  color: #4f4d4d;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 50%;
-  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
-  transition: background 0.3s, transform 0.2s ease-in-out;
-  z-index: 1001;
+  color: #333;
+  transition: color 0.3s ease-in-out;
 }
 
 .close-btn:hover {
-  background: #f0f0f0;
-  transform: scale(1.1);
+  color: #029cea;
 }
 
 
-.input-box {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
+form h1 {
+  font-size: 36px;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #029cea;
+}
+
+form .input-box {
+  position: relative;
+  width: 100%;
+  
+  height: 50px;
+  margin: 30px 0;
 }
 
 .input-box label {
   font-size: 14px;
   display: block;
-  color: black;
-  margin-bottom: 0.5rem;
-}
-
-.name-box {
-  display: flex;
-  justify-content: space-evenly;
-  direction: row;
-  gap: 8px;
-}
-
-.name-box input {
-  width: 90%;
-}
-
-
-.button-box {
-  display: flex;
-  justify-content: center;
-  direction: row;
-  gap: 8px;
+  margin-bottom: 5px;
+  color: #5e5d5d;
+  
 }
 
 .input-box input {
+  width: 100%;
   height: 100%;
   outline: none;
-  border-radius: 8px;
-  font-size: 12px;
-  border: 1px solid #ccc;
-  padding: 10px 10px;
-  margin-bottom: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 40px;
+  font-size: 16px;
+  color: #333;
+  padding: 20px 45px 20px 20px;
+  box-shadow: 0 0 10px  rgba(0, 0, 0, 0.221);
+  
 }
 
 .input-box input:focus {
-  border-color: #029cea;
-}
-
-.input-box input.invalid {
-  border-color: crimson;
+  background: #83bde9;
+  border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 .input-box input::placeholder {
-  color: #838282;
+  color: #333;
 }
 
 .input-box .icon {
   position: absolute;
-  right: 15px;
+  right: 20px;
+  top: 100%;
+  translate: 0 -50%;
   font-size: 18px;
   color: #333;
 }
 
-.modal form .remember-forgot {
+form .remember-forgot {
   display: flex;
   justify-content: space-between;
   font-size: 14.5px;
@@ -158,10 +147,12 @@
   text-decoration: underline;
 }
 
-.modal form button {
-  width: 70%;
-  height: 38px;
+form button {
+  width: 100%;
+  height: 45px;
   background: linear-gradient(135deg, #029cea, #629af5);
+  border: none;
+  outline: none;
   border-radius: 40px;
   box-shadow: 0 0 10px rgba(130, 190, 242, 0.1);
   cursor: pointer;
@@ -171,11 +162,19 @@
   color: white;
 }
 
-.modal form button:hover {
-  transform: scale(1.05);
+button:hover {
+  background: #0495dd;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(167, 224, 248, 0.6);
 }
 
-.modal form .login-link {
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+form .login-link {
   font-size: 14.5px;
   text-align: center;
   margin: 20px 0 15px;
@@ -184,16 +183,16 @@
 .login-link p {
   color: #333;
   text-decoration: none;
-  cursor: default;
 }
 
 .login-link p span {
   color: #029cea;
   text-decoration: none;
-  cursor: pointer;
   font-weight: 600;
 }
 
 .login-link p span:hover {
   text-decoration: underline;
 }
+
+

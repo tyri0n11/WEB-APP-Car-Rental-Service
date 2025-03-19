@@ -1,6 +1,6 @@
 import { FaCheckCircle, FaTimesCircle, FaUserCircle } from 'react-icons/fa';
 import { useAuth } from '../../../../../hooks/useAuth';
-import './myaccount.css';
+import './MyAccount.css';
 
 const MyAccount = () => {
   const {user} = useAuth();

@@ -1,8 +1,7 @@
 /* ✅ NAVBAR STYLES */
 .navbar {
   display: flex;
-  flex-direction: row;
-  width: 100%;
+  width: 100vw;
   height: 60px;
   align-items: center;
   justify-content: space-evenly;
@@ -11,14 +10,12 @@
 }
 
 .navbarContainer {
-  position: absolute;
-  left: 3%;
   display: flex;
   align-items: center;
   gap: 30px;
 }
 .logo {
-  height: 50px;
+  height: 50px; 
   cursor: pointer;
 }
 /* ✅ Menu Items */
@@ -26,6 +23,7 @@
   display: flex;
   align-items: center;
   gap: 2rem;
+  flex-grow: 1;
 }
 
 /* ✅ Navigation Links */
@@ -36,6 +34,7 @@
   padding: 0;
   font-weight: bold;
   margin: 0;
+
 }
 
 .navLinks button {
@@ -45,7 +44,7 @@
 .navLinks button,
 .authButtons a {
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: bold;
   color: #007bff;
   text-decoration: none;
   padding: 0.5rem 1rem;
@@ -56,38 +55,34 @@
   border: none;
   cursor: pointer;
 }
-.navLinks button:hover {
-  color: #0056b3;
-  animation-duration: 600ms;
+
+.navLinks button:focus{
+  color: #007bff;
+  scale: 1.2;
 }
 
-* :focus {
+* :focus{
   outline: none;
   transition: 400ms;
 }
 
 /* ✅ Auth Buttons */
 .authButtons {
-  position: absolute;
-  right: 3%;
   display: flex;
+  gap: 10px;
   align-items: center;
   justify-content: flex-end;
-  width: fit-content;
-  right: 10%;
+  width: 100%;
 }
 
 .authButtons .loginButton,
-.authButtons .signupButton,
-.privateContainer .dropdownItemLogout,
-.dropdownItem {
+.authButtons .signupButton {
   padding: 10px 15px;
   border: none;
   cursor: pointer;
   font-size: 16px;
   border-radius: 6px;
   transition: background 0.3s ease;
-  background-color: transparent;
 }
 
 .authButtons .loginButton {
@@ -162,10 +157,8 @@
   
 }
 
-.authButtons .loginButton:hover,
-.privateContainer .dropdownItemLogout:hover,
-.dropdownItem:hover {
-  text-decoration: underline;
+.authButtons .loginButton:hover {
+  background-color: #e0e0e0;
 }
 
 .authButtons .signupButton:hover {

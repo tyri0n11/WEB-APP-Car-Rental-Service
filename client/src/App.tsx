@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import ProtectedRoute from "../src/routes/ProtectedRoute";
+import { Route, Routes } from "react-router-dom";
+import "./App.css";
 import Banner from "./components/layout/Banner";
 import Footer from "./components/layout/Footer";
 import NavBar from "./components/layout/Navbar";
@@ -12,26 +12,18 @@ import Home from "./components/pages/home/Home";
 import Contact from "./components/pages/home/sections/Contact";
 import Profile from "./components/pages/profile/Profile";
 import Services from "./components/pages/service/Services";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
-import "./App.css";
 
 function App() {
-  return (
-    <BrowserRouter>
-      <MainLayout />
-    </BrowserRouter>
-  );
-}
-
-const MainLayout = () => {
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
 
   useEffect(() => {
     if (showSignIn || showSignUp) {
-      document.body.classList.add("no-scroll");
+      document.body.classList.add("modal-open");
     } else {
-      document.body.classList.remove("no-scroll");
+      document.body.classList.remove("modal-open");
     }
   }, [showSignIn, showSignUp]);
 
@@ -80,6 +72,8 @@ const MainLayout = () => {
         </Routes>
       </section>
 
+      <Footer />
+
       {showSignIn && (
         <SignIn
           onClose={() => setShowSignIn(false)}
@@ -99,9 +93,8 @@ const MainLayout = () => {
           }}
         />
       )}
-      <Footer />
     </div>
   );
-};
+}
 
 export default App;

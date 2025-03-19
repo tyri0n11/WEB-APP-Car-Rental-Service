@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../../../hooks/useAuth";
-import ForgotPassword from "../password/forgotPassword";
-
 import '../auth_styles.css';
 
 const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = ({ onClose, onSwitchToSignUp }) => {
@@ -75,7 +73,7 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
               <label>
                 <input type="checkbox" /> Remember me
               </label>
-              <a href="/auth/password/forgot-password">Forgot password?</a>
+              <a href="#">Forgot password?</a>
             </div>
 
             <div className="button-box">

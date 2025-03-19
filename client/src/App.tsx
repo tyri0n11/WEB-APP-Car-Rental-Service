@@ -13,8 +13,7 @@ import Contact from "./components/pages/home/sections/Contact";
 import Profile from "./components/pages/profile/Profile";
 
 import "./App.css";
-import ForgotPassword from "./components/pages/auth/password/forgotPassword";
-import ResetPassword from "./components/pages/auth/password/resetPassword";
+
 
 function App() {
   return (
@@ -57,8 +56,6 @@ const MainLayout = () => {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/auth/password/forgotPassword" element={<ForgotPassword />} />
-          <Route path="/auth/password/resetPassword" element={<ResetPassword />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />

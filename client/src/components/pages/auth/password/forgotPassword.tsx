@@ -1,55 +1,68 @@
 import React, { useState } from "react";
-import images from "../../../../assets/images/images"; // Import your images object
+import images from "../../../../assets/images/images"; // Ensure this is the correct path to your images
 
 const ForgotPassword: React.FC = () => {
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false); // Spinner for button
+    const [connected, setConnected] = useState(false); // State for backend connection
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
         setMessage("");
-        setLoading(true); // Show loading spinner
+        setLoading(true);
 
-        if (!email) {
+        console.log("Email:", email);
+        if (!email.trim()) {
             setError("Email is required");
             setLoading(false);
             return;
         }
 
         try {
-            const response = await fetch("http://localhost:3000/auth/email/forgot-password", {
+            // Ensure BACKEND_URL is properly loaded
+            const API_URL = import.meta.env.BACKEND_URL;
+            if (!API_URL) {
+                throw new Error("Backend URL is not set in environment variables.");
+            }
+            console.log("Connecting to backend at:", API_URL);
+            // headers: { "Content-Type": "application/json" },
+            const response = await fetch(`${API_URL}/auth/email/forgot-password`, {
                 method: "POST",
-                headers: {
-                    "accept": "*/*",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email }),
+                body: JSON.stringify({ email }), // Use actual email state
             });
 
-            if (response.ok) {
-                const data = await response.json();
-                const refreshToken = data.refreshToken; // Assuming the backend returns a token
+            console.log("Response status:", response.status);
 
-                if (refreshToken) {
-                    const resetLink = `http://localhost:3000/reset-password?token=${refreshToken}`;
-                    // Display a success message mentioning the link has been sent
-                    setMessage(`A password reset link has been sent to your email.`);
-                    console.log(`Reset link: ${resetLink}`); // For debugging purposes
-                } else {
-                    setError("Failed to generate reset link. Try again.");
+            if (!response.ok) {
+                let errorMessage = "Something went wrong.";
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorMessage;
+                } catch (jsonError) {
+                    console.warn("Response is not in JSON format.");
                 }
-            } else {
-                const data = await response.json();
-                setError(data.message || "Something went wrong. Try again.");
+                throw new Error(errorMessage);
             }
-        } catch (error) {
-            setError("Failed to send request. Check your connection.");
+
+            let responseData = {};
+            try {
+                responseData = await response.json(); // Try parsing JSON
+            } catch (jsonError) {
+                console.warn("No JSON body returned from server.");
+            }
+
+            setMessage(responseData?.message || "Password reset link sent to your email.");
+        } catch (err) {
+            console.error("Error during fetch:", err);
+            setError(err instanceof Error ? err.message : "Failed to send request.");
+        } finally {
+            setLoading(false);
         }
-        setLoading(false); // Stop spinner
     };
+
 
     const styles = {
         container: {
@@ -66,7 +79,6 @@ const ForgotPassword: React.FC = () => {
             borderRadius: "10px",
             boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
             textAlign: "center" as "center",
-            animation: "fadeIn 1s ease-in-out",
         },
         input: {
             width: "100%",
@@ -74,41 +86,30 @@ const ForgotPassword: React.FC = () => {
             border: "1px solid #ddd",
             borderRadius: "6px",
             fontSize: "16px",
-            outline: "none" as "none",
-            transition: "border-color 0.3s ease, box-shadow 0.3s ease",
             marginBottom: "15px",
-        },
-        inputFocus: {
-            borderColor: "#007bff",
-            boxShadow: "0 0 6px rgba(0, 123, 255, 0.5)",
         },
         button: {
             width: "100%",
             padding: "12px",
-            background: "#007bff",
+            background: loading ? "#aaa" : "#007bff",
             color: "white",
             border: "none",
             borderRadius: "6px",
             fontSize: "16px",
-            cursor: "pointer",
+            cursor: loading ? "not-allowed" : "pointer",
             transition: "background-color 0.3s ease",
-        },
-        buttonHover: {
-            background: "#0056b3",
-        },
-        buttonDisabled: {
-            background: "#007bff",
-            cursor: "not-allowed",
         },
         error: {
             color: "red",
             fontSize: "14px",
-            animation: "fadeIn 0.5s ease-in-out",
         },
         success: {
             color: "green",
             fontSize: "14px",
-            animation: "fadeIn 0.5s ease-in-out",
+        },
+        connected: {
+            color: "blue",
+            fontSize: "14px",
         },
         spinner: {
             width: "20px",
@@ -118,7 +119,6 @@ const ForgotPassword: React.FC = () => {
             borderRadius: "50%",
             animation: "spin 1s linear infinite",
             display: "inline-block",
-            verticalAlign: "middle",
             marginLeft: "8px",
         },
     };
@@ -135,29 +135,17 @@ const ForgotPassword: React.FC = () => {
                     background-size: cover;
                     overflow: hidden;
                 }
-
-                @keyframes fadeIn {
-                    from {
-                        opacity: 0;
-                    }
-                    to {
-                        opacity: 1;
-                    }
-                }
-
+                
                 @keyframes spin {
-                    0% {
-                        transform: rotate(0deg);
-                    }
-                    100% {
-                        transform: rotate(360deg);
-                    }
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
                 }
                 `}
             </style>
             <div style={styles.container}>
                 <div style={styles.wrapper}>
                     <h1 style={{ fontSize: "22px", color: "#333", marginBottom: "15px" }}>Forgot Password</h1>
+                    {connected && <p style={styles.connected}>Connected to backend successfully!</p>}
                     {error && <p style={styles.error}>{error}</p>}
                     {message && <p style={styles.success}>{message}</p>}
                     <form onSubmit={handleSubmit}>
@@ -166,23 +154,17 @@ const ForgotPassword: React.FC = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="Enter your email"
-                            style={{
-                                ...styles.input,
-                                ...(email ? styles.inputFocus : {}),
-                            }}
+                            style={styles.input}
                             required
                         />
                         <button
                             type="submit"
-                            style={{
-                                ...styles.button,
-                                ...(loading ? styles.buttonDisabled : styles.buttonHover),
-                            }}
+                            style={styles.button}
                             disabled={loading}
                         >
                             {loading ? (
                                 <>
-                                    Sending
+                                    Sending...
                                     <span style={styles.spinner}></span>
                                 </>
                             ) : (

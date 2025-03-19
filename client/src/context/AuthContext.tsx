@@ -69,6 +69,7 @@ const fetchUser = async (accessToken: string): Promise<User | null> => {
     if (!response.ok) throw new Error("Failed to fetch user");
 
     const result = await response.json();
+    console.log("User data:", result);
     if (result?.statusCode === 200 && result?.data) {
       const user: User = {
         role: result.data.role,
@@ -114,30 +115,29 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     user: null,
     accessToken: localStorage.getItem("access_token") || null,
   });
-  const initializeAuth = async () => {
-    if (state.accessToken) {
-      const user = await fetchUser(state.accessToken);
-      if (user) {
-        console.log("User fetched:", user);
-        dispatch({ type: "SET_USER", payload: user });
-      } else {
-        const newTokens = await refreshToken();
-        if (newTokens) {
-          localStorage.setItem("access_token", newTokens.access_token);
-          dispatch({ type: "SET_TOKEN", payload: newTokens.access_token });
-          const newUser = await fetchUser(newTokens.access_token);
-          dispatch({ type: "SET_USER", payload: newUser });
-        } else {
-          handleLogout();
-        }
-      }
-    }
-  };
 
   useEffect(() => {
+    const initializeAuth = async () => {
+      if (state.accessToken) {
+        const user = await fetchUser(state.accessToken);
+        if (user) {
+          console.log("User fetched:", user);
+          dispatch({ type: "SET_USER", payload: user });
+        } else {
+          const newTokens = await refreshToken();
+          if (newTokens) {
+            localStorage.setItem("access_token", newTokens.access_token);
+            dispatch({ type: "SET_TOKEN", payload: newTokens.access_token });
+            const newUser = await fetchUser(newTokens.access_token);
+            dispatch({ type: "SET_USER", payload: newUser });
+          } else {
+            handleLogout();
+          }
+        }
+      }
+    };
     initializeAuth();
-  }, []);
-
+  }, [state.accessToken]);
   const signup = async (data: {
     email: string;
     password: string;
@@ -154,18 +154,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       if (!response.ok) throw new Error("Signup failed");
 
-      const result = await response.json();
-      const access = result?.data?.accessToken;
-      const refresh = result?.data?.refreshToken;
-      localStorage.setItem("access_token", access);
-      localStorage.setItem("refresh_token", refresh);
-      const user = await fetchUser(access);
-      if (!user) {
-        throw new Error("Failed to fetch user");
-      }
+      const user = await response.json();
       dispatch({
         type: "LOGIN",
-        payload: { user, accessToken: access },
+        payload: { user, accessToken: localStorage.getItem("access_token") },
       });
     } catch (error) {
       console.error("Signup error:", error);
@@ -182,6 +174,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       if (!response.ok) {
         throw new Error("Login failed");
+        return false;
       }
 
       const data = await response.json();
@@ -192,11 +185,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const user = await fetchUser(access);
       if (!user) {
         throw new Error("Failed to fetch user");
-      }
-      dispatch({
-        type: "LOGIN",
-        payload: { user, accessToken: access },
-      });
+    }
       return true;
     } catch (error) {
       console.error("Login error:", error);

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
+import { useAuth } from "../../../../hooks/useAuth";
 import "../AuthStyles.css";
 
 const SignUp: React.FC<{
@@ -13,14 +14,25 @@ const SignUp: React.FC<{
   const [password, setPassword] = useState("");
   const [repassword, setRepassword] = useState("");
   const [message, setMessage] = useState("");
-
+  const { signup } = useAuth();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setMessage("");
-
     if (password !== repassword) {
       setMessage("Passwords do not match");
       return;
+    }
+    try {
+      await signup({
+        email,
+        password,
+        firstName,
+        lastName,
+        phoneNumber,
+      });
+      setMessage("Signup successful!");
+      onClose();
+    } catch (error) {
+      setMessage("Signup failed. Please try again.");
     }
   };
 

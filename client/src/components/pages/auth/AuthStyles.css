@@ -13,7 +13,8 @@
 
 .signup-wrapper, .signin-wrapper {
   position: fixed;
-  width: 40%;
+  min-width: 400px;
+  height: auto;
   background: white;
   border: 2px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: none;
@@ -81,10 +82,10 @@
   height: 32px;
   margin-bottom: 6px;
   width: 100%;
-  border: 1px solid rgba(73, 73, 73, 0.63);
-  border-radius: 8px;
+  border: 0.5px solid rgba(73, 73, 73, 0.63);
+  border-radius: 4px;
   font-size: 14px;
-  color: #333;
+  color: black;
   padding: 8px 12px;
 }
 
@@ -93,7 +94,11 @@
 }
 
 .input-box input::placeholder {
-  color: #333;
+  color: grey;
+}
+
+.input-box input::content {
+  color: black;
 }
 
 .input-box .icon {

@@ -9,11 +9,11 @@ import SignIn from "./components/pages/auth/signin/SignIn";
 import SignUp from "./components/pages/auth/signup/SignUp";
 import Dashboard from "./components/pages/dashboard/Dashboard";
 import Home from "./components/pages/home/Home";
+import CarDetail from "./components/pages/home/sections/CarDetail";
 import Contact from "./components/pages/home/sections/Contact";
 import Profile from "./components/pages/profile/Profile";
 import Services from "./components/pages/service/Services";
 import ProtectedRoute from "./routes/ProtectedRoute";
-
 
 function App() {
   const [showSignIn, setShowSignIn] = useState(false);
@@ -65,6 +65,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="services" element={<Services />} />
+          <Route path="/car/:id" element={<CarDetail />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />

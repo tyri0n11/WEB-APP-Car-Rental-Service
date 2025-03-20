@@ -153,7 +153,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       });
 
       if (!response.ok) throw new Error("Signup failed");
-
       const result = await response.json();
       const access = result?.data?.accessToken;
       const refresh = result?.data?.refreshToken;

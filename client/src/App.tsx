@@ -13,8 +13,8 @@ import Contact from "./components/pages/home/sections/Contact";
 import Profile from "./components/pages/profile/Profile";
 
 import "./App.css";
-import Forgot from "./components/pages/auth/password/Forgot";
-import Reset from "./components/pages/auth/password/Reset";
+import ForgotPassword from "./components/pages/auth/forgot-password";
+import ResetPassword from "./components/pages/auth/reset-password";
 
 function App() {
   return (
@@ -57,8 +57,8 @@ const MainLayout = () => {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/auth/password/Forgot" element={<Forgot />} />
-          <Route path="/auth/password/Reset" element={<Reset />} />
+          <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+          <Route path="/auth/reset-password" element={<ResetPassword />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />

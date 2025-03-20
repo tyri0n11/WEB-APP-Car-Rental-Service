@@ -77,14 +77,14 @@ const Navbar: React.FC<{
               <button
                 type="button"
                 className={styles.navButton}
-                onClick={() => handleNavigation("auth/password/Forgot")}
+                onClick={() => handleNavigation("auth/forgot-password")}
               >
                 Forgot
               </button>
               <button
                 type="button"
                 className={styles.navButton}
-                onClick={() => handleNavigation("auth/password/Reset")}
+                onClick={() => handleNavigation("auth/reset-password")}
               >
                 Reset
               </button>

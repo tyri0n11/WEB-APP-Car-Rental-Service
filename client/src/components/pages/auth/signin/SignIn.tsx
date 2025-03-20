@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../../../hooks/useAuth";
-import ForgotPassword from "../password/Forgot";
+import ForgotPassword from "../forgot-password";
 
 import '../auth_styles.css';
 

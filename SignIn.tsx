@@ -17,16 +17,8 @@ const SignIn: React.FC<{
       else if (password === "") setErrorMessage("Password is required");
       else {
         setErrorMessage("Please fill in all fields");
-        if (!email || !password) {
-          if (email === "") setErrorMessage("Email is required");
-          else if (password === "") setErrorMessage("Password is required");
-          else {
-            setErrorMessage("Please fill in all fields");
-            if (email.length < 5 || email.length > 89) setErrorMessage("Invalid email");
-          }
-          setErrorMessage("Please fill in all fields");
-          return false;
-        }
+        if (email.length < 5 || email.length > 89)
+          setErrorMessage("Invalid email");
       }
       setErrorMessage("Please fill in all fields");
       return false;

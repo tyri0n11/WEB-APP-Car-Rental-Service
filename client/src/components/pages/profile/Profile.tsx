@@ -1,6 +1,7 @@
-import React, { CSSProperties, useState } from "react";
+import React, { useState } from "react";
 import { FaAddressCard, FaCar, FaHeart, FaLock, FaUser } from "react-icons/fa";
 import { useAuth } from "../../../hooks/useAuth";
+import "./Profile.css";
 import MyAccount from "./sections/myaccount/MyAccount";
 
 const Profile: React.FC = () => {
@@ -23,29 +24,23 @@ const Profile: React.FC = () => {
   const { user } = useAuth();
 
   return (
-    <div style={styles.profilePage}>
-      <div style={styles.profileLayout}>
-        <div style={styles.profileContainer}>
-          <div style={styles.profileSidebar}>
-            <div style={styles.title}>
+    <div className="profilePage">
+      <div className="profileLayout">
+        <div className="profileContainer">
+          <div className="profileSidebar">
+            <div className="profileTitle">
               Hi, {user?.lastName || "there"} {user?.firstName}
             </div>
-            <hr style={styles.hr} />
+            <hr className="profileHr" />
             {menuItems.map((item, index) => (
               <a
                 key={index}
-                style={{
-                  ...styles.sidebarItem,
-                  ...(activeTab === index ? styles.sidebarItemActive : {}),
-                }}
+                className={`profileSidebarItem ${activeTab === index ? "profileSidebarItemActive" : ""}`}
                 onMouseEnter={(e) => {
-                  Object.assign(e.currentTarget.style, styles.sidebarItemHover);
+                  e.currentTarget.classList.add("profileSidebarItemHover");
                 }}
                 onMouseLeave={(e) => {
-                  if (activeTab !== index) {
-                    e.currentTarget.style.backgroundColor = "transparent";
-                    e.currentTarget.style.color = "#333";
-                  }
+                  e.currentTarget.classList.remove("profileSidebarItemHover");
                 }}
                 onClick={() => setActiveTab(index)}
               >
@@ -54,85 +49,14 @@ const Profile: React.FC = () => {
               </a>
             ))}
           </div>
-          <div style={styles.profileContent}>
-            <div style={styles.title}>Profile Content</div>
-            <div style={styles.details}>{menuItems[activeTab].content}</div>
+          <div className="profileContent">
+            <div className="profileTitle">Profile Content</div>
+            <div className="profileDetails">{menuItems[activeTab].content}</div>
           </div>
         </div>
       </div>
     </div>
   );
-};
-
-const styles: { [key: string]: CSSProperties } = {
-  profilePage: {
-    padding: "80px 0",
-    width: "100%",
-    backgroundColor: "#f9f9f9",
-    minHeight: "100vh",
-  },
-  profileLayout: {
-    display: "flex",
-    justifyContent: "center",
-    margin: "0 40px",
-  },
-  profileContainer: {
-    display: "flex",
-    flex: "0.8",
-    gap: "20px",
-  },
-  profileSidebar: {
-    padding: "0 10px",
-    flex: "0 0 30%",
-    display: "flex",
-    flexDirection: "column",
-    gap: "24px",
-    flexWrap: "nowrap",
-  },
-  profileContent: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "24px",
-    flex: "1",
-    backgroundColor: "#fff",
-    borderRadius: "8px",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-    paddingBottom: "16px",
-  },
-  title: {
-    fontSize: "24px",
-    fontWeight: "bold",
-    padding: "16px",
-    color: "#007bff",
-  },
-  details: {
-    padding: "16px",
-  },
-  sidebarItem: {
-    width: "240px",
-    position: "relative",
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    padding: "8px 12px",
-    cursor: "pointer",
-    color: "#333",
-    textDecoration: "none",
-  },
-  sidebarItemHover: {
-    backgroundColor: "#f2f2f2",
-    color: "#007bff",
-  },
-  hr: {
-    margin: "0 16px",
-    color: "#f2f2f2",
-  },
-  sidebarItemActive: {
-    backgroundColor: "#f2f2f2",
-    color: "#007bff",
-    fontWeight: "600",
-    borderLeft: "3px solid #007bff",
-  },
 };
 
 export default Profile;

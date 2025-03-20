@@ -15,6 +15,7 @@ import Profile from "./components/pages/profile/Profile";
 import Services from "./components/pages/service/Services";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
+
 function App() {
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);

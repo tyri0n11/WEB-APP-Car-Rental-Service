@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
 import styles from "./Navbar.module.css";
 
 const Navbar: React.FC<{
@@ -9,15 +8,11 @@ const Navbar: React.FC<{
 }> = ({ onSignInClick, onSignUpClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const { user, logout } = useAuth(); // Get user and logout function
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-  const handleLogout = () => {
-    logout();
-    setIsMenuOpen(false);
-  };
+
   const handleNavigation = (path: string) => {
     navigate(path);
     setIsMenuOpen(false);
@@ -33,7 +28,7 @@ const Navbar: React.FC<{
           tabIndex={0}
           onKeyPress={(e) => e.key === "Enter" && handleNavigation("/")}
         >
-          <img src="/logo.png" width={100} height={50} alt="Logo" />
+          <img src="/logo.png" width={100} height={50} />
         </div>
         <button
           className={styles.menuToggle}
@@ -77,53 +72,22 @@ const Navbar: React.FC<{
         </div>
       </div>
 
-      {user ? (
-        <div className={styles.privateContainer}>
-          <div className={styles.dropdown}>
-            <button className={styles.dropdownButton}>
-              <img
-                className={styles.userAvatar}
-                src={"https://cdn-icons-png.flaticon.com/128/1077/1077012.png"}
-                alt="User Avatar"
-              />
-              <p className={styles.userGreet}>Welcome, {user.lastName}</p>
-            </button>
-            <div className={styles.dropdownContent}>
-              <button
-                type="button"
-                className={styles.dropdownItem}
-                onClick={() => handleNavigation("/profile")}
-              >
-                Profile
-              </button>
-              <button
-                type="button"
-                onClick={handleLogout}
-                className={styles.dropdownItemLogout}
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className={styles.authButtons}>
-          <button
-            type="button"
-            onClick={onSignInClick}
-            className={styles.loginButton}
-          >
-            Sign In
-          </button>
-          <button
-            type="button"
-            onClick={onSignUpClick}
-            className={styles.signupButton}
-          >
-            Sign Up
-          </button>
-        </div>
-      )}
+      <div className={styles.authButtons}>
+        <button
+          type="button"
+          onClick={onSignInClick}
+          className={styles.loginButton}
+        >
+          Sign In
+        </button>
+        <button
+          type="button"
+          onClick={onSignUpClick}
+          className={styles.signupButton}
+        >
+          Sign Up
+        </button>
+      </div>
     </div>
   );
 };

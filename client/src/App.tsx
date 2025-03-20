@@ -1,15 +1,19 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import Banner from "./components/layout/Banner";
 import Footer from "./components/layout/Footer";
 import NavBar from "./components/layout/Navbar";
-import Home from "./components/pages/home/Home";
-import SignUp from "./components/pages/auth/signup/SignUp";
+import About from "./components/pages/about/About";
 import SignIn from "./components/pages/auth/signin/SignIn";
-import Contact from "./components/pages/home/sections/Contact";
+import SignUp from "./components/pages/auth/signup/SignUp";
+import Dashboard from "./components/pages/dashboard/Dashboard";
+import Home from "./components/pages/home/Home";
 import CarDetail from "./components/pages/home/sections/CarDetail";
-
+import Contact from "./components/pages/home/sections/Contact";
+import Profile from "./components/pages/profile/Profile";
+import Services from "./components/pages/service/Services";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 
 function App() {
@@ -24,54 +28,73 @@ function App() {
     }
   }, [showSignIn, showSignUp]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar?.classList.add('scrolled');
+      } else {
+        navbar?.classList.remove('scrolled');
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
-    <BrowserRouter>
-      <div className="flex flex-col min-h-screen bg-cover bg-center">
-        <nav>
-          <Banner />
-          <NavBar
-            onSignInClick={() => {
-              setShowSignIn(true);
-              setShowSignUp(false);
-            }}
-            onSignUpClick={() => {
-              setShowSignUp(true);
-              setShowSignIn(false);
-            }}
-          />
-        </nav>
+    <div className="App">
+      <header className="navbar">
+        <Banner />
+        <NavBar
+          onSignInClick={() => {
+            setShowSignIn(true);
+            setShowSignUp(false);
+          }}
+          onSignUpClick={() => {
+            setShowSignUp(true);
+            setShowSignIn(false);
+          }}
+        />
+      </header>
 
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/car/:id" element={<CarDetail />} />
-          </Routes>
-        </main>
+      <section className="main-content">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="services" element={<Services />} />
+          <Route path="/car/:id" element={<CarDetail />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
+        </Routes>
+      </section>
+      {showSignIn && (
+        <SignIn
+          onClose={() => setShowSignIn(false)}
+          onSwitchToSignUp={() => {
+            setShowSignIn(false);
+            setShowSignUp(true);
+          }}
+        />
+      )}
 
-        <Footer />
+      {showSignUp && (
+        <SignUp
+          onClose={() => setShowSignUp(false)}
+          onSwitchToSignIn={() => {
+            setShowSignUp(false);
+            setShowSignIn(true);
+          }}
+        />
+      )}
 
-        {showSignIn && (
-          <SignIn
-            onClose={() => setShowSignIn(false)}
-            onSwitchToSignUp={() => {
-              setShowSignIn(false);
-              setShowSignUp(true);
-            }}
-          />
-        )}
-
-        {showSignUp && (
-          <SignUp
-            onClose={() => setShowSignUp(false)}
-            onSwitchToSignIn={() => {
-              setShowSignUp(false);
-              setShowSignIn(true);
-            }}
-          />
-        )}
-      </div>
-    </BrowserRouter>
+      <Footer />
+    </div>
   );
 }
 

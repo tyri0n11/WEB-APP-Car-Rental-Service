@@ -1,8 +1,9 @@
-import React from 'react';
+import React from "react";
 import SearchBar from "./SearchBar";
 /*import AnimatedButton from '../../../buttons/AnimatedButton';*/
 const Hero: React.FC = () => {
-  const description = "Looking for a reliable and affordable car rental service? At CRS, we offer a wide range of well-maintained vehicles to meet your travel needs.";
+  const description =
+    "Looking for a reliable and affordable car rental service? At CRS, we offer a wide range of well-maintained vehicles to meet your travel needs.";
   return (
     <div style={styles.heroContainer}>
       <div style={styles.backgroundLayer} />
@@ -10,28 +11,22 @@ const Hero: React.FC = () => {
       <div style={styles.contentLayer}>
         <div style={styles.contentBox}>
           <h1 style={styles.heading}>CRS - Accompanying You on Every Ride</h1>
-          <hr style={styles.divider}/>
+          <hr style={styles.divider} />
           <p style={styles.description}>{description}</p>
           {/*<AnimatedButton text="Get Started" onClick={() => console.log("Get Started")} />*/}
-          
         </div>
         <SearchBar />
       </div>
-      
     </div>
   );
 };
 
 const styles: { [key: string]: React.CSSProperties } = {
   heroContainer: {
-    width: "80%",
-    height: "90vh",
-    overflow: "hidden",
     position: "relative",
-    padding: "0 8%",
-    margin: "0 auto",
-    borderRadius: "15px",
-
+    width: "100%",
+    height: "100vh",
+    overflow: "hidden",
   },
   backgroundLayer: {
     position: "absolute",
@@ -55,7 +50,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     left: 0,
     width: "100%",
     height: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", 
+    backgroundColor: "rgba(0, 0, 0, 0.76)",
     zIndex: -1,
   },
 
@@ -82,8 +77,8 @@ const styles: { [key: string]: React.CSSProperties } = {
     textShadow: "2px 2px 5px rgba(0, 0, 0, 0.7)",
   },
   divider: {
-    width: "150px", 
-    height: "0.1px", 
+    width: "150px",
+    height: "0.1px",
     backgroundColor: "#ffffff",
     margin: "30px auto",
     border: "none",

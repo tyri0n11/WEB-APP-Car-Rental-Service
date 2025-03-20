@@ -1,38 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Poppins', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-}
-
 .modal {
   position: fixed;
-  bottom: 50%;
-  left: 50%;
-  width: 700px;
-  height: 450px;
-  max-width: 90%; 
-  background: rgba(0, 0, 0, 0.5);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.719);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  flex-direction: column;
 }
 
-.wrapper {
+.signup-wrapper, .signin-wrapper {
   position: fixed;
-  width: 450px;
-  height: 450px;
+  min-width: 400px;
+  height: auto;
   background: white;
   border: 2px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: none;
@@ -44,9 +26,8 @@ body {
   flex-direction: column;
   overflow: hidden;
   transition: height 0.2s ease;
-  padding: 24px;
+  padding: 16px;
   top: 50%;
-  margin-top: 50px;
   left: 50%;
   transform: translate(-50%, -50%);
 }
@@ -55,7 +36,7 @@ body {
   position: absolute;
   top: 10px;
   right: 10px;
-  font-size: 18px;
+  font-size: 14px;
   cursor: pointer;
   color: #333;
   transition: color 0.3s ease-in-out;
@@ -65,50 +46,59 @@ body {
   color: #029cea;
 }
 
-
-form h1 {
-  font-size: 36px;
+.form-box h1 {
+  font-size: 20px;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 8px;
   color: #029cea;
 }
 
-form .input-box {
-  position: relative;
+.form-box .input-box {
   width: 100%;
-  
-  height: 50px;
-  margin: 30px 0;
 }
-
+.form-box {
+  width: 100%;
+  padding: 16px;
+  overflow: scroll;
+}
+.form-box .name-box {
+  display: flex;
+  gap: 10px;
+}
+.form-box .name-box .input-box {
+  width: 50%;
+}
+.form-box .name-box .input-box input {
+  width: 100%;
+}
 .input-box label {
-  font-size: 14px;
+  font-size: 12px;
   display: block;
   margin-bottom: 5px;
   color: #5e5d5d;
-  
 }
 
 .input-box input {
+  height: 32px;
+  margin-bottom: 6px;
   width: 100%;
-  height: 100%;
-  outline: none;
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 40px;
-  font-size: 16px;
-  color: #333;
-  padding: 20px 45px 20px 20px;
-  box-shadow: 0 0 10px  rgba(0, 0, 0, 0.221);
-  
+  border: 0.5px solid rgba(73, 73, 73, 0.63);
+  border-radius: 4px;
+  font-size: 14px;
+  color: black;
+  padding: 8px 12px;
 }
 
 .input-box input:focus {
-  background: #83bde9;
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  border: #029cea;
 }
 
 .input-box input::placeholder {
-  color: #333;
+  color: grey;
+}
+
+.input-box input::content {
+  color: black;
 }
 
 .input-box .icon {
@@ -116,24 +106,26 @@ form .input-box {
   right: 20px;
   top: 100%;
   translate: 0 -50%;
-  font-size: 18px;
+  font-size: 14px;
   color: #333;
 }
 
-form .remember-forgot {
+.form-box .remember-forgot {
   display: flex;
   justify-content: space-between;
-  font-size: 14.5px;
   align-items: center;
-  margin: 10px 0 15px;
+  font-size: 12px;
+  margin: 8px 0 12px;
 }
 
 .remember-forgot label input {
   accent-color: #333;
   margin-right: 4px;
+  cursor: pointer;
 }
 
 .remember-forgot label {
+  display: flex;
   color: #333;
   text-decoration: none;
 }
@@ -147,52 +139,41 @@ form .remember-forgot {
   text-decoration: underline;
 }
 
-form button {
+.form-box button {
   width: 100%;
-  height: 45px;
+  height: 36px;
   background: linear-gradient(135deg, #029cea, #629af5);
   border: none;
   outline: none;
   border-radius: 40px;
   box-shadow: 0 0 10px rgba(130, 190, 242, 0.1);
   cursor: pointer;
-  font-size: 17px;
+  font-size: 14px;
   font-weight: bold;
   transition: all 0.3s ease-in-out;
   color: white;
 }
 
-button:hover {
-  background: #0495dd;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 15px rgba(167, 224, 248, 0.6);
-}
-
-button:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-
-form .login-link {
-  font-size: 14.5px;
+.form-box .login-link, .form-box .register-link {
+  font-size: 12px;
   text-align: center;
-  margin: 20px 0 15px;
+  margin: 16px 0 12px;
 }
 
-.login-link p {
+.login-link p, .register-link p {
   color: #333;
   text-decoration: none;
 }
 
-.login-link p span {
+.login-link p span, .register-link p span {
   color: #029cea;
   text-decoration: none;
   font-weight: 600;
 }
 
-.login-link p span:hover {
+.login-link p span:hover, .register-link p span:hover {
   text-decoration: underline;
+  cursor: pointer;
 }
 
 

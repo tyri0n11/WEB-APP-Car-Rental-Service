@@ -11,7 +11,11 @@ interface LocationSearchModalProps {
 
 const locations = ["Ha Noi", "Ho Chi Minh", "Da Nang"];
 
-const LocationSearchModal: React.FC<LocationSearchModalProps> = ({ isOpen, onClose, onConfirm }) => {
+const LocationSearchModal: React.FC<LocationSearchModalProps> = ({
+  isOpen,
+  onClose,
+  onConfirm,
+}) => {
   return (
     <Modal
       isOpen={isOpen}
@@ -23,20 +27,26 @@ const LocationSearchModal: React.FC<LocationSearchModalProps> = ({ isOpen, onClo
       <h2 style={modalStyles.title}>Chọn địa điểm</h2>
       <ul style={modalStyles.list}>
         {locations.map((location) => (
-          <li key={location} style={modalStyles.locationItem} onClick={() => onConfirm(location)}>
+          <li
+            key={location}
+            style={modalStyles.locationItem}
+            onClick={() => onConfirm(location)}
+          >
             {location}
           </li>
         ))}
       </ul>
-      <button onClick={onClose} style={modalStyles.closeBtn}>Đóng</button>
+      <button onClick={onClose} style={modalStyles.closeBtn}>
+        Đóng
+      </button>
     </Modal>
   );
 };
 
 const modalStyles: { [key: string]: React.CSSProperties } = {
   overlay: {
-    zIndex: 1000, 
-    backgroundColor: "rgba(0, 0, 0, 0.5)", 
+    zIndex: 1000,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   content: {
     top: "50%",

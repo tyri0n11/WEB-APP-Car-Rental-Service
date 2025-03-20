@@ -1,7 +1,17 @@
 import React from "react";
-import { FaGasPump, FaMapMarkerAlt, FaStar, FaTachometerAlt, FaUsers, FaChargingStation } from "react-icons/fa";
-import { TbAutomaticGearboxFilled, TbManualGearboxFilled } from "react-icons/tb";
 import { BsFillFuelPumpDieselFill } from "react-icons/bs";
+import {
+  FaChargingStation,
+  FaGasPump,
+  FaMapMarkerAlt,
+  FaStar,
+  FaTachometerAlt,
+  FaUsers,
+} from "react-icons/fa";
+import {
+  TbAutomaticGearboxFilled,
+  TbManualGearboxFilled,
+} from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 
 interface Car {
@@ -18,7 +28,7 @@ interface Car {
   rating: number;
   kilometers: number;
   dailyPrice: number;
-  discountPrice?: number; 
+  discountPrice?: number;
   licensePlate: string;
   description: string;
 }
@@ -123,8 +133,8 @@ const CarCard: React.FC<{ car: Car }> = ({ car }) => {
 
     hr: {
       border: "none",
-      borderTop: "1px solid #ddd", 
-      margin: "8px 0", 
+      borderTop: "1px solid #ddd",
+      margin: "8px 0",
     },
 
     infoRow3: {
@@ -167,12 +177,15 @@ const CarCard: React.FC<{ car: Car }> = ({ car }) => {
       fontSize: "16px",
       color: "#FFD700",
     },
-    
   };
 
   return (
     <div style={styles.card} onClick={() => navigate(`/car/${car.id}`)}>
-      <img src={car.image} alt={`${car.make} ${car.model} ${car.year}`} style={styles.image} />
+      <img
+        src={car.image}
+        alt={`${car.make} ${car.model} ${car.year}`}
+        style={styles.image}
+      />
       <div>
         <h3 style={styles.title}>{`${car.make} ${car.model} - ${car.year}`}</h3>
         <div style={styles.infoRow1}>
@@ -190,20 +203,28 @@ const CarCard: React.FC<{ car: Car }> = ({ car }) => {
 
           <div style={styles.getFuel}>{getFuelTypeDisplay(car.fuelType)}</div>
         </div>
-        
+
         <div style={styles.infoRow2}>
-          <div style={styles.address}><FaMapMarkerAlt /> {car.address}</div>
-          <div style={styles.numSeats}><FaUsers /> {car.numSeats} seats </div>
+          <div style={styles.address}>
+            <FaMapMarkerAlt /> {car.address}
+          </div>
+          <div style={styles.numSeats}>
+            <FaUsers /> {car.numSeats} seats{" "}
+          </div>
         </div>
-        
-        <hr style={styles.hr}/>
+
+        <hr style={styles.hr} />
 
         <div style={styles.infoRow3}>
           <div style={styles.info}>
-            <div style={styles.rate}><FaStar /> {car.rating} </div>
-            <div style={styles.kilometers}><FaTachometerAlt /> {car.kilometers} km </div>
+            <div style={styles.rate}>
+              <FaStar /> {car.rating}{" "}
+            </div>
+            <div style={styles.kilometers}>
+              <FaTachometerAlt /> {car.kilometers} km{" "}
+            </div>
           </div>
-     
+
           <div style={styles.priceRow}>
             <span style={styles.price}>{car.dailyPrice} VND/day</span>
           </div>

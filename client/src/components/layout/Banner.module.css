@@ -9,7 +9,6 @@
   justify-content: center;
   overflow: hidden;
   font-weight: bold;
-  
 }
 
 /* ✅ Banner Scrolling Effect */
@@ -27,7 +26,7 @@
     transform: translateX(0);
   }
   to {
-    transform: translateX(-50%);
+    transform: translateX(-200%);
   }
 }
 

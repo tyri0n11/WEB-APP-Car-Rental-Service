@@ -17,7 +17,7 @@ interface AuthState {
   accessToken: string | null;
 }
 interface AuthContextType extends AuthState {
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<boolean>;
   signup: (data: {
     email: string;
     password: string;
@@ -59,7 +59,7 @@ const authReducer = (
 const fetchUser = async (accessToken: string): Promise<User | null> => {
   try {
     const response = await fetch(`${API_AUTHEN_URL}/me`, {
-      method: "POST",
+      method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
@@ -69,7 +69,6 @@ const fetchUser = async (accessToken: string): Promise<User | null> => {
     if (!response.ok) throw new Error("Failed to fetch user");
 
     const result = await response.json();
-
     if (result?.statusCode === 200 && result?.data) {
       const user: User = {
         role: result.data.role,
@@ -79,7 +78,7 @@ const fetchUser = async (accessToken: string): Promise<User | null> => {
         lastName: result.data.lastName,
         phoneNumber: result.data.phoneNumber,
         isVerified: result.data.isVerified,
-        drivingLicenceId: result.data.drivingLicenceId ?? "", // Handle null case
+        drivingLicenceId: result.data.drivingLicenceId ?? "Not validate yet",
       };
       return user;
     } else {
@@ -115,29 +114,30 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     user: null,
     accessToken: localStorage.getItem("access_token") || null,
   });
-
-  useEffect(() => {
-    const initializeAuth = async () => {
-      if (state.accessToken) {
-        const user = await fetchUser(state.accessToken);
-        if (user) {
-          console.log("User fetched:", user);
-          dispatch({ type: "SET_USER", payload: user });
+  const initializeAuth = async () => {
+    if (state.accessToken) {
+      const user = await fetchUser(state.accessToken);
+      if (user) {
+        console.log("User fetched:", user);
+        dispatch({ type: "SET_USER", payload: user });
+      } else {
+        const newTokens = await refreshToken();
+        if (newTokens) {
+          localStorage.setItem("access_token", newTokens.access_token);
+          dispatch({ type: "SET_TOKEN", payload: newTokens.access_token });
+          const newUser = await fetchUser(newTokens.access_token);
+          dispatch({ type: "SET_USER", payload: newUser });
         } else {
-          const newTokens = await refreshToken();
-          if (newTokens) {
-            localStorage.setItem("access_token", newTokens.access_token);
-            dispatch({ type: "SET_TOKEN", payload: newTokens.access_token });
-            const newUser = await fetchUser(newTokens.access_token);
-            dispatch({ type: "SET_USER", payload: newUser });
-          } else {
-            handleLogout();
-          }
+          handleLogout();
         }
       }
-    };
+    }
+  };
+
+  useEffect(() => {
     initializeAuth();
-  }, [state.accessToken]);
+  }, []);
+
   const signup = async (data: {
     email: string;
     password: string;
@@ -154,17 +154,26 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       if (!response.ok) throw new Error("Signup failed");
 
-      const user = await response.json();
+      const result = await response.json();
+      const access = result?.data?.accessToken;
+      const refresh = result?.data?.refreshToken;
+      localStorage.setItem("access_token", access);
+      localStorage.setItem("refresh_token", refresh);
+      
+      const user = await fetchUser(access);
+      if (!user) {
+        throw new Error("Failed to fetch user");
+      }
       dispatch({
         type: "LOGIN",
-        payload: { user, accessToken: localStorage.getItem("access_token") },
+        payload: { user, accessToken: access },
       });
     } catch (error) {
       console.error("Signup error:", error);
     }
   };
 
-  const login = async (email: string, password: string): Promise<void> => {
+  const login = async (email: string, password: string): Promise<boolean> => {
     try {
       const response = await fetch(`${API_AUTHEN_URL}/login`, {
         method: "POST",
@@ -172,7 +181,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         body: JSON.stringify({ email, password }),
       });
 
-      if (!response.ok) throw new Error("Login failed");
+      if (!response.ok) {
+        throw new Error("Login failed");
+      }
 
       const data = await response.json();
       const access = data?.data?.accessToken;
@@ -180,13 +191,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       localStorage.setItem("access_token", access);
       localStorage.setItem("refresh_token", refresh);
       const user = await fetchUser(access);
-      if (!user) throw new Error("Failed to fetch user");
+      if (!user) {
+        throw new Error("Failed to fetch user");
+      }
       dispatch({
         type: "LOGIN",
         payload: { user, accessToken: access },
       });
+      return true;
     } catch (error) {
       console.error("Login error:", error);
+      return false;
     }
   };
 

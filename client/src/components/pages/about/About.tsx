@@ -1,10 +1,10 @@
 import React from "react";
 
 import Card from "./sections/Card";
-import Intro from "./sections/Intro";
 import Hero from "./sections/Hero";
-import Value from "./sections/Value";
+import Intro from "./sections/Intro";
 import Location from "./sections/Location";
+import Value from "./sections/Value";
 
 const AboutUs: React.FC = () => {
     return (

@@ -83,14 +83,16 @@ const styles = {
         alignItems: "center",
         justifyContent: "center",
         height: "100vh",
-        width: "100%",
+        width: "100vw",
+        padding: "20px",
         //backgroundImage: `url(${images.background})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
     },
     box: {
-        width: "500px",
+        width: "100%",
+        maxWidth: "600px",
         padding: "40px",
         background: "white",
         borderRadius: "10px",
@@ -128,5 +130,6 @@ const styles = {
         transition: "background-color 0.3s ease",
     }),
 };
+
 
 export default ForgotPassword;

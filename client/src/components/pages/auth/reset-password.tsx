@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 const ResetPassword: React.FC = () => {
@@ -8,7 +8,6 @@ const ResetPassword: React.FC = () => {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
-    // Extract token from the query parameter
     const token = searchParams.get("token");
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -24,7 +23,6 @@ const ResetPassword: React.FC = () => {
         }
 
         try {
-            // Read host and path from environment variables
             const API_HOST = import.meta.env.VITE_HOST || "http://localhost:3000";
             const RP_PATH = import.meta.env.VITE_RP_PATH || "/auth/reset-password";
             const API_URL = `${API_HOST}${RP_PATH}`;
@@ -42,13 +40,10 @@ const ResetPassword: React.FC = () => {
 
             setMessage("Password reset successfully!");
 
-            // Remove the token from the URL after success
             setTimeout(() => {
                 window.history.replaceState({}, document.title, window.location.pathname);
                 setSearchParams({});
             }, 500);
-
-
         } catch (err) {
             setError(err instanceof Error ? err.message : "An error occurred.");
         } finally {
@@ -82,15 +77,16 @@ const ResetPassword: React.FC = () => {
     );
 };
 
-// Extracted styles
+// Updated responsive styles
 const styles = {
     container: {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         height: "100vh",
-        width: "100%",
-        //backgroundImage: `url(${images.background})`,
+        width: "100vw", // Full width of the browser
+        padding: "20px", // Prevents content from touching edges on small screens
+        //backgroundImage: `url(${images.background})`,]
         backgroundSize: "cover",
         backgroundPosition: "center",
     },
@@ -103,7 +99,8 @@ const styles = {
         backgroundColor: "rgba(0, 0, 0, 0.5)",
     },
     box: {
-        width: "500px",
+        width: "90%", // Responsive width for mobile screens
+        maxWidth: "500px", // Prevents it from being too wide on larger screens
         padding: "40px",
         background: "white",
         borderRadius: "10px",

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { useAuth } from "../../../../hooks/useAuth";
+import { Link } from "react-router-dom";
+
 import "../AuthStyles.css";
 
 const SignIn: React.FC<{
@@ -90,8 +92,11 @@ const SignIn: React.FC<{
               <label>
                 <input type="checkbox" /> Remember me
               </label>
-              <a href="#">Forgot password?</a>
+              <Link to="/auth/forgot-password" onClick={onClose}>
+                Forgot password?
+              </Link>
             </div>
+
             <div className="button-box">
               <button type="submit">Sign In</button>
             </div>

@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import carsData from "../../../.././utils/dummy/cars.json";
-import CarCard from "./CarCard";
+import CarCard from "../../../cards/CarCard";
 
 const styles: { [key: string]: React.CSSProperties } = {
   container: {

@@ -9,10 +9,10 @@ import SignIn from "./components/pages/auth/signin/SignIn";
 import SignUp from "./components/pages/auth/signup/SignUp";
 import Dashboard from "./components/pages/dashboard/Dashboard";
 import Home from "./components/pages/home/Home";
-import CarDetail from "./components/pages/home/sections/CarDetail";
+import CarDetail from "./components/pages/car/carDetail";
 import Contact from "./components/pages/home/sections/Contact";
 import Profile from "./components/pages/profile/Profile";
-import Services from "./components/pages/service/Services";
+import Services from "./components/pages/service/Service";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
 

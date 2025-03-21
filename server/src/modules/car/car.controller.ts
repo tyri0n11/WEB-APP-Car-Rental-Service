@@ -27,7 +27,7 @@ import {
 } from './dto/response.dto';
 import { TrackViewInterceptor } from '@/interceptors/action-tracking/track-view.interceptor';
 
-@Controller('car')
+@Controller('cars')
 export class CarController {
   constructor(private readonly carService: CarService) {}
 

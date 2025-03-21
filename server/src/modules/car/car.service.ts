@@ -177,8 +177,8 @@ export class CarService extends BaseService<Car> {
               rating: true,
             },
           },
-          carCategories: {
-            include: {
+          categories: {
+            select: {
               category: true,
             },
           },

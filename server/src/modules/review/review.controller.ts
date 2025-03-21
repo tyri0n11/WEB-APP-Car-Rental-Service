@@ -17,7 +17,7 @@ import { FindManyByCarIdQueryDTO } from './dto/findManyByCarId.request.dto';
 import { CreateReviewRequestDTO } from './dto/create.request.dto';
 import { JwtAccessGuard } from '../auth/guards/jwt/jwtAccess.guard';
 
-@Controller('review')
+@Controller('reviews')
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 

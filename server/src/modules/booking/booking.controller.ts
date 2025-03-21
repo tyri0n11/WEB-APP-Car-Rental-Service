@@ -21,7 +21,7 @@ import { FindManyBookingsQueryDTO } from './dto/findMany.request.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtAccessGuard } from '../auth/guards/jwt/jwtAccess.guard';
 @UseGuards(JwtAccessGuard)
-@Controller('booking')
+@Controller('bookings')
 export class BookingController {
   constructor(
     private readonly bookingService: BookingService,

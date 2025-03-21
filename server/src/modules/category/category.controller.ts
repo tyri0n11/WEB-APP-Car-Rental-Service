@@ -15,7 +15,7 @@ import { JwtAccessGuard } from '../auth/guards/jwt/jwtAccess.guard';
 import { Roles } from '@/decorators/role.decorator';
 import { Role } from '@prisma/client';
 
-@Controller('category')
+@Controller('categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 

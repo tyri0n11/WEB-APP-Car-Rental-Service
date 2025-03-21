@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/car';
+const API_URL = 'http://localhost:3000/cars';
 
-export const getCars = async (params : any) => {
+export const getCars = async (params? : any) => {
   const response = await axios.get(API_URL, { params });
   return response.data;
 };

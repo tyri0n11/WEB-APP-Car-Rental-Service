@@ -34,7 +34,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly userService: UserService,
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
   @ApiPost({
     path: 'signup',

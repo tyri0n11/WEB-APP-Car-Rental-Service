@@ -15,6 +15,9 @@ import Profile from "./components/pages/profile/Profile";
 import Services from "./components/pages/service/Service";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
+import "./App.css";
+import ForgotPassword from "./components/pages/auth/forgot-password";
+import ResetPassword from "./components/pages/auth/reset-password";
 
 function App() {
   const [showSignIn, setShowSignIn] = useState(false);
@@ -65,7 +68,10 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/services" element={<Services />} />
+          <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+          <Route path="/auth/reset-password" element={<ResetPassword />} />
+          <Route path="services" element={<Services />} />
+
           <Route path="/car/:id" element={<CarDetail />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />

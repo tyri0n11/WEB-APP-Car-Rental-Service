@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import images from "../../../assets/images/images";
+//import images from "../../../assets/images/images";
 
 const ForgotPassword: React.FC = () => {
     const [email, setEmail] = useState("");
@@ -84,7 +84,7 @@ const styles = {
         justifyContent: "center",
         height: "100vh",
         width: "100%",
-        backgroundImage: `url(${images.background})`,
+        //backgroundImage: `url(${images.background})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",

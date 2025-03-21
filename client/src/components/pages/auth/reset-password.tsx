@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
 const ResetPassword: React.FC = () => {
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [newPassword, setNewPassword] = useState("");
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
@@ -25,8 +25,8 @@ const ResetPassword: React.FC = () => {
 
         try {
             // Read host and path from environment variables
-            const API_HOST = import.meta.env.HOST || "http://localhost:3000";
-            const RP_PATH = import.meta.env.RP_PATH || "/auth/reset-password";
+            const API_HOST = import.meta.env.VITE_HOST || "http://localhost:3000";
+            const RP_PATH = import.meta.env.VITE_RP_PATH || "/auth/reset-password";
             const API_URL = `${API_HOST}${RP_PATH}`;
 
             const response = await fetch(API_URL, {
@@ -41,18 +41,20 @@ const ResetPassword: React.FC = () => {
             }
 
             setMessage("Password reset successfully!");
+
+            // Remove the token from the URL after success
+            setTimeout(() => {
+                window.history.replaceState({}, document.title, window.location.pathname);
+                setSearchParams({});
+            }, 500);
+
+
         } catch (err) {
             setError(err instanceof Error ? err.message : "An error occurred.");
         } finally {
             setLoading(false);
         }
     };
-
-    useEffect(() => {
-        if (!token) {
-            setError("No token found in the URL.");
-        }
-    }, [token]);
 
     return (
         <div style={styles.container}>
@@ -88,7 +90,7 @@ const styles = {
         justifyContent: "center",
         height: "100vh",
         width: "100%",
-        backgroundImage: "url('your-image-url.jpg')", // Replace with your actual image URL
+        //backgroundImage: `url(${images.background})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
     },
@@ -98,7 +100,7 @@ const styles = {
         justifyContent: "center",
         width: "100%",
         height: "100%",
-        backgroundColor: "rgba(0, 0, 0, 0.5)", // Adds a slight dark overlay to enhance readability
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
     },
     box: {
         width: "500px",

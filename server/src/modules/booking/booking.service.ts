@@ -6,7 +6,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Booking, BookingStatus, CarStatus, User } from '@prisma/client';
+import { Booking, BookingStatus, CarStatus } from '@prisma/client';
 import { Queue } from 'bullmq';
 import * as dayjs from 'dayjs';
 import Redis from 'ioredis';
@@ -14,8 +14,8 @@ import { CarService } from '../car/car.service';
 import { DatabaseService } from '../database/database.service';
 import { CreatePaymentData } from '../payment/interfaces/paymentGateway.interface';
 import { PaymentService } from '../payment/payment.service';
-import { CreateTransactionRequestDTO } from '../transaction/dto/create.request.dto';
 import { TransactionService } from '../transaction/transaction.service';
+import { UserActionService } from '../user-action/user-action.service';
 import { CreateBookingRequestDTO } from './dto/create.request.dto';
 import { CrearteBookingResponseDTO } from './dto/create.response.dto';
 import { FindManyBookingsQueryDTO } from './dto/findMany.request.dto';
@@ -24,7 +24,6 @@ import {
   BookingResponseOnRedisDTO,
 } from './dto/response.dto';
 import { UnlockCarQueue } from './enums/queue';
-import { UserActionService } from '../user-action/user-action.service';
 @Injectable()
 export class BookingService extends BaseService<Booking> {
   constructor(
@@ -290,7 +289,7 @@ export class BookingService extends BaseService<Booking> {
       });
 
       if (!booking) {
-        throw new NotFoundException('Booking not found');
+        throw new BadRequestException('Booking not found');
       }
 
       if (booking.status !== BookingStatus.ONGOING) {

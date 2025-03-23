@@ -1,21 +1,18 @@
+import { RequestWithUser } from '@/types/request.type';
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Post,
   Req,
-  Query,
   UseGuards,
 } from '@nestjs/common';
-import { ReviewService } from './review.service';
-import { RequestWithUser } from '@/types/request.type';
-import { ApiPagination } from '@/decorators/apiPagination.decorator';
-import { FindManyByCarIdQueryDTO } from './dto/findManyByCarId.request.dto';
-import { CreateReviewRequestDTO } from './dto/create.request.dto';
 import { JwtAccessGuard } from '../auth/guards/jwt/jwtAccess.guard';
+import { CreateReviewRequestDTO } from './dto/create.request.dto';
+import { ReviewOwnerGuard } from './guards/reviewOwner.guard';
+import { ReviewService } from './review.service';
 
 @Controller('reviews')
 export class ReviewController {
@@ -35,18 +32,12 @@ export class ReviewController {
     );
   }
 
-  @Get()
-  @ApiPagination()
-  findManyByCarId(@Query() query: FindManyByCarIdQueryDTO) {
-    return this.reviewService.findManyByCarId(query);
-  }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.reviewService.findById(id);
   }
 
-  @UseGuards(JwtAccessGuard)
+  @UseGuards(JwtAccessGuard, ReviewOwnerGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.reviewService.remove(id);

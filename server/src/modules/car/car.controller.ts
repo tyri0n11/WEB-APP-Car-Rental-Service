@@ -12,7 +12,10 @@ import {
 } from '@nestjs/common';
 import { CarService } from './car.service';
 import { CreateCarRequestDTO } from './dto/create.request.dto';
-import { UpdateCarRequestDTO } from './dto/update.request.dto';
+import {
+  UpdateCarRequestDTO,
+  UpdateCarStatusRequestDTO,
+} from './dto/update.request.dto';
 import { RolesGuard } from '@/guards/role.guard';
 import { Roles } from '@/decorators/role.decorator';
 import { Role } from '@prisma/client';
@@ -50,7 +53,7 @@ export class CarController {
   @UseInterceptors(TrackViewInterceptor)
   @ApiOkResponse({ type: CarResponseDTO })
   findOne(@Param('id') id: string) {
-    return this.carService.findOne({ id });
+    return this.carService.findById(id);
   }
 
   @Patch(':id')
@@ -58,6 +61,16 @@ export class CarController {
   @Roles(Role.ADMIN)
   update(@Param('id') id: string, @Body() dto: UpdateCarRequestDTO) {
     return this.carService.update(id, dto);
+  }
+
+  @Patch(':id/status')
+  @UseGuards(JwtAccessGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  updateStatus(
+    @Param('id') id: string,
+    @Body() dto: UpdateCarStatusRequestDTO,
+  ) {
+    return this.carService.updateStatus(id, dto.status);
   }
 
   @Delete(':id')

@@ -1,16 +1,13 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "moduleResolution": "Node",
     "declaration": true,
     "removeComments": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2021",
+    "target": "es2017",
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": "./",
     "tsBuildInfoFile": "./dist/tsconfig.build.tsbuildinfo",
     "baseUrl": "./",
     "incremental": true,
@@ -20,11 +17,14 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "paths": {
       "@/*": ["src/*"],
-      "@modules/*": ["src/modules/*"],
       "@configs/*": ["src/configs/*"],
       "@repositories/*": ["src/repositories/*"]
     }
-  }
+  },
+  "include": ["src/**/*", "prisma/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

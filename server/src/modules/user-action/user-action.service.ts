@@ -29,7 +29,7 @@ export class UserActionService extends BaseService<UserAction> {
     actionType: ActionType,
   ) {
     // Get car details
-    const car = await this.carService.findById(carId, { categories: true });
+    const car = await this.carService.findById(carId);
 
     if (!car) return;
 

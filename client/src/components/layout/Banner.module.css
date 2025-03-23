@@ -3,13 +3,9 @@
 .banner {
   background-color: #007bff;
   color: white;
-  width: inherit;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
   overflow: hidden;
   font-weight: bold;
-  
 }
 
 /* ✅ Banner Scrolling Effect */
@@ -27,7 +23,7 @@
     transform: translateX(0);
   }
   to {
-    transform: translateX(-50%);
+    transform: translateX(-200%);
   }
 }
 

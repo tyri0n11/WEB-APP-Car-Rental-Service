@@ -1,49 +1,7 @@
 import React from 'react';
 import AnimatedButton from '../../../buttons/AnimatedButton';
 import TitleContentCard from '../../../cards/TitleContentCard';
-
-const styles:  { [key: string]: React.CSSProperties }  = {
-  servicesContainer: {
-    padding: '2rem',
-    backgroundColor: '#f5f5f5',
-    justifyContent: 'center',
-    textAlign: 'center',
-    alignItems: 'center',
-  },
-  serviceCardContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    padding: '2rem',
-    gap: '3rem'
-  },
-  serviceTitle: {
-    marginBottom: '1rem',
-    fontSize: '3rem',
-  },
-  serviceDescription: {
-    marginBottom: '1rem',
-    fontSize: '1rem',
-  },
-  rentalPlans: {
-    marginTop: '2rem',
-    fontSize: '1.25rem',
-  },
-  viewAllButton: {
-    marginTop: '1rem',
-    padding: '10px 20px',
-    fontSize: '1rem',
-    color: 'white',
-    backgroundColor: '#007bff',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s ease',
-  },
-  viewAllButtonHover: {
-    backgroundColor: '#0056b3',
-  },
-};
+import ServicesFilter from '../../../filters/ServiceFilter';
 
 const Services: React.FC = () => {
   const services = [
@@ -54,16 +12,49 @@ const Services: React.FC = () => {
     { title: 'Vans & Minibuses', description: 'Perfect for group travels' },
   ];
 
+  const styles = {
+    container: {
+      width: '100%',
+      backgroundColor: '#f5f5f5',
+    },
+    servicesContainer: {
+      maxWidth: '1250px',
+      margin: '0 auto',
+      padding: '40px 16px',
+      textAlign: 'center' as const,
+    },
+    serviceTitle: {
+      fontSize: '32px',
+      fontWeight: 'bold',
+      color: '#1E3A8A',
+      marginBottom: '16px',
+    },
+    description: {
+      fontSize: '16px',
+      color: '#666',
+      marginBottom: '32px',
+    },
+    serviceCardContainer: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+      gap: '24px',
+      marginBottom: '40px',
+    },
+  };
+
   return (
-    <div style={styles.servicesContainer}>
-      <h4 style={styles.serviceTitle}>Choose Your Ride</h4>
-      <p>We offer a diverse selection of vehicles to suit every journey</p>
-      <div style={styles.serviceCardContainer}>
-        {services.map((service, index) => (
-          <TitleContentCard title={service.title} content={service.description} key={index} />
-        ))}
+    <div style={styles.container}>
+      <ServicesFilter />
+      <div style={styles.servicesContainer}>
+        <h4 style={styles.serviceTitle}>Choose Your Ride</h4>
+        <p style={styles.description}>We offer a diverse selection of vehicles to suit every journey</p>
+        <div style={styles.serviceCardContainer}>
+          {services.map((service, index) => (
+            <TitleContentCard title={service.title} content={service.description} key={index} />
+          ))}
+        </div>
+        <AnimatedButton text="View all cars" onClick={() => console.log("View all cars")}/>
       </div>
-      <AnimatedButton text="View all cars" onClick={() => console.log("View all cars")}/>
     </div>
   );
 };

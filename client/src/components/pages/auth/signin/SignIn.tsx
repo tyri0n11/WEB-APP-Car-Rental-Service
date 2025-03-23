@@ -1,54 +1,71 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { FaTimes } from "react-icons/fa";
 import { useAuth } from "../../../../hooks/useAuth";
+import { Link } from "react-router-dom";
 
-import '../signup/SignUp.css';
-const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = ({ onClose, onSwitchToSignUp }) => {
+import "../AuthStyles.css";
+
+const SignIn: React.FC<{
+  onClose: () => void;
+  onSwitchToSignUp: () => void;
+}> = ({ onClose, onSwitchToSignUp }) => {
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const { login } = useAuth();
-
+  const [errorMessage, setErrorMessage] = useState("");
   const checkValid = () => {
-    if (email.length < 5 || !email.includes("@") || !email.includes(".") || email.length > 89) {
-      setMessage("Invalid email format");
+    if (!email || !password) {
+      if (email === "") setErrorMessage("Email is required");
+      else if (password === "") setErrorMessage("Password is required");
+      else {
+        setErrorMessage("Please fill in all fields");
+        if (!email || !password) {
+          if (email === "") setErrorMessage("Email is required");
+          else if (password === "") setErrorMessage("Password is required");
+          else {
+            setErrorMessage("Please fill in all fields");
+            if (email.length < 5 || email.length > 89) setErrorMessage("Invalid email");
+          }
+          setErrorMessage("Please fill in all fields");
+          return false;
+        }
+      }
+      setErrorMessage("Please fill in all fields");
       return false;
     }
-    return true
+    return true;
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMessage("");
+    setErrorMessage("");
     if (!checkValid()) {
       console.log("Invalid input");
       return;
     }
     try {
-      await login(email, password);
-      onClose();
+      const state = await login(email, password);
+      if (state) {
+        onClose();
+      } else {
+        window.alert("Login failed");
+        onClose();
+      }
     } catch (error) {
       console.error(error);
-      setMessage((error as any).response.data.message);
+      setErrorMessage((error as any).response.data.message);
     }
   };
 
-  useEffect(() => {
-    const closeOnEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        onClose();
-      }
-    };
-    window.addEventListener("keydown", closeOnEscape);
-    return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [onClose, email, password]);
-
   return (
     <div className="modal">
-      <div className="wrapper">
-        <span className="close-btn" onClick={onClose}>&times;</span>
-        <div className="form-box">
+      <div className="signin-wrapper">
+        <FaTimes className="close-btn" onClick={onClose} />
+
+        <div className="form-box signin">
           <form onSubmit={handleSubmit}>
             <h1>Sign In</h1>
-            {message && <p className="message">{message}</p>}
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
+
             <div className="input-box">
               <label>Email</label>
               <input
@@ -59,6 +76,7 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
                 required
               />
             </div>
+
             <div className="input-box">
               <label>Password</label>
               <input
@@ -69,30 +87,36 @@ const SignIn: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = 
                 required
               />
             </div>
+
             <div className="remember-forgot">
               <label>
                 <input type="checkbox" /> Remember me
               </label>
-              <a href="#">Forgot password?</a>
+              <Link to="/auth/forgot-password" onClick={onClose}>
+                Forgot password?
+              </Link>
             </div>
 
             <div className="button-box">
-              <button type="submit">Login</button>
+              <button type="submit">Sign In</button>
             </div>
-
-            <div className="login-link">
+            <div className="register-link">
               <p>
                 Don't have an account?{" "}
-                <span className="link" onClick={onSwitchToSignUp} role="button" tabIndex={0}>
+                <span
+                  className="link"
+                  onClick={onSwitchToSignUp}
+                  role="button"
+                  tabIndex={0}
+                >
                   Sign Up
                 </span>
               </p>
             </div>
-
           </form>
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
 

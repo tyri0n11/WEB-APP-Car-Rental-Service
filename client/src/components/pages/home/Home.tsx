@@ -1,15 +1,21 @@
-import Hero from "./sections/Hero";
-import Services from "./sections/Services";
+import Hero from "./sections/hero/Hero";
+import CarList from "./sections/CarList";
 import UniqueValue from "./sections/UniqueValue";
+import Contact from "./sections/Contact";
+
+
 const Home: React.FC = () => {
+
+
   return (
     <div>
       <Hero />
+      <CarList />
       <UniqueValue />
-      <Services />
+      <Contact />
     </div>
   );
-};
+}
 
 export default Home;
 

@@ -49,8 +49,14 @@ async function main() {
       status: CarStatus.AVAILABLE,
       categories: ['SUV'],
       images: [
-        { url: 'https://example.com/rav4-1.jpg', isMain: true },
-        { url: 'https://example.com/rav4-2.jpg', isMain: false },
+        {
+          url: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800&auto=format&fit=crop&q=60',
+          isMain: true,
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800&auto=format&fit=crop&q=60',
+          isMain: false,
+        },
       ],
     },
     {
@@ -68,8 +74,14 @@ async function main() {
       status: CarStatus.AVAILABLE,
       categories: ['Electric', 'Sedan'],
       images: [
-        { url: 'https://example.com/tesla-1.jpg', isMain: true },
-        { url: 'https://example.com/tesla-2.jpg', isMain: false },
+        {
+          url: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&auto=format&fit=crop&q=60',
+          isMain: true,
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&auto=format&fit=crop&q=60',
+          isMain: false,
+        },
       ],
     },
     {
@@ -87,8 +99,14 @@ async function main() {
       status: CarStatus.AVAILABLE,
       categories: ['Sports', 'Luxury'],
       images: [
-        { url: 'https://example.com/bmw-1.jpg', isMain: true },
-        { url: 'https://example.com/bmw-2.jpg', isMain: false },
+        {
+          url: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&auto=format&fit=crop&q=60',
+          isMain: true,
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&auto=format&fit=crop&q=60',
+          isMain: false,
+        },
       ],
     },
     {
@@ -106,8 +124,14 @@ async function main() {
       status: CarStatus.AVAILABLE,
       categories: ['Luxury', 'Sedan'],
       images: [
-        { url: 'https://example.com/mercedes-1.jpg', isMain: true },
-        { url: 'https://example.com/mercedes-2.jpg', isMain: false },
+        {
+          url: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&auto=format&fit=crop&q=60',
+          isMain: true,
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&auto=format&fit=crop&q=60',
+          isMain: false,
+        },
       ],
     },
     {
@@ -125,8 +149,14 @@ async function main() {
       status: CarStatus.AVAILABLE,
       categories: ['Sports', 'Luxury'],
       images: [
-        { url: 'https://example.com/porsche-1.jpg', isMain: true },
-        { url: 'https://example.com/porsche-2.jpg', isMain: false },
+        {
+          url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&auto=format&fit=crop&q=60',
+          isMain: true,
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&auto=format&fit=crop&q=60',
+          isMain: false,
+        },
       ],
     },
     {
@@ -144,8 +174,14 @@ async function main() {
       status: CarStatus.AVAILABLE,
       categories: ['SUV', 'Luxury'],
       images: [
-        { url: 'https://example.com/audi-1.jpg', isMain: true },
-        { url: 'https://example.com/audi-2.jpg', isMain: false },
+        {
+          url: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800&auto=format&fit=crop&q=60',
+          isMain: true,
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800&auto=format&fit=crop&q=60',
+          isMain: false,
+        },
       ],
     },
     {
@@ -163,8 +199,14 @@ async function main() {
       status: CarStatus.AVAILABLE,
       categories: ['Sedan'],
       images: [
-        { url: 'https://example.com/vw-1.jpg', isMain: true },
-        { url: 'https://example.com/vw-2.jpg', isMain: false },
+        {
+          url: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&auto=format&fit=crop&q=60',
+          isMain: true,
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&auto=format&fit=crop&q=60',
+          isMain: false,
+        },
       ],
     },
     {
@@ -182,8 +224,14 @@ async function main() {
       status: CarStatus.AVAILABLE,
       categories: ['Sports'],
       images: [
-        { url: 'https://example.com/mustang-1.jpg', isMain: true },
-        { url: 'https://example.com/mustang-2.jpg', isMain: false },
+        {
+          url: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&auto=format&fit=crop&q=60',
+          isMain: true,
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&auto=format&fit=crop&q=60',
+          isMain: false,
+        },
       ],
     },
     {
@@ -201,8 +249,14 @@ async function main() {
       status: CarStatus.AVAILABLE,
       categories: ['SUV'],
       images: [
-        { url: 'https://example.com/hyundai-1.jpg', isMain: true },
-        { url: 'https://example.com/hyundai-2.jpg', isMain: false },
+        {
+          url: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800&auto=format&fit=crop&q=60',
+          isMain: true,
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800&auto=format&fit=crop&q=60',
+          isMain: false,
+        },
       ],
     },
     {
@@ -220,8 +274,14 @@ async function main() {
       status: CarStatus.AVAILABLE,
       categories: ['Electric', 'Sedan'],
       images: [
-        { url: 'https://example.com/nissan-1.jpg', isMain: true },
-        { url: 'https://example.com/nissan-2.jpg', isMain: false },
+        {
+          url: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&auto=format&fit=crop&q=60',
+          isMain: true,
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&auto=format&fit=crop&q=60',
+          isMain: false,
+        },
       ],
     },
     {
@@ -239,8 +299,14 @@ async function main() {
       status: CarStatus.AVAILABLE,
       categories: ['SUV', 'Luxury'],
       images: [
-        { url: 'https://example.com/lexus-1.jpg', isMain: true },
-        { url: 'https://example.com/lexus-2.jpg', isMain: false },
+        {
+          url: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&auto=format&fit=crop&q=60',
+          isMain: true,
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&auto=format&fit=crop&q=60',
+          isMain: false,
+        },
       ],
     },
     {
@@ -258,8 +324,14 @@ async function main() {
       status: CarStatus.AVAILABLE,
       categories: ['Sports', 'Luxury'],
       images: [
-        { url: 'https://example.com/corvette-1.jpg', isMain: true },
-        { url: 'https://example.com/corvette-2.jpg', isMain: false },
+        {
+          url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&auto=format&fit=crop&q=60',
+          isMain: true,
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&auto=format&fit=crop&q=60',
+          isMain: false,
+        },
       ],
     },
     {
@@ -277,8 +349,14 @@ async function main() {
       status: CarStatus.AVAILABLE,
       categories: ['SUV', 'Luxury'],
       images: [
-        { url: 'https://example.com/volvo-1.jpg', isMain: true },
-        { url: 'https://example.com/volvo-2.jpg', isMain: false },
+        {
+          url: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800&auto=format&fit=crop&q=60',
+          isMain: true,
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800&auto=format&fit=crop&q=60',
+          isMain: false,
+        },
       ],
     },
     {
@@ -296,8 +374,14 @@ async function main() {
       status: CarStatus.AVAILABLE,
       categories: ['Sports'],
       images: [
-        { url: 'https://example.com/mazda-1.jpg', isMain: true },
-        { url: 'https://example.com/mazda-2.jpg', isMain: false },
+        {
+          url: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&auto=format&fit=crop&q=60',
+          isMain: true,
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&auto=format&fit=crop&q=60',
+          isMain: false,
+        },
       ],
     },
     {
@@ -315,8 +399,14 @@ async function main() {
       status: CarStatus.AVAILABLE,
       categories: ['Electric', 'SUV'],
       images: [
-        { url: 'https://example.com/kia-1.jpg', isMain: true },
-        { url: 'https://example.com/kia-2.jpg', isMain: false },
+        {
+          url: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&auto=format&fit=crop&q=60',
+          isMain: true,
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&auto=format&fit=crop&q=60',
+          isMain: false,
+        },
       ],
     },
     {
@@ -334,8 +424,14 @@ async function main() {
       status: CarStatus.AVAILABLE,
       categories: ['SUV'],
       images: [
-        { url: 'https://example.com/subaru-1.jpg', isMain: true },
-        { url: 'https://example.com/subaru-2.jpg', isMain: false },
+        {
+          url: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800&auto=format&fit=crop&q=60',
+          isMain: true,
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800&auto=format&fit=crop&q=60',
+          isMain: false,
+        },
       ],
     },
     {
@@ -353,8 +449,14 @@ async function main() {
       status: CarStatus.AVAILABLE,
       categories: ['Sports', 'Luxury'],
       images: [
-        { url: 'https://example.com/jaguar-1.jpg', isMain: true },
-        { url: 'https://example.com/jaguar-2.jpg', isMain: false },
+        {
+          url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&auto=format&fit=crop&q=60',
+          isMain: true,
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&auto=format&fit=crop&q=60',
+          isMain: false,
+        },
       ],
     },
     {
@@ -372,8 +474,14 @@ async function main() {
       status: CarStatus.AVAILABLE,
       categories: ['SUV', 'Luxury'],
       images: [
-        { url: 'https://example.com/range-1.jpg', isMain: true },
-        { url: 'https://example.com/range-2.jpg', isMain: false },
+        {
+          url: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800&auto=format&fit=crop&q=60',
+          isMain: true,
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800&auto=format&fit=crop&q=60',
+          isMain: false,
+        },
       ],
     },
     {
@@ -391,8 +499,14 @@ async function main() {
       status: CarStatus.AVAILABLE,
       categories: ['Electric', 'Sports', 'Luxury'],
       images: [
-        { url: 'https://example.com/taycan-1.jpg', isMain: true },
-        { url: 'https://example.com/taycan-2.jpg', isMain: false },
+        {
+          url: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&auto=format&fit=crop&q=60',
+          isMain: true,
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&auto=format&fit=crop&q=60',
+          isMain: false,
+        },
       ],
     },
     {
@@ -410,8 +524,14 @@ async function main() {
       status: CarStatus.AVAILABLE,
       categories: ['Electric', 'Luxury', 'Sedan'],
       images: [
-        { url: 'https://example.com/etron-1.jpg', isMain: true },
-        { url: 'https://example.com/etron-2.jpg', isMain: false },
+        {
+          url: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&auto=format&fit=crop&q=60',
+          isMain: true,
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&auto=format&fit=crop&q=60',
+          isMain: false,
+        },
       ],
     },
   ];

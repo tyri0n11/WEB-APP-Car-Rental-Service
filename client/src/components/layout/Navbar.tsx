@@ -17,7 +17,6 @@ const Navbar: React.FC<{
   const handleLogout = () => {
     logout();
     setIsMenuOpen(false);
-    handleNavigation("/");
   };
   const handleNavigation = (path: string) => {
     navigate(path);

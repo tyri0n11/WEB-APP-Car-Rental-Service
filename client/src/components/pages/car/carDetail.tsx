@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { FaCar, FaMapMarkerAlt, FaCalendarAlt, FaUser, FaBluetooth, FaCamera, FaUsb, FaShieldAlt, FaRoad, FaMoneyBillWave, FaDesktop } from 'react-icons/fa';
+import React, { useEffect, useState } from 'react';
+import { FaBluetooth, FaCamera, FaDesktop, FaMoneyBillWave, FaRoad, FaShieldAlt, FaUsb, FaUser } from 'react-icons/fa';
 import { MdAirlineSeatReclineNormal } from 'react-icons/md';
 
 const carDetail: React.FC = () => {
@@ -67,26 +67,26 @@ const carDetail: React.FC = () => {
     rating: 4.8,
     trips: 48,
     reviews: 24,
-    location: 'TP Hồ Chí Minh',
+    location: 'Ho Chi Minh City',
     features: [
-      { icon: <FaRoad />, label: 'Số tự động' },
-      { icon: <MdAirlineSeatReclineNormal />, label: '7 chỗ' },
-      { icon: <FaMoneyBillWave />, label: 'Xăng' },
+      { icon: <FaRoad />, label: 'Automatic' },
+      { icon: <MdAirlineSeatReclineNormal />, label: '7 Seats' },
+      { icon: <FaMoneyBillWave />, label: 'Gasoline' },
     ],
-    description: 'Xe gia đình, mới đẹp, sạch sẽ, an toàn, tiện nghi, đầy đủ bảo hiểm',
+    description: 'Family car, new and beautiful, clean, safe, comfortable, fully insured',
     additionalFeatures: [
       { icon: <FaBluetooth />, label: 'Bluetooth' },
-      { icon: <FaCamera />, label: 'Camera lùi' },
-      { icon: <FaUsb />, label: 'Khe cắm USB' },
-      { icon: <FaShieldAlt />, label: 'Lốp dự phòng' },
-      { icon: <FaDesktop />, label: 'Màn hình DVD' },
+      { icon: <FaCamera />, label: 'Reverse Camera' },
+      { icon: <FaUsb />, label: 'USB Port' },
+      { icon: <FaShieldAlt />, label: 'Spare Tire' },
+      { icon: <FaDesktop />, label: 'DVD Screen' },
       { icon: <FaRoad />, label: 'ETC' },
     ],
     documents: [
-      'GPLX (đối chiếu) & CCCD (đối chiếu)',
-      'GPLX (đối chiếu) & Passport (giữ lại)',
+      'Driver License (verify) & ID Card (verify)',
+      'Driver License (verify) & Passport (keep)',
     ],
-    deposit: '15 triệu (tiền mặt/chuyển khoản cho chủ xe khi nhận xe) hoặc xe máy (kèm cà vẹt gốc) giá trị 15 triệu',
+    deposit: '15 million (cash/transfer to car owner upon receipt) or motorcycle (with original registration) worth 15 million',
   };
 
   const styles = {
@@ -184,6 +184,7 @@ const carDetail: React.FC = () => {
       boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
       position: 'sticky' as const,
       top: '24px',
+      zIndex: 2,
     },
     priceInfo: {
       display: 'flex',
@@ -271,9 +272,9 @@ const carDetail: React.FC = () => {
           <div style={styles.rating}>
             <span>⭐ {carInfo.rating}</span>
             <span>•</span>
-            <span>{carInfo.trips} chuyến</span>
+            <span>{carInfo.trips} trips</span>
             <span>•</span>
-            <span>{carInfo.reviews} đánh giá</span>
+            <span>{carInfo.reviews} reviews</span>
           </div>
 
           <div style={styles.features}>
@@ -290,7 +291,7 @@ const carDetail: React.FC = () => {
           </div>
 
           <div style={styles.section}>
-            <h2 style={styles.sectionTitle}>Các tiện nghi khác</h2>
+            <h2 style={styles.sectionTitle}>Additional Features</h2>
             <div style={styles.additionalFeatures}>
               {carInfo.additionalFeatures.map((feature, index) => (
                 <div key={index} style={styles.feature}>
@@ -302,7 +303,7 @@ const carDetail: React.FC = () => {
           </div>
 
           <div style={styles.section}>
-            <h2 style={styles.sectionTitle}>Giấy tờ thuê xe</h2>
+            <h2 style={styles.sectionTitle}>Required Documents</h2>
             <ul style={styles.documentList}>
               {carInfo.documents.map((doc, index) => (
                 <li key={index} style={styles.documentItem}>
@@ -314,7 +315,7 @@ const carDetail: React.FC = () => {
           </div>
 
           <div style={styles.section}>
-            <h2 style={styles.sectionTitle}>Tài sản thế chấp</h2>
+            <h2 style={styles.sectionTitle}>Security Deposit</h2>
             <p style={styles.description}>{carInfo.deposit}</p>
           </div>
         </div>
@@ -322,8 +323,8 @@ const carDetail: React.FC = () => {
 
       <div style={styles.bookingCard}>
         <div style={styles.priceInfo}>
-          <span style={styles.price}>1.028K</span>
-          <span style={styles.perDay}>/ngày</span>
+          <span style={styles.price}>1,028K</span>
+          <span style={styles.perDay}>/day</span>
         </div>
 
         <div style={styles.dateRange}>
@@ -346,13 +347,13 @@ const carDetail: React.FC = () => {
         <div style={styles.insuranceInfo}>
           <div style={styles.insuranceTitle}>
             <FaShieldAlt />
-            <span>Bảo hiểm thuê xe</span>
+            <span>Car Insurance</span>
           </div>
-          <p>Bảo hiểm vật chất xe và bảo hiểm tai nạn người ngồi trên xe</p>
+          <p>Vehicle insurance and passenger accident insurance</p>
         </div>
 
         <button style={styles.bookButton}>
-          Đặt xe
+          Book Now
         </button>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaCar, FaMapMarkerAlt, FaCalendarAlt, FaFilter, FaUser, FaExchangeAlt, FaTruck, FaGift, FaPercent, FaBolt } from 'react-icons/fa';
+import { FaBolt, FaCalendarAlt, FaCar, FaExchangeAlt, FaFilter, FaGift, FaMapMarkerAlt, FaPercent, FaTruck, FaUser } from 'react-icons/fa';
 
 interface FilterOption {
   icon: React.ReactNode;
@@ -32,7 +32,7 @@ const ServiceFilter: React.FC = () => {
       padding: '12px 24px',
       position: 'sticky' as const,
       top: 0,
-      zIndex: 1000,
+      zIndex: 998,
     },
     topBar: {
       display: 'flex',

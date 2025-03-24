@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import { getCars } from '../../apis/cars';
 import { mockCars, mockPagination } from '../../utils/dummy/carsData';
 import CarCard from '../cards/CarCard';
 
@@ -69,6 +70,9 @@ class CustomePaginate extends Component<{}, State> {
 
   componentDidMount() {
     this.loadMockData();
+    getCars().then(response => {
+      console.log(response);
+    });
   }
 
   loadMockData = () => {

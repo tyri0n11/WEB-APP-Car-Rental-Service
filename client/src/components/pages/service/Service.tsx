@@ -26,7 +26,7 @@ const Service: React.FC = () => {
     <div style={styles.container}>
       <ServiceFilter />
       <div style={styles.content}>
-        <h1 style={styles.title}>Danh sách xe có sẵn</h1>
+        <h1 style={styles.title}>Available Cars</h1>
         <CustomePaginate />
       </div>
     </div>

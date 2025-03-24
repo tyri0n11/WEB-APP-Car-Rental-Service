@@ -16,7 +16,12 @@ export function ApiCarQueries() {
       required: false,
       enum: CarStatus,
     }),
-    ApiQuery({ name: 'categoryIds', required: false, type: String }),
+    ApiQuery({
+      name: 'categoryIds',
+      required: false,
+      type: String,
+      description: 'Comma-separated category IDs',
+    }),
     ApiQuery({ name: 'yearFrom', required: false, type: Number }),
     ApiQuery({ name: 'yearTo', required: false, type: Number }),
   );

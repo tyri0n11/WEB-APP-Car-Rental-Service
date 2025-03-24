@@ -18,6 +18,8 @@ export class ReviewResponseDTO implements Review {
   @Expose()
   carId: string;
   @Expose()
+  userId: string;
+  @Expose()
   createdAt: Date;
   @Expose()
   updatedAt: Date;

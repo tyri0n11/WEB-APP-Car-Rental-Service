@@ -9,6 +9,8 @@ import {
   IsOptional,
   IsString,
   IsUrl,
+  Max,
+  Min,
 } from 'class-validator';
 
 export class CreateCarRequestDTO {
@@ -22,10 +24,13 @@ export class CreateCarRequestDTO {
 
   @IsNotEmpty()
   @IsNumber()
+  @Min(1900)
+  @Max(new Date().getFullYear())
   year: number;
 
   @IsNotEmpty()
   @IsNumber()
+  @Min(0)
   kilometers: number;
 
   @IsOptional()
@@ -34,6 +39,7 @@ export class CreateCarRequestDTO {
 
   @IsNotEmpty()
   @IsNumber()
+  @Min(0)
   dailyPrice: number;
 
   @IsNotEmpty()
@@ -50,6 +56,7 @@ export class CreateCarRequestDTO {
 
   @IsNotEmpty()
   @IsNumber()
+  @Min(1)
   numSeats: number;
 
   @IsNotEmpty()

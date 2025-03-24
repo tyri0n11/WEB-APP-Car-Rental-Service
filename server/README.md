@@ -71,6 +71,60 @@ $ mau deploy
 
 With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
 
+## Database Seeding
+
+To populate the database with initial data:
+
+1. Install dependencies:
+   `npm install`
+
+2. Run migrations:
+   `npx prisma migrate dev`
+
+3. Run seed:
+   `npx prisma db seed`
+
+Note: Make sure your .env file has the correct DATABASE_URL
+
+````
+
+2. **Update package.json**
+Make sure your package.json has the prisma seed configuration:
+```json
+{
+  "prisma": {
+    "seed": "ts-node prisma/seeds/seed.ts"
+  }
+}
+````
+
+3. **Best Practices for Team Members**:
+
+- Always run seeds after pulling new changes that include seed updates
+- Run seeds after database migrations
+- Use the seed data for development and testing
+- Don't modify seed data directly; create PRs for changes
+- Keep seed data minimal but sufficient for testing
+
+4. **Development Workflow**:
+
+```bash
+# After pulling new changes
+npm install              # Install any new dependencies
+npx prisma generate     # Update Prisma client
+npx prisma migrate dev  # Run any new migrations
+npx prisma db seed     # Run the seed
+```
+
+5. **Common Issues to Document**:
+
+- If seeds fail, try resetting the database: `npx prisma migrate reset`
+- Seeds are idempotent (can be run multiple times safely)
+- Seeds use upsert to avoid duplicate data
+- Seeds will maintain referential integrity
+
+This ensures all team members have consistent development data and understand how to maintain it.
+
 ## Resources
 
 Check out a few resources that may come in handy when working with NestJS:

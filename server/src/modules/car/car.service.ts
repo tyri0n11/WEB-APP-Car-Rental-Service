@@ -2,9 +2,11 @@ import { BaseService } from '@/services/base/base.service';
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { Car, Prisma } from '@prisma/client';
+import { Car, CarStatus, Prisma } from '@prisma/client';
 import { DatabaseService } from '../database/database.service';
 import {
   CarResponseDTO,
@@ -15,15 +17,22 @@ import { CreateCarRequestDTO } from './dto/create.request.dto';
 import { CarSortBy, FindManyCarsQueryDTO } from './dto/findMany.request.dto';
 import * as crypto from 'crypto';
 import * as dayjs from 'dayjs';
+import { CategoryService } from '../category/category.service';
 
 @Injectable()
 export class CarService extends BaseService<Car> {
+  private readonly logger = new Logger(CarService.name);
   private readonly defaultIncludes = {
     images: true,
     reviews: true,
-    carCategories: {
-      include: {
-        category: true,
+    categories: {
+      select: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
       },
     },
   };
@@ -58,7 +67,10 @@ export class CarService extends BaseService<Car> {
     }
   }
 
-  constructor(private readonly databaseService: DatabaseService) {
+  constructor(
+    private readonly databaseService: DatabaseService,
+    private readonly categoryService: CategoryService,
+  ) {
     super(databaseService, 'car', CarResponseDTO);
   }
 
@@ -92,7 +104,7 @@ export class CarService extends BaseService<Car> {
             isMain: index === 0,
           })),
         },
-        carCategories: categoryIds && {
+        categories: categoryIds && {
           create: categoryIds?.map((id) => ({
             categoryId: id,
           })),
@@ -104,14 +116,10 @@ export class CarService extends BaseService<Car> {
     );
   }
 
-  async findById(
-    id: string,
-    include?: Prisma.CarInclude,
-  ): Promise<CarResponseDTO> {
-    const car = await super.findOne({ id }, { include });
-
+  async findById(id: string): Promise<CarResponseDTO> {
+    const car = await super.findOne({ id }, { include: this.defaultIncludes });
     if (!car) {
-      throw new NotFoundException(`Car with ID ${id} not found`);
+      throw new BadRequestException(`Car with ID ${id} not found`);
     }
 
     return car;
@@ -204,56 +212,67 @@ export class CarService extends BaseService<Car> {
     });
   }
 
-  async update(id: string, dto: UpdateCarRequestDTO): Promise<CarResponseDTO> {
+  async update(
+    id: string,
+    input: Prisma.CarUpdateInput,
+  ): Promise<CarResponseDTO> {
     const foundCar = await this.findOne({ id });
     if (!foundCar) {
       throw new BadRequestException('Car not found');
     }
-    const { imageUrls, categoryIds, ...updateData } = dto;
-
-    if (categoryIds?.length > 0) {
-      const foundCategories = await this.databaseService.category.findMany({
-        where: { id: { in: categoryIds } },
-        select: { id: true },
-      });
-
-      if (foundCategories.length !== categoryIds.length) {
-        const foundIds = foundCategories.map((cat) => cat.id);
-        const notFoundIds = categoryIds.filter((id) => !foundIds.includes(id));
-        throw new BadRequestException(
-          `Categories not found: ${notFoundIds.join(', ')}`,
-        );
-      }
-    }
-
-    return super.update(
-      { id },
-      {
-        ...updateData,
-        ...(imageUrls && {
-          images: {
-            deleteMany: {},
-            create: imageUrls.map((url, index) => ({
-              url,
-              isMain: index === 0,
-            })),
-          },
-        }),
-        ...(categoryIds && {
-          carCategories: {
-            deleteMany: {},
-            create: categoryIds.map((categoryId) => ({
-              categoryId,
-            })),
-          },
-        }),
-      },
-      {
-        include: this.defaultIncludes,
-      },
-    );
+    return await super.update(id, input);
   }
 
+  async updateStatus(id: string, status: CarStatus): Promise<CarResponseDTO> {
+    return await this.update(id, { status });
+  }
+
+  async updateCategories(
+    id: string,
+    categoryIds: string[],
+  ): Promise<CarResponseDTO> {
+    const foundCar = await this.findOne({ id });
+    if (!foundCar) {
+      throw new BadRequestException('Car not found');
+    }
+
+    const foundCategories = await this.databaseService.category.findMany({
+      where: {
+        id: {
+          in: categoryIds,
+        },
+      },
+    });
+
+    if (foundCategories.length !== categoryIds.length) {
+      const foundIds = foundCategories.map((cat) => cat.id);
+      const notFoundIds = categoryIds.filter((id) => !foundIds.includes(id));
+      throw new BadRequestException(
+        `Categories not found: ${notFoundIds.join(', ')}`,
+      );
+    }
+
+    return await super.update(id, {
+      categories: {
+        deleteMany: {},
+        create: categoryIds.map((id) => ({ categoryId: id })),
+      },
+    });
+  }
+
+  async updateImages(id: string, imageUrls: string[]): Promise<CarResponseDTO> {
+    const foundCar = await this.findOne({ id });
+    if (!foundCar) {
+      throw new BadRequestException('Car not found');
+    }
+
+    return await super.update(id, {
+      images: {
+        deleteMany: {},
+        create: imageUrls.map((url) => ({ url })),
+      },
+    });
+  }
   async delete(id: string): Promise<boolean> {
     const foundCar = await this.findOne({ id });
     if (!foundCar) {

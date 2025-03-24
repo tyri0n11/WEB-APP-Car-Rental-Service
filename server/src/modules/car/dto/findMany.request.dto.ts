@@ -1,7 +1,14 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { CarStatus, FuelType } from '@prisma/client';
 import { Type } from 'class-transformer';
-import { IsEnum, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import {
+  IsArray,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 
 export enum CarSortBy {
   PRICE_ASC = 'price_asc',
@@ -84,4 +91,12 @@ export class FindManyCarsQueryDTO {
   @IsNumber()
   @Min(1900)
   yearTo?: number;
+
+  @ApiPropertyOptional({
+    type: String,
+    description: 'Comma-separated category IDs',
+  })
+  @IsOptional()
+  @IsString()
+  categoryIds?: string;
 }

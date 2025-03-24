@@ -17,7 +17,6 @@ const Navbar: React.FC<{
   const handleLogout = () => {
     logout();
     setIsMenuOpen(false);
-    handleNavigation("/");
   };
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -81,7 +80,8 @@ const Navbar: React.FC<{
       {user ? (
         <div className={styles.privateContainer}>
           <div className={styles.dropdown}>
-            <button className={styles.dropdownButton}>
+            <button className={styles.dropdownButton}                 onClick={() => handleNavigation("/profile")}
+            >
               <img
                 className={styles.userAvatar}
                 src={"https://cdn-icons-png.flaticon.com/128/1077/1077012.png"}
@@ -89,22 +89,6 @@ const Navbar: React.FC<{
               />
               <p className={styles.userGreet}>Welcome, {user.lastName}</p>
             </button>
-            <div className={styles.dropdownContent}>
-              <button
-                type="button"
-                className={styles.dropdownItem}
-                onClick={() => handleNavigation("/profile")}
-              >
-                Profile
-              </button>
-              <button
-                type="button"
-                onClick={handleLogout}
-                className={styles.dropdownItemLogout}
-              >
-                Logout
-              </button>
-            </div>
           </div>
         </div>
       ) : (

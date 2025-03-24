@@ -1,0 +1,123 @@
+.formContainer {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(10px, 2vw, 20px);
+  border-radius: 15px;
+  background-color: #fff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: clamp(10px, 2vw, 20px);
+  align-items: flex-end;
+  justify-content: center;
+  padding: 10px 0;
+  flex-wrap: wrap;
+}
+
+.inputBox {
+  flex: 1;
+  min-width: 200px;
+  margin: 0;
+}
+
+.buttonWrapper {
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 10px;
+}
+
+.label {
+  font-size: clamp(14px, 1.5vw, 16px);
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.container {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  padding: 0 15px;
+  border-radius: 10px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.locationContainer {
+  composes: container;
+  justify-content: space-between;
+}
+
+.locationText {
+  flex: 1;
+  font-size: clamp(14px, 1.5vw, 15px);
+  font-weight: bold;
+  color: #333;
+  margin-left: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: clamp(14px, 1.5vw, 15px);
+  font-weight: bold;
+  color: #333;
+}
+
+.icon {
+  font-size: clamp(16px, 1.8vw, 18px);
+  color: #666;
+}
+
+.arrowIcon {
+  font-size: clamp(12px, 1.4vw, 14px);
+  color: #666;
+  margin-left: 10px;
+}
+
+@media (max-width: 1024px) {
+  .form {
+    gap: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .formContainer {
+    width: 95%;
+    padding: 10px;
+  }
+
+  .form {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .inputBox {
+    min-width: 100%;
+  }
+
+  .buttonWrapper {
+    width: 100%;
+    justify-content: center;
+    padding-bottom: 0;
+    margin-top: 10px;
+  }
+
+  .container {
+    height: 45px;
+  }
+} 

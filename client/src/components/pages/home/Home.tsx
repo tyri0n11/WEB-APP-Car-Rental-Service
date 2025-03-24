@@ -1,7 +1,6 @@
-import Hero from "./sections/hero/Hero";
 import CarList from "./sections/CarList";
+import Hero from "./sections/hero/Hero";
 import UniqueValue from "./sections/UniqueValue";
-import Contact from "./sections/Contact";
 
 
 const Home: React.FC = () => {
@@ -12,7 +11,6 @@ const Home: React.FC = () => {
       <Hero />
       <CarList />
       <UniqueValue />
-      <Contact />
     </div>
   );
 }

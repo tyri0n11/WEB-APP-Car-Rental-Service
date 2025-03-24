@@ -75,7 +75,7 @@ function App() {
             <Route path="/auth/reset-password" element={<ResetPassword />} />
             <Route path="services" element={<Services />} />
 
-            <Route path="/car/:id" element={<CarDetail />} />
+            <Route path="/cars/:id" element={<CarDetail />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/profile" element={<Profile />} />

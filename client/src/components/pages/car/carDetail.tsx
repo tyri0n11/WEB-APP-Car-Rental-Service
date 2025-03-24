@@ -1,13 +1,42 @@
 import React, { useEffect, useState } from 'react';
-import { FaBluetooth, FaCamera, FaDesktop, FaMoneyBillWave, FaRoad, FaShieldAlt, FaUsb, FaUser } from 'react-icons/fa';
+import { FaBluetooth, FaCamera, FaDesktop, FaMoneyBillWave, FaRoad, FaShieldAlt, FaUsb } from 'react-icons/fa';
 import { MdAirlineSeatReclineNormal } from 'react-icons/md';
+import { useParams } from 'react-router-dom';
+import { Car, computeTotalPrice, getCarById } from '../../../apis/cars';
+import { FuelType } from '../../../types/car';
 
-const carDetail: React.FC = () => {
-  // State cho filter dates
+const DEFAULT_CAR_IMAGE = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&auto=format&fit=crop&q=60";
+
+const CarDetail: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const [car, setCar] = useState<Car | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
+  const [totalPrice, setTotalPrice] = useState<number>(0);
 
-  // Hàm helper để format date
+  // Fetch car details
+  useEffect(() => {
+    const fetchCarDetails = async () => {
+      if (!id) return;
+      try {
+        setLoading(true);
+        const carData = await getCarById(id);
+        console.log('Car data:', carData);
+        setCar(carData);
+      } catch (err) {
+        console.error('Error fetching car details:', err);
+        setError('Failed to load car details');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCarDetails();
+  }, [id]);
+
+  // Format date helper
   const formatDate = (date: Date): string => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -17,15 +46,12 @@ const carDetail: React.FC = () => {
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
 
-  // Set default dates khi component mount
+  // Set default dates
   useEffect(() => {
     const now = new Date();
     const tomorrow = new Date(now);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    // Set thời gian mặc định: 
-    // - Bắt đầu: ngày hiện tại, 21:00
-    // - Kết thúc: ngày mai, 20:00
     const defaultStart = new Date(now.setHours(21, 0, 0, 0));
     const defaultEnd = new Date(tomorrow.setHours(20, 0, 0, 0));
 
@@ -33,11 +59,10 @@ const carDetail: React.FC = () => {
     setEndDate(formatDate(defaultEnd));
   }, []);
 
-  // Xử lý khi thay đổi ngày
+  // Handle date changes
   const handleDateChange = (type: 'start' | 'end', value: string) => {
     if (type === 'start') {
       setStartDate(value);
-      // Nếu ngày kết thúc < ngày bắt đầu, cập nhật ngày kết thúc
       if (new Date(value) >= new Date(endDate)) {
         const newEndDate = new Date(value);
         newEndDate.setDate(newEndDate.getDate() + 1);
@@ -47,6 +72,18 @@ const carDetail: React.FC = () => {
       setEndDate(value);
     }
   };
+
+  // Update total price when dates change
+  useEffect(() => {
+    if (car && startDate && endDate) {
+      const total = computeTotalPrice(
+        car.dailyPrice,
+        new Date(startDate),
+        new Date(endDate)
+      );
+      setTotalPrice(total);
+    }
+  }, [car, startDate, endDate]);
 
   const colors = {
     primary: '#1E3A8A',
@@ -62,31 +99,19 @@ const carDetail: React.FC = () => {
     warning: '#F59E0B',
   };
 
-  const carInfo = {
-    name: 'TOYOTA FORTUNER 2014',
-    rating: 4.8,
-    trips: 48,
-    reviews: 24,
-    location: 'Ho Chi Minh City',
-    features: [
-      { icon: <FaRoad />, label: 'Automatic' },
-      { icon: <MdAirlineSeatReclineNormal />, label: '7 Seats' },
-      { icon: <FaMoneyBillWave />, label: 'Gasoline' },
-    ],
-    description: 'Family car, new and beautiful, clean, safe, comfortable, fully insured',
-    additionalFeatures: [
-      { icon: <FaBluetooth />, label: 'Bluetooth' },
-      { icon: <FaCamera />, label: 'Reverse Camera' },
-      { icon: <FaUsb />, label: 'USB Port' },
-      { icon: <FaShieldAlt />, label: 'Spare Tire' },
-      { icon: <FaDesktop />, label: 'DVD Screen' },
-      { icon: <FaRoad />, label: 'ETC' },
-    ],
-    documents: [
-      'Driver License (verify) & ID Card (verify)',
-      'Driver License (verify) & Passport (keep)',
-    ],
-    deposit: '15 million (cash/transfer to car owner upon receipt) or motorcycle (with original registration) worth 15 million',
+  const getFuelTypeLabel = (fuelType: FuelType) => {
+    switch (fuelType) {
+      case FuelType.PETROL:
+        return 'Gasoline';
+      case FuelType.DIESEL:
+        return 'Diesel';
+      case FuelType.ELECTRIC:
+        return 'Electric';
+      case FuelType.HYBRID:
+        return 'Hybrid';
+      default:
+        return 'Unknown';
+    }
   };
 
   const styles = {
@@ -97,18 +122,12 @@ const carDetail: React.FC = () => {
       display: 'grid',
       gridTemplateColumns: '2fr 1fr',
       gap: '24px',
-      '@media (max-width: 1024px)': {
-        gridTemplateColumns: '1fr',
-      },
     },
     imageGallery: {
       display: 'grid',
       gridTemplateColumns: '3fr 1fr',
       gap: '8px',
       marginBottom: '24px',
-      '@media (max-width: 768px)': {
-        gridTemplateColumns: '1fr',
-      },
     },
     mainImage: {
       width: '100%',
@@ -184,7 +203,6 @@ const carDetail: React.FC = () => {
       boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
       position: 'sticky' as const,
       top: '24px',
-      zIndex: 2,
     },
     priceInfo: {
       display: 'flex',
@@ -222,9 +240,6 @@ const carDetail: React.FC = () => {
       fontWeight: 'bold' as const,
       cursor: 'pointer',
       transition: 'all 0.2s',
-      '&:hover': {
-        backgroundColor: colors.primaryHover,
-      },
     },
     insuranceInfo: {
       marginTop: '16px',
@@ -240,45 +255,88 @@ const carDetail: React.FC = () => {
       fontWeight: 'bold' as const,
       marginBottom: '8px',
     },
-    documentList: {
-      listStyle: 'none',
-      padding: 0,
-      margin: 0,
-    },
-    documentItem: {
+    loadingContainer: {
       display: 'flex',
+      justifyContent: 'center',
       alignItems: 'center',
-      gap: '8px',
-      marginBottom: '8px',
-      color: colors.text,
+      minHeight: '400px',
+    },
+    errorContainer: {
+      display: 'flex',
+      flexDirection: 'column' as const,
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: '400px',
+      color: '#EF4444',
+    },
+    totalPrice: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: '16px',
     },
   };
+
+  if (loading) {
+    return (
+      <div style={styles.loadingContainer}>
+        <p>Loading car details...</p>
+      </div>
+    );
+  }
+
+  if (error || !car) {
+    return (
+      <div style={styles.errorContainer}>
+        <p>{error || 'Car not found'}</p>
+      </div>
+    );
+  }
+
+  const mainImage = car.images?.find(img => img.isMain)?.url || car.images?.[0]?.url || DEFAULT_CAR_IMAGE;
+  const otherImages = car.images?.filter(img => !img.isMain).slice(0, 3) || [];
+
+  const features = [
+    { icon: <FaRoad />, label: car.autoGearbox ? 'Automatic' : 'Manual' },
+    { icon: <MdAirlineSeatReclineNormal />, label: `${car.numSeats} Seats` },
+    { icon: <FaMoneyBillWave />, label: getFuelTypeLabel(car.fuelType) },
+  ];
+
+  const additionalFeatures = [
+    { icon: <FaBluetooth />, label: 'Bluetooth' },
+    { icon: <FaCamera />, label: 'Reverse Camera' },
+    { icon: <FaUsb />, label: 'USB Port' },
+    { icon: <FaShieldAlt />, label: 'Spare Tire' },
+    { icon: <FaDesktop />, label: 'DVD Screen' },
+    { icon: <FaRoad />, label: 'ETC' },
+  ];
 
   return (
     <div style={styles.container}>
       <div>
         <div style={styles.imageGallery}>
-          <img src="/path/to/main-image.jpg" alt="Toyota Fortuner" style={styles.mainImage} />
+          <img src={mainImage} alt={`${car.make} ${car.model}`} style={styles.mainImage} />
           <div style={styles.thumbnailContainer}>
-            <img src="/path/to/thumbnail1.jpg" alt="" style={styles.thumbnail} />
-            <img src="/path/to/thumbnail2.jpg" alt="" style={styles.thumbnail} />
-            <img src="/path/to/thumbnail3.jpg" alt="" style={styles.thumbnail} />
+            {otherImages.map((image, index) => (
+              <img 
+                key={image.id || index} 
+                src={image.url} 
+                alt={`${car.make} ${car.model} view ${index + 1}`} 
+                style={styles.thumbnail} 
+              />
+            ))}
           </div>
         </div>
 
         <div style={styles.carInfo}>
-          <h1 style={styles.title}>{carInfo.name}</h1>
+          <h1 style={styles.title}>{`${car.make} ${car.model} ${car.year}`}</h1>
           
           <div style={styles.rating}>
-            <span>⭐ {carInfo.rating}</span>
-            <span>•</span>
-            <span>{carInfo.trips} trips</span>
-            <span>•</span>
-            <span>{carInfo.reviews} reviews</span>
+            <span>⭐ {car.rating}</span>
           </div>
 
           <div style={styles.features}>
-            {carInfo.features.map((feature, index) => (
+            {features.map((feature, index) => (
               <div key={index} style={styles.feature}>
                 {feature.icon}
                 <span>{feature.label}</span>
@@ -287,13 +345,13 @@ const carDetail: React.FC = () => {
           </div>
 
           <div style={styles.description}>
-            <p>{carInfo.description}</p>
+            <p>{car.description}</p>
           </div>
 
           <div style={styles.section}>
             <h2 style={styles.sectionTitle}>Additional Features</h2>
             <div style={styles.additionalFeatures}>
-              {carInfo.additionalFeatures.map((feature, index) => (
+              {additionalFeatures.map((feature, index) => (
                 <div key={index} style={styles.feature}>
                   {feature.icon}
                   <span>{feature.label}</span>
@@ -304,27 +362,23 @@ const carDetail: React.FC = () => {
 
           <div style={styles.section}>
             <h2 style={styles.sectionTitle}>Required Documents</h2>
-            <ul style={styles.documentList}>
-              {carInfo.documents.map((doc, index) => (
-                <li key={index} style={styles.documentItem}>
-                  <FaUser />
-                  <span>{doc}</span>
-                </li>
-              ))}
+            <ul>
+              <li>Driver License (verify) & ID Card (verify)</li>
+              <li>Driver License (verify) & Passport (keep)</li>
             </ul>
           </div>
 
           <div style={styles.section}>
             <h2 style={styles.sectionTitle}>Security Deposit</h2>
-            <p style={styles.description}>{carInfo.deposit}</p>
+            <p>15 million (cash/transfer to car owner upon receipt) or motorcycle (with original registration) worth 15 million</p>
           </div>
         </div>
       </div>
 
       <div style={styles.bookingCard}>
         <div style={styles.priceInfo}>
-          <span style={styles.price}>1,028K</span>
-          <span style={styles.perDay}>/day</span>
+          <span style={styles.price}>{car.dailyPrice?.toLocaleString()} USD</span>
+          <span style={styles.perDay}>/ngày</span>
         </div>
 
         <div style={styles.dateRange}>
@@ -344,20 +398,27 @@ const carDetail: React.FC = () => {
           />
         </div>
 
+        {totalPrice > 0 && (
+          <div style={styles.totalPrice}>
+            <span>Tổng cộng:</span>
+            <span style={styles.price}>{totalPrice.toLocaleString()} USD</span>
+          </div>
+        )}
+
         <div style={styles.insuranceInfo}>
           <div style={styles.insuranceTitle}>
             <FaShieldAlt />
-            <span>Car Insurance</span>
+            <span>Bảo hiểm xe</span>
           </div>
-          <p>Vehicle insurance and passenger accident insurance</p>
+          <p>Bảo hiểm xe và bảo hiểm tai nạn hành khách</p>
         </div>
 
         <button style={styles.bookButton}>
-          Book Now
+          Đặt xe ngay
         </button>
       </div>
     </div>
   );
 };
 
-export default carDetail; 
+export default CarDetail; 

@@ -1,0 +1,118 @@
+.favourites-root {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.favourites-section {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.favourites-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e1e4e8;
+}
+
+.favourites-header h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 0;
+}
+
+.favourites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.favourite-card {
+    background: #fff;
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.favourite-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.car-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.car-info {
+    padding: 1rem;
+}
+
+.car-info h5 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    color: #2d3748;
+}
+
+.car-price {
+    color: #2b6cb0;
+    font-weight: 600;
+    margin: 0.5rem 0;
+}
+
+.car-rating {
+    color: #f6ad55;
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+}
+
+.remove-favorite {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #fff;
+    border: 1px solid #e53e3e;
+    color: #e53e3e;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.remove-favorite:hover {
+    background-color: #fff5f5;
+}
+
+.favourites-loading,
+.favourites-error,
+.favourites-empty {
+    text-align: center;
+    padding: 2rem;
+    color: #4a5568;
+}
+
+.favourites-error {
+    color: #e53e3e;
+}
+
+@media (max-width: 768px) {
+    .favourites-root {
+        padding: 1rem;
+    }
+
+    .favourites-section {
+        padding: 1.5rem;
+    }
+
+    .favourites-grid {
+        grid-template-columns: 1fr;
+    }
+}

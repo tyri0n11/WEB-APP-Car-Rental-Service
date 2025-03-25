@@ -1,0 +1,167 @@
+.my-rides-root {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.my-rides-section {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.my-rides-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e1e4e8;
+}
+
+.my-rides-header h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 0 0 1rem 0;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #4a5568;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+    background-color: #f7fafc;
+    border-color: #cbd5e0;
+}
+
+.filter-btn.active {
+    background-color: #4299e1;
+    border-color: #4299e1;
+    color: #fff;
+}
+
+.rides-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.ride-card {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1rem;
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ride-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.ride-car-image {
+    width: 200px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.ride-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.ride-info h5 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #2d3748;
+}
+
+.ride-dates {
+    display: flex;
+    gap: 1rem;
+    color: #4a5568;
+}
+
+.ride-dates p {
+    margin: 0;
+}
+
+.ride-price {
+    color: #2b6cb0;
+    font-weight: 600;
+    margin: 0.5rem 0;
+}
+
+.ride-status {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.my-rides-loading,
+.my-rides-error,
+.my-rides-empty {
+    text-align: center;
+    padding: 2rem;
+    color: #4a5568;
+}
+
+.my-rides-error {
+    color: #e53e3e;
+}
+
+@media (max-width: 768px) {
+    .my-rides-root {
+        padding: 1rem;
+    }
+
+    .my-rides-section {
+        padding: 1.5rem;
+    }
+
+    .ride-card {
+        flex-direction: column;
+    }
+
+    .ride-car-image {
+        width: 100%;
+        height: 160px;
+    }
+
+    .ride-dates {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .filter-buttons {
+        flex-direction: column;
+    }
+
+    .filter-btn {
+        width: 100%;
+    }
+}

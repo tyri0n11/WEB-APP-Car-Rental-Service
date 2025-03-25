@@ -1,56 +1,294 @@
+/* Root container */
 .myaccount-root {
-    display: flex;
-    justify-content: center;
-    padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* General Profile Section */
+.general-profile {
+  display: flex;
+  gap: 3rem;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  flex-wrap: wrap;
+}
+
+/* Left Column: Profile Picture and Full Name */
+.profile-left {
+  flex: 1;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+.profile-picture-container {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #e1e4e8;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.profile-picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.full-name {
+  margin-top: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2d3748;
+  text-align: center;
+}
+
+/* Right Column: Personal Information */
+.profile-right {
+  flex: 2;
+  min-width: 300px;
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e1e4e8;
+}
+
+.profile-header h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0;
+}
+
+.edit-btn {
+  background: none;
+  border: none;
+  color: #4299e1;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.edit-btn:hover {
+  background-color: #ebf8ff;
+  color: #2b6cb0;
+}
+
+/* Display Information */
+.display-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.display-info p {
+  font-size: 1rem;
+  color: #4a5568;
+  margin: 0;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e1e4e8;
+}
+
+.display-info strong {
+  color: #2d3748;
+  min-width: 120px;
+  display: inline-block;
+}
+
+/* Edit Form */
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-field label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.form-field input,
+.form-field select {
+  padding: 0.75rem;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #2d3748;
+  background-color: #fff;
+  transition: all 0.2s ease;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+}
+
+/* Date of Birth Field */
+.dob-field {
+  margin-bottom: 0.5rem;
+}
+
+.dob-selects {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.dob-selects select {
+  flex: 1;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e1e4e8;
+}
+
+.cancel-btn,
+.save-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancel-btn {
+  background-color: #fff;
+  border: 1px solid #e1e4e8;
+  color: #4a5568;
+}
+
+.cancel-btn:hover {
+  background-color: #f7fafc;
+  border-color: #cbd5e0;
+}
+
+.save-btn {
+  background-color: #4299e1;
+  border: none;
+  color: #fff;
+}
+
+.save-btn:hover {
+  background-color: #2b6cb0;
+}
+
+/* License Section */
+.license-section {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.license-section h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0 0 1.5rem 0;
+}
+
+.license-content {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.license-picture {
+  width: 200px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e1e4e8;
+}
+
+.license-status {
+  font-size: 1.5rem;
+}
+
+.verified-icon {
+  color: #48bb78;
+}
+
+.not-verified-icon {
+  color: #e53e3e;
+}
+
+/* Error Messages */
+.error-message {
+  color: #e53e3e;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Disabled state for buttons */
+.edit-btn:disabled,
+.cancel-btn:disabled,
+.save-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .myaccount-root {
+    padding: 1rem;
   }
-  
-  .myaccount-card {
-    max-width: 600px;
+
+  .general-profile {
+    padding: 1.5rem;
+    gap: 2rem;
+  }
+
+  .profile-left {
     width: 100%;
-    border-radius: 8px;
   }
-  
-  .myaccount-header {
-    display: flex;
-    align-items: center;
+
+  .profile-right {
+    width: 100%;
   }
-  
-  .myaccount-avatar {
-    font-size: 48px;
-    color: #007bff;
-    margin-right: 16px;
+
+  .dob-selects {
+    flex-direction: column;
+    gap: 0.5rem;
   }
-  
-  .myaccount-info h5 {
-    margin: 0;
-    font-size: 24px;
-    color: #333;
+
+  .form-actions {
+    flex-direction: column;
   }
-  
-  .myaccount-info p {
-    margin: 4px 0;
-    color: #666;
+
+  .cancel-btn,
+  .save-btn {
+    width: 100%;
   }
-  
-  .verified-icon {
-    color: green;
-  }
-  
-  .not-verified-icon {
-    color: red;
-  }
-  
-  .myaccount-details p {
-    margin: 8px 0;
-    color: #333;
-  }
-  
-  .verified {
-    align-items: center;
-    color: green;
-  }
-  
-  .not-verified {
-    color: red;
-  }
-  
+}

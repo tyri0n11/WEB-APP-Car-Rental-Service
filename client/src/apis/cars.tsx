@@ -25,12 +25,15 @@ export interface CarQueryParams {
   yearFrom?: number;
   yearTo?: number;
   categoryIds?: string;
+  address?: string;
+  pickupDate?: string;
+  returnDate?: string;
 }
 
 export interface CarImage {
+  isPrimary: boolean;
   id: number;
   url: string;
-  isMain: boolean;
 }
 
 export interface CarCategory {

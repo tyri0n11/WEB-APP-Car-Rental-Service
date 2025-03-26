@@ -42,7 +42,7 @@ const getFuelTypeDisplay = (fuelType: FuelType) => {
 
 const CarCard: React.FC<{ car: Car }> = ({ car }) => {
   const navigate = useNavigate();
-  const mainImage = car?.images?.find(img => img.isMain)?.url || car?.images?.[0]?.url || DEFAULT_CAR_IMAGE;
+  const mainImage = car?.images?.find(img => img.isPrimary)?.url || car?.images?.[0]?.url || DEFAULT_CAR_IMAGE;
 
   return (
     <div className="car-card" onClick={() => navigate(`/cars/${car.id}`)}>

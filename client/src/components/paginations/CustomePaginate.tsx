@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Car, getCars } from '../../apis/cars';
+import { Car, CarQueryParams, getCars } from '../../apis/cars';
 import { CarStatus, FuelType } from '../../types/car';
 import CarCard from '../cards/CarCard';
+import CarSearchFilter from '../filters/CarSearchFilter';
 import './CustomePaginate.css';
 
 const DEFAULT_CAR_IMAGE = "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&auto=format&fit=crop&q=60";
@@ -15,15 +16,21 @@ interface Pagination {
   next: number | null;
 }
 
+const ITEMS_PER_PAGE = 12; // Số lượng xe hiển thị trên mỗi trang
+
 const CustomePaginate: React.FC = () => {
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchParams, setSearchParams] = useState<CarQueryParams>({
+    page: 1,
+    perPage: ITEMS_PER_PAGE,
+  });
   const [pagination, setPagination] = useState<Pagination>({
     total: 0,
     lastPage: 1,
     currentPage: 1,
-    perPage: 12,
+    perPage: ITEMS_PER_PAGE,
     prev: null,
     next: null
   });
@@ -39,15 +46,35 @@ const CustomePaginate: React.FC = () => {
     }]
   });
 
+  const handleSearch = (params: CarQueryParams | undefined) => {
+    if (!params) {
+      // Nếu không có tham số, reset về trạng thái mặc định
+      setSearchParams({
+        page: 1,
+        perPage: ITEMS_PER_PAGE,
+      });
+    } else {
+      // Lọc bỏ các tham số rỗng hoặc undefined
+      const filteredParams: CarQueryParams = {
+        page: 1,
+        perPage: ITEMS_PER_PAGE,
+      };
+
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== '' && value !== undefined && value !== null) {
+          filteredParams[key as keyof CarQueryParams] = value as any;
+        }
+      });
+
+      setSearchParams(filteredParams);
+    }
+  };
+
   const fetchCars = async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await getCars({
-        page: pagination.currentPage,
-        perPage: pagination.perPage
-      });
-      console.log('API Response:', response);
+      const response = await getCars(searchParams);
       
       if (response) {
         setCars(response.data?.cars?.map(addDefaultImage) || []);
@@ -55,7 +82,7 @@ const CustomePaginate: React.FC = () => {
           total: response.data?.pagination?.total || 0,
           lastPage: response.data?.pagination?.lastPage || 1,
           currentPage: response.data?.pagination?.currentPage || 1,
-          perPage: response.data?.pagination?.perPage || 12,
+          perPage: response.data?.pagination?.perPage || ITEMS_PER_PAGE,
           prev: response.data?.pagination?.prev,
           next: response.data?.pagination?.next
         });
@@ -79,11 +106,11 @@ const CustomePaginate: React.FC = () => {
 
   useEffect(() => {
     fetchCars();
-  }, [pagination.currentPage]);
+  }, [searchParams]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= pagination.lastPage) {
-      setPagination(prev => ({ ...prev, currentPage: newPage }));
+      setSearchParams(prev => ({ ...prev, page: newPage }));
     }
   };
 
@@ -104,45 +131,47 @@ const CustomePaginate: React.FC = () => {
     );
   }
 
-  if (cars.length === 0) {
-    return (
-      <div className="empty-container">
-        <p>No cars available at the moment.</p>
-      </div>
-    );
-  }
-
   return (
     <div className="paginate-container">
-      <div className="cars-grid">
-        {cars.map((car) => (
-          <div key={car.id} className="car-item">
-            <CarCard car={car} />
+      <CarSearchFilter onSearch={handleSearch} />
+      
+      {cars.length === 0 ? (
+        <div className="empty-container">
+          <p>No cars available at the moment.</p>
+        </div>
+      ) : (
+        <>
+          <div className="cars-grid">
+            {cars.map((car) => (
+              <div key={car.id} className="car-item">
+                <CarCard car={car} />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      <div className="pagination-controls">
-        <button
-          className={`pagination-button ${!pagination.prev ? 'disabled' : ''}`}
-          onClick={() => handlePageChange(pagination.currentPage - 1)}
-          disabled={!pagination.prev}
-        >
-          Previous
-        </button>
+          <div className="pagination-controls">
+            <button
+              className={`pagination-button ${!pagination.prev ? 'disabled' : ''}`}
+              onClick={() => handlePageChange(pagination.currentPage - 1)}
+              disabled={!pagination.prev}
+            >
+              Previous
+            </button>
 
-        <span className="page-info">
-          Page {pagination.currentPage} of {pagination.lastPage}
-        </span>
+            <span className="page-info">
+              Page {pagination.currentPage} of {pagination.lastPage}
+            </span>
 
-        <button
-          className={`pagination-button ${!pagination.next ? 'disabled' : ''}`}
-          onClick={() => handlePageChange(pagination.currentPage + 1)}
-          disabled={!pagination.next}
-        >
-          Next
-        </button>
-      </div>
+            <button
+              className={`pagination-button ${!pagination.next ? 'disabled' : ''}`}
+              onClick={() => handlePageChange(pagination.currentPage + 1)}
+              disabled={!pagination.next}
+            >
+              Next
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };

@@ -293,8 +293,8 @@ const CarDetail: React.FC = () => {
     );
   }
 
-  const mainImage = car.images?.find(img => img.isMain)?.url || car.images?.[0]?.url || DEFAULT_CAR_IMAGE;
-  const otherImages = car.images?.filter(img => !img.isMain).slice(0, 3) || [];
+  const mainImage = car.images?.find(img => img.isPrimary)?.url || car.images?.[0]?.url || DEFAULT_CAR_IMAGE;
+  const otherImages = car.images?.filter(img => !img.isPrimary).slice(0, 3) || [];
 
   const features = [
     { icon: <FaRoad />, label: car.autoGearbox ? 'Automatic' : 'Manual' },

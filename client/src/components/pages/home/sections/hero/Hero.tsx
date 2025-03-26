@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import React from "react";
-import SearchBar from "./SearchBar";
+// import SearchBar from "./SearchBar"; // Commented out since SearchBar component doesn't exist yet
 /*import AnimatedButton from '../../../buttons/AnimatedButton';*/
 
 const Hero: React.FC = () => {
@@ -86,7 +86,6 @@ const Hero: React.FC = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 1 }}
         >
-          <SearchBar />
         </motion.div>
       </div>
     </motion.div>

@@ -169,7 +169,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         payload: { user, accessToken: access },
       });
     } catch (error) {
-      console.error("Signup error:", error);
+      throw new Error("Signup error");
     }
   };
 
@@ -183,6 +183,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       if (!response.ok) {
         throw new Error("Login failed");
+        
       }
 
       const data = await response.json();
@@ -200,8 +201,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       });
       return true;
     } catch (error) {
-      console.error("Login error:", error);
-      return false;
+        throw new Error("Login error");
     }
   };
 

@@ -18,30 +18,15 @@ const SignIn: React.FC<{
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!email || !password) {
-      if (email === "") {
-        return;
-      }
-      if (password === "") {
-        return;
-      }
-      return;
-    }
+  
 
     const result = await handleAsync(
-      async () => {
-        const state = await login(email, password);
-        if (state) {
-          setTimeout(onClose, 1500);
-          return true;
-        }
-        return false;
-      },
+      async () => login(email, password),
       {
-        loading: AUTH_NOTIFICATIONS.SIGN_IN_LOADING,
-        success: AUTH_NOTIFICATIONS.SIGN_IN_SUCCESS,
-        error: AUTH_NOTIFICATIONS.SIGN_IN_ERROR
+        
+        loading: AUTH_NOTIFICATIONS.signIn.loading,
+        success: AUTH_NOTIFICATIONS.signIn.success,
+        error: AUTH_NOTIFICATIONS.signIn.error,
       }
     );
 

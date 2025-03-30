@@ -18,8 +18,8 @@ const Notification: React.FC<NotificationProps> = ({ show, type, message, onClos
       if (type !== 'loading') {
         const timer = setTimeout(() => {
           setIsVisible(false);
-          setTimeout(onClose, 500);
-        }, 5000);
+          setTimeout(onClose, 300);
+        }, 4000);
         return () => clearTimeout(timer);
       }
     }

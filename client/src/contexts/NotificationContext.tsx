@@ -56,7 +56,6 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   );
 };
 
-// Hook tiện ích để sử dụng notification
 export const useNotificationWithState = () => {
   const { showNotification } = useNotification();
   const [isLoading, setIsLoading] = useState(false);

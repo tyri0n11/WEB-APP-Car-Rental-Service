@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaAddressCard, FaCar, FaHeart, FaLock, FaUser } from "react-icons/fa";
+import { FaAddressCard, FaCar, FaHeart, FaLock, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { useAuth } from "../../../hooks/useAuth";
 import "./Profile.css";
 import MyAccount from "./sections/myaccount/MyAccount";
@@ -24,8 +24,22 @@ const Profile: React.FC = () => {
       icon: <FaLock />,
       content: <ChangePassword />,
     },
+    {
+      label: "Log Out",
+      icon: <FaSignOutAlt />,
+      content: "Logging out...",
+      isLogout: true
+    },
   ];
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+
+  const handleTabClick = (index: number) => {
+    if (menuItems[index].isLogout) {
+      logout();
+    } else {
+      setActiveTab(index);
+    }
+  };
 
   return (
     <div className="profilePage">
@@ -39,14 +53,14 @@ const Profile: React.FC = () => {
             {menuItems.map((item, index) => (
               <a
                 key={index}
-                className={`profileSidebarItem ${activeTab === index ? "profileSidebarItemActive" : ""}`}
+                className={`profileSidebarItem ${activeTab === index ? "profileSidebarItemActive" : ""} ${item.isLogout ? "profileLogoutButton" : ""}`}
                 onMouseEnter={(e) => {
                   e.currentTarget.classList.add("profileSidebarItemHover");
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.classList.remove("profileSidebarItemHover");
                 }}
-                onClick={() => setActiveTab(index)}
+                onClick={() => handleTabClick(index)}
               >
                 {item.icon}
                 <span>{item.label}</span>

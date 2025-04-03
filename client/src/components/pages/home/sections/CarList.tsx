@@ -1,4 +1,4 @@
-
+import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import carsData from "../../../.././utils/dummy/cars.json";
 import CarCard from "../../../cards/CarCard";
@@ -21,16 +21,10 @@ const styles: { [key: string]: React.CSSProperties } = {
     gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
     gap: "20px",
   },
-
   gridItem: {
     transition: "box-shadow 0.3s ease-in-out, transform 0.2s ease-in-out",
     borderRadius: "12px",
     cursor: "pointer",
-  },
-  
-  gridItemHover: {
-    transform: "scale(1.05)",
-    boxShadow: "0px calc(0.05 * 250px) calc(0.1 * 250px) rgba(0, 0, 0, 0.2)",
   }
 };
 
@@ -41,29 +35,67 @@ const CarList: React.FC = () => {
     setCars(carsData);
   }, []);
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+        when: "beforeChildren",
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    }
+  };
+
   return (
-    <div style={styles.container}>
-      <h2 style={styles.sectionTitle}>Car for you</h2>
-      <div style={styles.gridContainer}>
-      {cars.map((car) => (
-        <div
-          key={car.id}
-          style={styles.gridItem}
-          onMouseEnter={(e) => {
-            const width = e.currentTarget.clientWidth;
-            e.currentTarget.style.boxShadow = `0px ${width * 0.05}px ${width * 0.1}px rgba(0, 0, 0, 0.2)`;
-            e.currentTarget.style.transform = "scale(1.05)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.boxShadow = "none";
-            e.currentTarget.style.transform = "scale(1)";
-          }}
-        >
-          <CarCard car={car} />
-        </div>
-      ))}
-      </div>
-    </div>
+    <motion.div
+      style={styles.container}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.1 }}
+      variants={containerVariants}
+    >
+      <motion.h2 
+        style={styles.sectionTitle}
+        variants={itemVariants}
+      >
+        Car for you
+      </motion.h2>
+      <motion.div 
+        style={styles.gridContainer}
+        variants={containerVariants}
+      >
+        {cars.map((car) => (
+          <motion.div
+            key={car.id}
+            style={styles.gridItem}
+            variants={itemVariants}
+            whileHover={{ 
+              scale: 1.05,
+              boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.2)",
+              transition: {
+                duration: 0.2,
+                ease: "easeOut"
+              }
+            }}
+          >
+            <CarCard car={car} />
+          </motion.div>
+        ))}
+      </motion.div>
+    </motion.div>
   );
 };
 

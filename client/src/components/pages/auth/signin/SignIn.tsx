@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
-import { useAuth } from "../../../../hooks/useAuth";
 import { Link } from "react-router-dom";
+import { AUTH_NOTIFICATIONS } from "../../../../constants/notificationMessages";
+import { useNotificationWithState } from "../../../../contexts/NotificationContext";
+import { useAuth } from "../../../../hooks/useAuth";
 
 import "../AuthStyles.css";
 
@@ -12,47 +14,24 @@ const SignIn: React.FC<{
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const checkValid = () => {
-    if (!email || !password) {
-      if (email === "") setErrorMessage("Email is required");
-      else if (password === "") setErrorMessage("Password is required");
-      else {
-        setErrorMessage("Please fill in all fields");
-        if (!email || !password) {
-          if (email === "") setErrorMessage("Email is required");
-          else if (password === "") setErrorMessage("Password is required");
-          else {
-            setErrorMessage("Please fill in all fields");
-            if (email.length < 5 || email.length > 89) setErrorMessage("Invalid email");
-          }
-          setErrorMessage("Please fill in all fields");
-          return false;
-        }
-      }
-      setErrorMessage("Please fill in all fields");
-      return false;
-    }
-    return true;
-  };
+  const { isLoading, handleAsync } = useNotificationWithState();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMessage("");
-    if (!checkValid()) {
-      console.log("Invalid input");
-      return;
-    }
-    try {
-      const state = await login(email, password);
-      if (state) {
-        onClose();
-      } else {
-        window.alert("Login failed");
-        onClose();
+  
+
+    const result = await handleAsync(
+      async () => login(email, password),
+      {
+        
+        loading: AUTH_NOTIFICATIONS.signIn.loading,
+        success: AUTH_NOTIFICATIONS.signIn.success,
+        error: AUTH_NOTIFICATIONS.signIn.error,
       }
-    } catch (error) {
-      console.error(error);
-      setErrorMessage((error as any).response.data.message);
+    );
+
+    if (!result) {
+      console.error("Login failed");
     }
   };
 
@@ -64,7 +43,6 @@ const SignIn: React.FC<{
         <div className="form-box signin">
           <form onSubmit={handleSubmit}>
             <h1>Sign In</h1>
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
 
             <div className="input-box">
               <label>Email</label>
@@ -74,6 +52,7 @@ const SignIn: React.FC<{
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                disabled={isLoading}
               />
             </div>
 
@@ -85,12 +64,13 @@ const SignIn: React.FC<{
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                disabled={isLoading}
               />
             </div>
 
             <div className="remember-forgot">
               <label>
-                <input type="checkbox" /> Remember me
+                <input type="checkbox" disabled={isLoading} /> Remember me
               </label>
               <Link to="/auth/forgot-password" onClick={onClose}>
                 Forgot password?
@@ -98,7 +78,9 @@ const SignIn: React.FC<{
             </div>
 
             <div className="button-box">
-              <button type="submit">Sign In</button>
+              <button type="submit" disabled={isLoading}>
+                {isLoading ? 'Signing in...' : 'Sign In'}
+              </button>
             </div>
             <div className="register-link">
               <p>
@@ -115,8 +97,8 @@ const SignIn: React.FC<{
             </div>
           </form>
         </div>
-      </div >
-    </div >
+      </div>
+    </div>
   );
 };
 

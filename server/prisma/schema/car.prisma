@@ -18,10 +18,11 @@ model Car {
     kilometers   Int
     description  String
     dailyPrice   Float
-    licensePlate String
+    licensePlate String        @unique
     numSeats     Int
     address      String
     autoGearbox  Boolean
+    rating       Float         @default(0)
     fuelType     FuelType
     status       CarStatus     @default(AVAILABLE)
     categories   CarCategory[]
@@ -44,12 +45,13 @@ model CarImage {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    @@unique([carId, url])
     @@map("car_images")
 }
 
 model Category {
     id            String        @id @default(uuid())
-    name          String
+    name          String        @unique
     createdAt     DateTime      @default(now())
     updatedAt     DateTime      @updatedAt
     carCategories CarCategory[]
@@ -66,6 +68,7 @@ model CarCategory {
     createdAt  DateTime @default(now())
     updatedAt  DateTime @updatedAt
 
+    @@unique([carId, categoryId])
     @@map("car_categories")
 }
 
@@ -75,6 +78,7 @@ model Review {
     comment   String?
     booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
     bookingId String   @unique
+    userId    String
     userName  String
     car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
     carId     String

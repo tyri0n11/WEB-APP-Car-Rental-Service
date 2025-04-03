@@ -32,6 +32,9 @@ export class CarResponseDTO implements Car {
   licensePlate: string;
 
   @Expose()
+  rating: number;
+
+  @Expose()
   @ApiProperty({ enum: FuelType, enumName: 'fuelType' })
   fuelType: FuelType;
 

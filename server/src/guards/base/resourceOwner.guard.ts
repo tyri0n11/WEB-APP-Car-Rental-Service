@@ -10,8 +10,6 @@ import { Role } from '@prisma/client';
 
 @Injectable()
 export abstract class ResourceOwnerGuard implements CanActivate {
-  constructor(protected readonly reflector: Reflector) {}
-
   abstract checkOwnership(userId: string, resourceId: string): Promise<boolean>;
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

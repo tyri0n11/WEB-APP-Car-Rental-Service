@@ -53,7 +53,7 @@ export class BookingController {
     return this.bookingService.findOne({ id });
   }
 
-  @Patch(':id')
+  @Patch(':id/return')
   returnCar(@Param('id') id: string) {
     return this.bookingService.handleReturnCar(id);
   }

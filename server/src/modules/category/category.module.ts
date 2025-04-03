@@ -6,5 +6,6 @@ import { RolesGuard } from '@/guards/role.guard';
 @Module({
   controllers: [CategoryController],
   providers: [CategoryService, RolesGuard],
+  exports: [CategoryService],
 })
 export class CategoryModule {}

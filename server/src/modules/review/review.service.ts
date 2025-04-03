@@ -1,17 +1,23 @@
 import { BaseService } from '@/services/base/base.service';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Review } from '@prisma/client';
 import { BookingService } from '../booking/booking.service';
 import { DatabaseService } from '../database/database.service';
 import { CreateReviewRequestDTO } from './dto/create.request.dto';
 import { ReviewResponseDTO } from './dto/response.dto';
 import { FindManyByCarIdQueryDTO } from './dto/findManyByCarId.request.dto';
+import { CarService } from '../car/car.service';
 
 @Injectable()
 export class ReviewService extends BaseService<Review> {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly bookingService: BookingService,
+    private readonly carService: CarService,
   ) {
     super(databaseService, 'review', ReviewResponseDTO);
   }
@@ -27,14 +33,16 @@ export class ReviewService extends BaseService<Review> {
       userId: userId,
     });
     if (!foundBooking) {
-      throw new NotFoundException('Booking not found');
+      throw new BadRequestException('Booking not found');
     }
+
     console.log(foundBooking);
     const userName = firstName + ' ' + lastName;
-    return await super.create({
+    const review = await super.create({
       comment,
       rating,
       userName,
+      userId,
       car: {
         connect: {
           id: foundBooking.carId,
@@ -46,6 +54,11 @@ export class ReviewService extends BaseService<Review> {
         },
       },
     });
+
+    const car = await this.carService.findOne({ id: foundBooking.carId });
+    car.rating = (car.rating + rating) / 2;
+    await this.carService.update(car.id, { rating: car.rating });
+    return review;
   }
 
   findManyByCarId(query: FindManyByCarIdQueryDTO) {

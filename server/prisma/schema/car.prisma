@@ -29,6 +29,7 @@ model Car {
     reviews      Review[]
     images       CarImage[]
     bookings     Booking[]
+    favoritedBy  FavoriteCar[]
     userActions  UserAction[]
     createdAt    DateTime      @default(now())
     updatedAt    DateTime      @updatedAt

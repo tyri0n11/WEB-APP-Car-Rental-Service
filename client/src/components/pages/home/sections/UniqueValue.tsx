@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import React from "react";
 
 const styles: { [key: string]: React.CSSProperties } = {
@@ -87,22 +88,88 @@ const uniqueValues = [
 ];
 
 const UniqueValue: React.FC = () => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+        when: "beforeChildren",
+        staggerChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 50, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut"
+      }
+    }
+  };
+
   return (
-    <section style={styles.section}>
-      <h2 style={styles.title}>Why choose Us?</h2>
-      <p style={styles.description}>
+    <motion.section
+      style={styles.section}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      variants={containerVariants}
+    >
+      <motion.h2 
+        style={styles.title}
+        variants={itemVariants}
+      >
+        Why choose Us?
+      </motion.h2>
+      <motion.p 
+        style={styles.description}
+        variants={itemVariants}
+      >
         Features that make renting a car on CRS easier
-      </p>
-      <div style={styles.gridContainer}>
+      </motion.p>
+      <motion.div 
+        style={styles.gridContainer}
+        variants={containerVariants}
+      >
         {uniqueValues.map((item) => (
-          <div key={item.id} style={styles.card}>
-            <img src={item.image} alt={item.title} style={styles.image} />
-            <h3 style={styles.cardTitle}>{item.title}</h3>
-            <p style={styles.cardDescription}>{item.description}</p>
-          </div>
+          <motion.div
+            key={item.id}
+            style={styles.card}
+            variants={itemVariants}
+            whileHover={{ 
+              scale: 1.05,
+              transition: { duration: 0.2 }
+            }}
+          >
+            <motion.img
+              src={item.image}
+              alt={item.title}
+              style={styles.image}
+              initial={{ scale: 0.8, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            />
+            <motion.h3 
+              style={styles.cardTitle}
+              variants={itemVariants}
+            >
+              {item.title}
+            </motion.h3>
+            <motion.p 
+              style={styles.cardDescription}
+              variants={itemVariants}
+            >
+              {item.description}
+            </motion.p>
+          </motion.div>
         ))}
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 };
 

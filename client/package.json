@@ -21,6 +21,7 @@
     "@types/tailwindcss": "^3.0.11",
     "@vitejs/plugin-react": "^4.3.4",
     "dotenv": "^16.4.7",
+    "framer-motion": "^12.5.0",
     "lucide-react": "^0.475.0",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.9",

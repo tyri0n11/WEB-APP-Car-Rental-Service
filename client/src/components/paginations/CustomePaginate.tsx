@@ -1,41 +1,13 @@
-import { Component } from 'react';
-import { mockCars, mockPagination } from '../../utils/dummy/carsData';
+import React, { useEffect, useState } from 'react';
+import { Car, CarQueryParams, getCars } from '../../apis/cars';
+import { CarStatus, FuelType } from '../../types/car';
 import CarCard from '../cards/CarCard';
+import CarSearchFilter from '../filters/CarSearchFilter';
+import './CustomePaginate.css';
 
-interface Image {
-  id: string;
-  url: string;
-  isMain: boolean;
-}
+const DEFAULT_CAR_IMAGE = "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&auto=format&fit=crop&q=60";
 
-interface Category {
-  id: string;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface Car {
-  id: string;
-  make: string;
-  model: string;
-  year: number;
-  fuelType: string;
-  status: string;
-  kilometers: number;
-  description: string;
-  dailyPrice: number;
-  licensePlate: string;
-  address: string;
-  numSeats: number;
-  autoGearbox: boolean;
-  images: Image[];
-  categories: Category[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface PaginationInfo {
+interface Pagination {
   total: number;
   lastPage: number;
   currentPage: number;
@@ -44,207 +16,164 @@ interface PaginationInfo {
   next: number | null;
 }
 
-interface State {
-  cars: Car[];
-  pagination: PaginationInfo;
-  isLoading: boolean;
-}
+const ITEMS_PER_PAGE = 12; // Số lượng xe hiển thị trên mỗi trang
 
-class CustomePaginate extends Component<{}, State> {
-  constructor(props: {}) {
-    super(props);
-    this.state = {
-      cars: [],
-      pagination: {
+const CustomePaginate: React.FC = () => {
+  const [cars, setCars] = useState<Car[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchParams, setSearchParams] = useState<CarQueryParams>({
+    page: 1,
+    perPage: ITEMS_PER_PAGE,
+  });
+  const [pagination, setPagination] = useState<Pagination>({
+    total: 0,
+    lastPage: 1,
+    currentPage: 1,
+    perPage: ITEMS_PER_PAGE,
+    prev: null,
+    next: null
+  });
+
+  const addDefaultImage = (car: any): Car => ({
+    ...car,
+    fuelType: car.fuelType as FuelType,
+    status: car.status as CarStatus,
+    images: car.images?.length ? car.images : [{
+      id: 'default',
+      url: DEFAULT_CAR_IMAGE,
+      isMain: true
+    }]
+  });
+
+  const handleSearch = (params: CarQueryParams | undefined) => {
+    if (!params) {
+      // Nếu không có tham số, reset về trạng thái mặc định
+      setSearchParams({
+        page: 1,
+        perPage: ITEMS_PER_PAGE,
+      });
+    } else {
+      // Lọc bỏ các tham số rỗng hoặc undefined
+      const filteredParams: CarQueryParams = {
+        page: 1,
+        perPage: ITEMS_PER_PAGE,
+      };
+
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== '' && value !== undefined && value !== null) {
+          filteredParams[key as keyof CarQueryParams] = value as any;
+        }
+      });
+
+      setSearchParams(filteredParams);
+    }
+  };
+
+  const fetchCars = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await getCars(searchParams);
+      
+      if (response) {
+        setCars(response.data?.cars?.map(addDefaultImage) || []);
+        setPagination({
+          total: response.data?.pagination?.total || 0,
+          lastPage: response.data?.pagination?.lastPage || 1,
+          currentPage: response.data?.pagination?.currentPage || 1,
+          perPage: response.data?.pagination?.perPage || ITEMS_PER_PAGE,
+          prev: response.data?.pagination?.prev,
+          next: response.data?.pagination?.next
+        });
+      } else {
+        throw new Error('Invalid response format');
+      }
+    } catch (err) {
+      console.error('Error fetching cars:', err);
+      setError('Failed to load cars. Please try again.');
+      setCars([]);
+      setPagination(prev => ({
+        ...prev,
         total: 0,
-        lastPage: 0,
-        currentPage: 1,
-        perPage: 8,
-        prev: null,
-        next: null,
-      },
-      isLoading: false,
-    };
-  }
-
-  componentDidMount() {
-    this.loadMockData();
-  }
-
-  loadMockData = () => {
-    const { currentPage, perPage } = this.state.pagination;
-    const startIndex = (currentPage - 1) * perPage;
-    const endIndex = startIndex + perPage;
-    const paginatedCars = mockCars.slice(startIndex, endIndex);
-
-    this.setState({
-      cars: paginatedCars,
-      pagination: {
-        ...mockPagination,
-        currentPage,
-        prev: currentPage > 1 ? currentPage - 1 : null,
-        next: currentPage < mockPagination.lastPage ? currentPage + 1 : null,
-      },
-      isLoading: false,
-    });
+        lastPage: 1,
+        currentPage: 1
+      }));
+    } finally {
+      setLoading(false);
+    }
   };
 
-  handlePageChange = (newPage: number) => {
-    this.setState(
-      (prevState) => ({
-        pagination: {
-          ...prevState.pagination,
-          currentPage: newPage,
-        },
-      }),
-      this.loadMockData
-    );
+  useEffect(() => {
+    fetchCars();
+  }, [searchParams]);
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= pagination.lastPage) {
+      setSearchParams(prev => ({ ...prev, page: newPage }));
+    }
   };
 
-  render() {
-    const { cars, pagination, isLoading } = this.state;
-
-    const styles = {
-      container: {
-        maxWidth: "1250px",
-        margin: "0 auto",
-        padding: "16px",
-        width: "100%",
-        boxSizing: "border-box" as const,
-      },
-      gridContainer: {
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-        gap: "20px",
-        marginBottom: "20px",
-        width: "100%",
-        "@media (max-width: 768px)": {
-          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-          gap: "15px",
-        },
-        "@media (max-width: 480px)": {
-          gridTemplateColumns: "1fr",
-          gap: "20px",
-        },
-      },
-      gridItem: {
-        transition: "box-shadow 0.3s ease-in-out, transform 0.2s ease-in-out",
-        borderRadius: "12px",
-        cursor: "pointer",
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column" as const,
-      },
-      paginationControls: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        gap: "20px",
-        marginTop: "20px",
-        flexWrap: "wrap" as const,
-        "@media (max-width: 480px)": {
-          gap: "10px",
-        },
-      },
-      button: {
-        padding: "8px 16px",
-        borderRadius: "4px",
-        border: "none",
-        backgroundColor: "#1E3A8A",
-        color: "white",
-        cursor: "pointer",
-        transition: "background-color 0.2s",
-        minWidth: "100px",
-        "@media (max-width: 480px)": {
-          padding: "6px 12px",
-          minWidth: "80px",
-        },
-      },
-      buttonDisabled: {
-        backgroundColor: "#ccc",
-        cursor: "not-allowed",
-      },
-      pageInfo: {
-        fontSize: "16px",
-        color: "#1E3A8A",
-        "@media (max-width: 480px)": {
-          fontSize: "14px",
-        },
-      },
-      loadingContainer: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "200px",
-        width: "100%",
-      },
-      loadingText: {
-        fontSize: "18px",
-        color: "#1E3A8A",
-      },
-    };
-
+  if (loading) {
     return (
-      <div style={styles.container}>
-        {isLoading ? (
-          <div style={styles.loadingContainer}>
-            <p style={styles.loadingText}>Loading...</p>
-          </div>
-        ) : (
-          <>
-            <div style={styles.gridContainer}>
-              {cars && cars.map((car) => (
-                <div
-                  key={car.id}
-                  style={styles.gridItem}
-                  onMouseEnter={(e) => {
-                    const width = e.currentTarget.clientWidth;
-                    e.currentTarget.style.boxShadow = `0px ${width * 0.05}px ${width * 0.1}px rgba(0, 0, 0, 0.2)`;
-                    e.currentTarget.style.transform = "scale(1.02)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = "none";
-                    e.currentTarget.style.transform = "scale(1)";
-                  }}
-                >
-                  <CarCard car={car as any} />
-                </div>
-              ))}
-            </div>
-
-            <div style={styles.paginationControls}>
-              <button
-                onClick={() => this.handlePageChange(pagination.prev!)}
-                style={{
-                  ...styles.button,
-                  ...(pagination.prev === null ? styles.buttonDisabled : {}),
-                }}
-                disabled={pagination.prev === null}
-              >
-                Previous
-              </button>
-
-              <span style={styles.pageInfo}>
-                Page {pagination.currentPage} of {pagination.lastPage}
-              </span>
-
-              <button
-                onClick={() => this.handlePageChange(pagination.next!)}
-                style={{
-                  ...styles.button,
-                  ...(pagination.next === null ? styles.buttonDisabled : {}),
-                }}
-                disabled={pagination.next === null}
-              >
-                Next
-              </button>
-            </div>
-          </>
-        )}
+      <div className="loading-container">
+        <p>Loading cars...</p>
       </div>
     );
   }
-}
+
+  if (error) {
+    return (
+      <div className="error-container">
+        <p>{error}</p>
+        <button onClick={() => fetchCars()}>Try Again</button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="paginate-container">
+      <CarSearchFilter onSearch={handleSearch} />
+      
+      {cars.length === 0 ? (
+        <div className="empty-container">
+          <p>No cars available at the moment.</p>
+        </div>
+      ) : (
+        <>
+          <div className="cars-grid">
+            {cars.map((car) => (
+              <div key={car.id} className="car-item">
+                <CarCard car={car} />
+              </div>
+            ))}
+          </div>
+
+          <div className="pagination-controls">
+            <button
+              className={`pagination-button ${!pagination.prev ? 'disabled' : ''}`}
+              onClick={() => handlePageChange(pagination.currentPage - 1)}
+              disabled={!pagination.prev}
+            >
+              Previous
+            </button>
+
+            <span className="page-info">
+              Page {pagination.currentPage} of {pagination.lastPage}
+            </span>
+
+            <button
+              className={`pagination-button ${!pagination.next ? 'disabled' : ''}`}
+              onClick={() => handlePageChange(pagination.currentPage + 1)}
+              disabled={!pagination.next}
+            >
+              Next
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
 
 export default CustomePaginate;

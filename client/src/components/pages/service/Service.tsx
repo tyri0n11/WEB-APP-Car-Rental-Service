@@ -1,5 +1,4 @@
 import React from 'react';
-import ServiceFilter from '../../filters/ServiceFilter';
 import CustomePaginate from '../../paginations/CustomePaginate';
 
 const Service: React.FC = () => {
@@ -24,9 +23,8 @@ const Service: React.FC = () => {
 
   return (
     <div style={styles.container}>
-      <ServiceFilter />
       <div style={styles.content}>
-        <h1 style={styles.title}>Danh sách xe có sẵn</h1>
+        <h1 style={styles.title}>Available Cars</h1>
         <CustomePaginate />
       </div>
     </div>

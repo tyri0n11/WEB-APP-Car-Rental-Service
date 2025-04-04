@@ -1,0 +1,143 @@
+.car-card {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 300px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.car-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.car-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.car-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.car-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #222;
+  margin: 0;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.gear-box,
+.fuel-type,
+.address,
+.seats,
+.rating,
+.kilometers {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+}
+
+.icon {
+  font-size: 16px;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 8px 0;
+}
+
+.car-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.price-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price {
+  font-weight: bold;
+  font-size: 16px;
+  color: #FFD700;
+}
+
+/* Fuel type specific styles */
+.fuel {
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.gasoline {
+  background-color: #e6f3ff;
+  color: #0066cc;
+}
+
+.diesel {
+  background-color: #fff3e6;
+  color: #cc6600;
+}
+
+.electric {
+  background-color: #e6ffe6;
+  color: #008000;
+}
+
+.hybrid {
+  background-color: #f3e6ff;
+  color: #6600cc;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .car-card {
+    max-width: 100%;
+  }
+  
+  .car-image {
+    height: 160px;
+  }
+}
+
+@media (max-width: 480px) {
+  .car-image {
+    height: 140px;
+  }
+  
+  .car-title {
+    font-size: 14px;
+  }
+  
+  .info-row {
+    font-size: 12px;
+  }
+  
+  .price {
+    font-size: 14px;
+  }
+} 

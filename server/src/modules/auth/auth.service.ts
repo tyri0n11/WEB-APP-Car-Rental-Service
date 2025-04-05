@@ -25,6 +25,7 @@ import { SignupResponseDTO } from './dto/response/signup.response.dto';
 import { LoginResponseDTO } from './dto/response/login.response.dto';
 import { UserResponseDTO } from '../user/dto/response.dto';
 import { ResetPasswordRequestDTO } from './dto/request/resetPassword.dto';
+import { ChangePasswordRequestDTO } from './dto/request/changePassword.request.dto';
 
 @Injectable()
 export class AuthService {
@@ -195,6 +196,30 @@ export class AuthService {
 
     this.logger.log(`Password reset for user ${user.id}`);
     await this.deleteRefreshToken(user.id);
+  }
+
+  async changePassword(
+    userId: string,
+    dto: ChangePasswordRequestDTO,
+  ): Promise<void> {
+    const user = await this.userService.findById(userId);
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    await this.verifyPlainContentWithHashedContent(
+      dto.oldPassword,
+      user.password,
+    );
+
+    const hashedPassword = await bcrypt.hash(dto.newPassword, this.SALT_ROUND);
+    await this.userService.update(
+      { id: user.id },
+      { password: hashedPassword },
+    );
+
+    await this.deleteRefreshToken(user.id);
+    this.logger.log(`Password changed for user ${user.id}`);
   }
 
   async verifyAccount(token: string): Promise<void> {

@@ -56,14 +56,22 @@ export class CarResponseDTO implements Car {
   images: CarImageResponseDTO[];
 
   @Expose()
-  @Type(() => CategoryResponseDTO)
-  categories: CategoryResponseDTO[];
+  @Type(() => CarCategoryResponseDTO)
+  categories: CarCategoryResponseDTO[];
 
   @Exclude()
   createdAt: Date;
 
   @Exclude()
   updatedAt: Date;
+}
+
+export class CarCategoryResponseDTO {
+  @Expose()
+  id: string;
+
+  @Expose()
+  name: string;
 }
 
 export class CarImageResponseDTO {

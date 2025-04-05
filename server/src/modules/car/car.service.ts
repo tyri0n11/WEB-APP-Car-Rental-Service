@@ -273,6 +273,7 @@ export class CarService extends BaseService<Car> {
       },
     });
   }
+
   async delete(id: string): Promise<boolean> {
     const foundCar = await this.findOne({ id });
     if (!foundCar) {
@@ -295,5 +296,41 @@ export class CarService extends BaseService<Car> {
     });
 
     return this.findById(id);
+  }
+
+  async addToFavorite(userId: string, carId: string): Promise<void> {
+    const car = await this.findById(carId);
+    if (!car) {
+      throw new BadRequestException('Car not found');
+    }
+
+    await this.databaseService.favoriteCar.create({
+      data: {
+        userId,
+        carId,
+      },
+    });
+  }
+
+  async removeFromFavorite(userId: string, carId: string): Promise<void> {
+    const favoriteCar = await this.databaseService.favoriteCar.findUnique({
+      where: { userId_carId: { userId, carId } },
+    });
+    if (!favoriteCar) {
+      throw new BadRequestException('Car not found in favorites');
+    }
+
+    await this.databaseService.favoriteCar.delete({
+      where: { id: favoriteCar.id },
+    });
+  }
+
+  async getFavoriteCars(userId: string): Promise<any> {
+    const favoriteCars = await this.databaseService.car.findMany({
+      where: { favoritedBy: { some: { userId } } },
+      include: this.defaultIncludes,
+    });
+
+    return favoriteCars;
   }
 }

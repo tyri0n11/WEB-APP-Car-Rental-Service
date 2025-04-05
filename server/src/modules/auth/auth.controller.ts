@@ -26,6 +26,7 @@ import { JwtRefreshGuard } from './guards/jwt/jwtRefresh.guard';
 import { RefreshTokenRequestDTO } from './dto/request/refreshToken.request.dto';
 import { ResetPasswordRequestDTO } from './dto/request/resetPassword.dto';
 import { SendEmailVerfiyRequestDTO } from './dto/request/sendVerifyEmail.request.dto';
+import { ChangePasswordRequestDTO } from './dto/request/changePassword.request.dto';
 
 @Controller('auth')
 // @UseInterceptors(new PrismaInterceptor(User))
@@ -34,7 +35,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly userService: UserService,
     private readonly configService: ConfigService,
-  ) { }
+  ) {}
 
   @ApiPost({
     path: 'signup',
@@ -99,6 +100,16 @@ export class AuthController {
   @ApiPost({ path: 'reset-password' })
   async resetPassword(@Body() dto: ResetPasswordRequestDTO) {
     return await this.authService.resetPassword(dto);
+  }
+
+  @ApiPost({ path: 'change-password' })
+  @UseGuards(JwtAccessGuard)
+  async changePassword(
+    @Req() request: RequestWithUser,
+    @Body() dto: ChangePasswordRequestDTO,
+  ) {
+    const { user } = request;
+    await this.authService.changePassword(user.id, dto);
   }
 
   @ApiPost({ path: 'verify-account' })

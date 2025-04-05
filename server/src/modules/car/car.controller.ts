@@ -9,6 +9,7 @@ import {
   UseGuards,
   Query,
   UseInterceptors,
+  Req,
 } from '@nestjs/common';
 import { CarService } from './car.service';
 import { CreateCarRequestDTO } from './dto/create.request.dto';
@@ -28,6 +29,7 @@ import {
   CarResponseDTO,
   CarsWithPaginationResponseDTO,
 } from './dto/response.dto';
+import { RequestWithUser } from '@/types/request.type';
 import { TrackViewInterceptor } from '@/interceptors/action-tracking/track-view.interceptor';
 
 @Controller('cars')
@@ -78,5 +80,27 @@ export class CarController {
   @Roles(Role.ADMIN)
   remove(@Param('id') id: string) {
     return this.carService.remove(+id);
+  }
+
+  @Post(':id/favorite')
+  @UseGuards(JwtAccessGuard)
+  addToFavorite(@Param('id') id: string, @Req() request: RequestWithUser) {
+    const { user } = request;
+    return this.carService.addToFavorite(user.id, id);
+  }
+
+  @Delete(':id/favorite')
+  @UseGuards(JwtAccessGuard)
+  removeFromFavorite(@Param('id') id: string, @Req() request: RequestWithUser) {
+    const { user } = request;
+    return this.carService.removeFromFavorite(user.id, id);
+  }
+
+  @Get('favorite')
+  @UseGuards(JwtAccessGuard)
+  @ApiOkResponse({ type: [CarResponseDTO] })
+  getFavoriteCars(@Req() request: RequestWithUser) {
+    const { user } = request;
+    return this.carService.getFavoriteCars(user.id);
   }
 }

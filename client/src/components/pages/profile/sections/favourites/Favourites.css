@@ -1,18 +1,18 @@
 .favourites-root {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    padding: 2rem;
-    background-color: #f8f9fa;
-    max-width: 1200px;
-    margin: 0 auto;
+    gap: 1.5rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .favourites-section {
     background-color: #fff;
-    border-radius: 12px;
+    border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
+    padding: 1.5rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .favourites-header {
@@ -94,8 +94,12 @@
 .favourites-loading,
 .favourites-error,
 .favourites-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
     text-align: center;
-    padding: 2rem;
     color: #4a5568;
 }
 
@@ -105,13 +109,13 @@
 
 @media (max-width: 768px) {
     .favourites-root {
+        padding: 0;
+    }
+    
+    .favourites-section {
         padding: 1rem;
     }
-
-    .favourites-section {
-        padding: 1.5rem;
-    }
-
+    
     .favourites-grid {
         grid-template-columns: 1fr;
     }

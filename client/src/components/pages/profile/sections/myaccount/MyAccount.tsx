@@ -1,331 +1,513 @@
-import React, { useState, useEffect } from 'react';
-import {
-  FaCheckCircle,
-  FaTimesCircle,
-  FaUserCircle,
-  FaEdit,
-} from 'react-icons/fa';
-import { useAuth } from '../../../../../hooks/useAuth';
-import { User } from '../../../../../types';
+import React, { useEffect, useState, useRef } from 'react';
+import { FaUser, FaEdit, FaSave, FaTimes, FaUpload, FaImage } from 'react-icons/fa';
+import { useAuth } from '../../../../../contexts/AuthContext';
 import './MyAccount.css';
 
+const API_BASE_URL = 'http://localhost:3000';
+
+// Define the driving license interface
+interface DrivingLicence {
+  licenceNumber: string;
+  drivingLicenseImages: string[];
+  expiryDate: string;
+}
+
+// Define the extended user type that includes driving license details
+type ExtendedUser = {
+  drivingLicence?: DrivingLicence;
+}
+
 const MyAccount: React.FC = () => {
-  const { user, updateUser } = useAuth();
-
-  const defaultProfilePic: string =
-    'https://via.placeholder.com/150?text=Profile';
-  const defaultLicensePic: string =
-    'https://via.placeholder.com/150x100?text=License';
-
-  // State for editing personal info and validation
-  const [editMode, setEditMode] = useState<boolean>(false);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [personalInfo, setPersonalInfo] = useState({
-    dobDay: '',
-    dobMonth: '',
-    dobYear: '',
-    gender: '',
+  const { user, accessToken } = useAuth();
+  const [userDetails, setUserDetails] = useState<(typeof user & ExtendedUser) | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
     phoneNumber: '',
-    email: '',
+    licenceNumber: '',
+    expiryDate: '',
   });
 
-  // When user changes, initialize personalInfo fields
   useEffect(() => {
-    if (user) {
-      if (user.dob) {
-        const [year, month, day] = user.dob.split('-');
-        setPersonalInfo({
-          dobDay: day,
-          dobMonth: month,
-          dobYear: year,
-          gender: user.gender || '',
-          phoneNumber: user.phoneNumber || '',
-          email: user.email || '',
-        });
-      } else {
-        setPersonalInfo({
-          dobDay: '',
-          dobMonth: '',
-          dobYear: '',
-          gender: user.gender || '',
-          phoneNumber: user.phoneNumber || '',
-          email: user.email || '',
-        });
-      }
+    if (accessToken) {
+      fetchUserDetails();
+    } else {
+      setError('No authentication token available. Please log in.');
+      setLoading(false);
     }
-  }, [user]);
+  }, [accessToken, user]);
+
+  const fetchUserDetails = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      if (!accessToken) {
+        throw new Error('No authentication token available. Please log in.');
+      }
+
+      // First get the user ID from /auth/me endpoint
+      const meResponse = await fetch(`${API_BASE_URL}/auth/me`, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!meResponse.ok) {
+        if (meResponse.status === 401) {
+          throw new Error('Authentication token expired. Please log in again.');
+        }
+        throw new Error('Failed to fetch user details from /auth/me');
+      }
+
+      const meResult = await meResponse.json();
+      
+      // Check if the response has the expected structure
+      if (!meResult?.data) {
+        throw new Error('Invalid response format from /auth/me');
+      }
+      
+      const meData = meResult.data;
+      
+      // Then get detailed user info from /user/:id endpoint
+      const userResponse = await fetch(`${API_BASE_URL}/user/${meData.id}`, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!userResponse.ok) {
+        if (userResponse.status === 401) {
+          throw new Error('Authentication token expired. Please log in again.');
+        }
+        throw new Error('Failed to fetch user details from /user/:id');
+      }
+
+      const userResult = await userResponse.json();
+      
+      // Check if the response has the expected structure
+      if (!userResult?.data) {
+        throw new Error('Invalid response format from /user/:id');
+      }
+      
+      const userData = userResult.data;
+      
+      // Combine the data
+      const combinedData = {
+        ...meData,
+        ...userData,
+      };
+      
+      setUserDetails(combinedData);
+      setFormData({
+        firstName: combinedData.firstName || '',
+        lastName: combinedData.lastName || '',
+        phoneNumber: combinedData.phoneNumber || '',
+        licenceNumber: combinedData.drivingLicence?.licenceNumber || '',
+        expiryDate: combinedData.drivingLicence?.expiryDate || '',
+      });
+    } catch (err) {
+      console.error('Error fetching user details:', err);
+      setError(err instanceof Error ? err.message : 'Failed to fetch user details');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-
-    // Validate email
-    if (personalInfo.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(personalInfo.email)) {
-      newErrors.email = 'Please enter a valid email address';
+    if (!formData.firstName.trim()) {
+      setError('First name is required');
+      return false;
     }
-
-    // Validate phone number (basic validation)
-    if (personalInfo.phoneNumber && !/^\+?[\d\s-]{10,}$/.test(personalInfo.phoneNumber)) {
-      newErrors.phoneNumber = 'Please enter a valid phone number';
+    if (!formData.lastName.trim()) {
+      setError('Last name is required');
+      return false;
     }
-
-    // Validate date of birth
-    if ((personalInfo.dobDay || personalInfo.dobMonth || personalInfo.dobYear) &&
-      !(personalInfo.dobDay && personalInfo.dobMonth && personalInfo.dobYear)) {
-      newErrors.dob = 'Please complete all date fields';
+    if (!formData.phoneNumber.trim()) {
+      setError('Phone number is required');
+      return false;
     }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return true;
   };
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setPersonalInfo((prev) => ({ ...prev, [name]: value }));
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: '' }));
-    }
-  };
-
-  const handleSave = async () => {
-    if (!validateForm()) return;
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
     try {
-      setIsSubmitting(true);
-      // Format the date of birth
-      const formattedDob = personalInfo.dobYear && personalInfo.dobMonth && personalInfo.dobDay
-        ? `${personalInfo.dobYear}-${personalInfo.dobMonth}-${personalInfo.dobDay}`
-        : '';
+      setUploading(true);
+      setError(null);
 
-      // Update user data
-      if (user) {
-        await updateUser({
-          ...user,
-          dob: formattedDob || undefined,
-          gender: personalInfo.gender || undefined,
-          phoneNumber: personalInfo.phoneNumber || undefined,
-          email: personalInfo.email || user.email,
-        });
+      if (!accessToken) {
+        throw new Error('No authentication token available. Please log in.');
       }
-      setEditMode(false);
-    } catch (error) {
-      console.error('Error updating user:', error);
-      setErrors({ submit: 'Failed to update profile. Please try again.' });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
-  const handleCancel = () => {
-    // Reset errors
-    setErrors({});
-    // Revert changes to original values from user data
-    if (user?.dob) {
-      const [year, month, day] = user.dob.split('-');
-      setPersonalInfo({
-        dobDay: day,
-        dobMonth: month,
-        dobYear: year,
-        gender: user.gender || '',
-        phoneNumber: user.phoneNumber || '',
-        email: user.email || '',
+      const formData = new FormData();
+      formData.append('file', files[0]);
+
+      // Add a delay before making the request to avoid rate limiting
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      console.log('Uploading image...');
+      
+      const response = await fetch(`${API_BASE_URL}/image/upload`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: formData,
       });
+
+      if (response.status === 429) { // Too Many Requests
+        throw new Error('Server is busy. Please try again in a few moments.');
+      }
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Authentication token expired. Please log in again.');
+        }
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to upload image');
+      }
+
+      const result = await response.json();
+      
+      if (!result?.data?.url) {
+        throw new Error('Invalid response format from image upload');
+      }
+
+      // Update the user details with the new image URL
+      if (userDetails) {
+        const updatedUserDetails = { ...userDetails };
+        if (!updatedUserDetails.drivingLicence) {
+          updatedUserDetails.drivingLicence = {
+            licenceNumber: '',
+            expiryDate: '',
+            drivingLicenseImages: [],
+          };
+        }
+        
+        // Ensure drivingLicence exists before accessing its properties
+        const drivingLicence = updatedUserDetails.drivingLicence;
+        if (drivingLicence) {
+          // Add the image URL to the drivingLicenseImages array
+          drivingLicence.drivingLicenseImages = [
+            ...(drivingLicence.drivingLicenseImages || []),
+            result.data.url
+          ];
+        }
+        
+        setUserDetails(updatedUserDetails);
+      }
+      
+      console.log('Image uploaded successfully!');
+    } catch (err) {
+      console.error('Error uploading image:', err);
+      setError(err instanceof Error ? err.message : 'Failed to upload image');
+    } finally {
+      setUploading(false);
+      // Reset the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
-    setEditMode(false);
   };
 
-  // Format date for display
-  const formatDateForDisplay = (dateString: string) => {
-    if (!dateString) return 'Not provided';
-    const [year, month, day] = dateString.split('-');
-    return `${day}/${month}/${year}`;
+  const handleRemoveImage = (index: number) => {
+    if (!userDetails?.drivingLicence) return;
+    
+    const updatedUserDetails = { ...userDetails };
+    const drivingLicence = updatedUserDetails.drivingLicence;
+    
+    if (drivingLicence) {
+      drivingLicence.drivingLicenseImages = 
+        drivingLicence.drivingLicenseImages.filter((_, i) => i !== index);
+    }
+    
+    setUserDetails(updatedUserDetails);
   };
 
-  // Options for DOB selects
-  const days = Array.from({ length: 31 }, (_, i) =>
-    (i + 1).toString().padStart(2, '0')
-  );
-  const months = Array.from({ length: 12 }, (_, i) =>
-    (i + 1).toString().padStart(2, '0')
-  );
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 100 }, (_, i) =>
-    (currentYear - i).toString()
-  );
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateForm()) {
+      return;
+    }
+
+    if (!userDetails?.id) {
+      setError('No user ID available');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+      
+      if (!accessToken) {
+        throw new Error('No authentication token available. Please log in.');
+      }
+
+      // Prepare the update data
+      const updateData: any = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        phoneNumber: formData.phoneNumber,
+      };
+
+      // Only include drivingLicence if either licenceNumber or expiryDate is provided
+      if (formData.licenceNumber || formData.expiryDate || userDetails.drivingLicence?.drivingLicenseImages?.length) {
+        // Create a new drivingLicence object with the updated values
+        // Make sure to preserve any existing drivingLicenseImages
+        const existingImages = userDetails.drivingLicence?.drivingLicenseImages || [];
+        
+        updateData.drivingLicence = {
+          licenceNumber: formData.licenceNumber || userDetails.drivingLicence?.licenceNumber || '',
+          expiryDate: formData.expiryDate || userDetails.drivingLicence?.expiryDate || '',
+          drivingLicenseImages: existingImages
+        };
+      }
+
+      console.log('Sending update data:', updateData);
+
+      const response = await fetch(`${API_BASE_URL}/user/${userDetails.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updateData),
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Authentication token expired. Please log in again.');
+        }
+        
+        // Try to get more detailed error information
+        let errorMessage = 'Failed to update user details';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorData.error || errorMessage;
+          console.error('Server error details:', errorData);
+        } catch (parseError) {
+          console.error('Could not parse error response:', parseError);
+        }
+        
+        throw new Error(errorMessage);
+      }
+
+      const result = await response.json();
+      
+      // Check if the response has the expected structure
+      if (!result?.data) {
+        throw new Error('Invalid response format from update request');
+      }
+      
+      const updatedData = result.data;
+      setUserDetails(updatedData);
+      setIsEditing(false);
+    } catch (err) {
+      console.error('Error updating user details:', err);
+      setError(err instanceof Error ? err.message : 'Failed to update user details');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="my-account-container">
+        <div className="loading">Loading your account information...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="my-account-container">
+        <div className="error-message">
+          <p><strong>Error:</strong> {error}</p>
+          <p className="error-help">Please check your input and try again. If the problem persists, contact support.</p>
+          <button onClick={fetchUserDetails}>Retry</button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!userDetails) {
+    return (
+      <div className="my-account-container">
+        <div className="empty-state">
+          <FaUser size={48} />
+          <p>No user data available</p>
+          <button onClick={fetchUserDetails}>Retry</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="myaccount-root">
-      {/* General Profile Section */}
-      <div className="general-profile">
-        {/* Left Column: Profile Picture and Full Name */}
-        <div className="profile-left">
-          <div className="profile-picture-container">
-            <img
-              src={user?.profilePic || defaultProfilePic}
-              alt="Profile"
-              className="profile-picture"
-            />
-          </div>
-          <h3 className="full-name">
-            {user?.firstName} {user?.lastName}
-          </h3>
-        </div>
-        {/* Right Column: Personal Information */}
-        <div className="profile-right">
-          <div className="profile-header">
-            <h4>General Profile</h4>
-            <button
-              className="edit-btn"
-              onClick={() => setEditMode(true)}
-              disabled={isSubmitting}
-            >
-              <FaEdit />
-            </button>
-          </div>
-          {editMode ? (
-            <div className="edit-form">
-              <div className="form-field dob-field">
-                <label>Date of Birth:</label>
-                <div className="dob-selects">
-                  <select
-                    name="dobDay"
-                    value={personalInfo.dobDay}
-                    onChange={handleInputChange}
-                    aria-label="Day"
-                  >
-                    <option value="">Day</option>
-                    {days.map((day) => (
-                      <option key={day} value={day}>
-                        {day}
-                      </option>
-                    ))}
-                  </select>
-                  <select
-                    name="dobMonth"
-                    value={personalInfo.dobMonth}
-                    onChange={handleInputChange}
-                    aria-label="Month"
-                  >
-                    <option value="">Month</option>
-                    {months.map((month) => (
-                      <option key={month} value={month}>
-                        {month}
-                      </option>
-                    ))}
-                  </select>
-                  <select
-                    name="dobYear"
-                    value={personalInfo.dobYear}
-                    onChange={handleInputChange}
-                    aria-label="Year"
-                  >
-                    <option value="">Year</option>
-                    {years.map((year) => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                {errors.dob && <span className="error-message">{errors.dob}</span>}
-              </div>
-              <div className="form-field">
-                <label>Gender:</label>
-                <select
-                  name="gender"
-                  value={personalInfo.gender}
-                  onChange={handleInputChange}
-                  aria-label="Gender"
-                >
-                  <option value="">Select</option>
-                  <option value="Female">Female</option>
-                  <option value="Male">Male</option>
-                  <option value="Others">Others</option>
-                </select>
-              </div>
-              <div className="form-field">
-                <label>Email:</label>
+      <div className="content">
+        <div className="section">
+          <h3>Personal Information</h3>
+          <div className="info-grid">
+            <div className="info-item">
+              <label>Email</label>
+              <p>{userDetails.email}</p>
+            </div>
+            <div className="info-item">
+              <label>First Name</label>
+              {isEditing ? (
                 <input
-                  type="email"
-                  name="email"
-                  value={personalInfo.email}
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
                   onChange={handleInputChange}
-                  aria-label="Email"
+                  required
                 />
-                {errors.email && <span className="error-message">{errors.email}</span>}
-              </div>
-              <div className="form-field">
-                <label>Phone:</label>
+              ) : (
+                <p>{userDetails.firstName}</p>
+              )}
+            </div>
+            <div className="info-item">
+              <label>Last Name</label>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  required
+                />
+              ) : (
+                <p>{userDetails.lastName}</p>
+              )}
+            </div>
+            <div className="info-item">
+              <label>Phone Number</label>
+              {isEditing ? (
                 <input
                   type="tel"
                   name="phoneNumber"
-                  value={personalInfo.phoneNumber}
+                  value={formData.phoneNumber}
                   onChange={handleInputChange}
-                  placeholder="+1 234 567 8900"
-                  aria-label="Phone number"
+                  required
                 />
-                {errors.phoneNumber && <span className="error-message">{errors.phoneNumber}</span>}
-              </div>
-              {errors.submit && <div className="error-message">{errors.submit}</div>}
-              <div className="form-actions">
-                <button
-                  className="cancel-btn"
-                  onClick={handleCancel}
-                  disabled={isSubmitting}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="save-btn"
-                  onClick={handleSave}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? 'Saving...' : 'Save'}
-                </button>
-              </div>
+              ) : (
+                <p>{userDetails.phoneNumber}</p>
+              )}
             </div>
-          ) : (
-            <div className="display-info">
-              <p>
-                <strong>Date of Birth:</strong>{' '}
-                {formatDateForDisplay(user?.dob || '')}
-              </p>
-              <p>
-                <strong>Gender:</strong>{' '}
-                {user?.gender || 'Not provided'}
-              </p>
-              <p>
-                <strong>Email:</strong>{' '}
-                {user?.email || 'Not provided'}
-              </p>
-              <p>
-                <strong>Phone:</strong>{' '}
-                {user?.phoneNumber || 'Not provided'}
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* License Section */}
-      <div className="license-section">
-        <h4>License</h4>
-        <div className="license-content">
-          <img
-            src={user?.licensePic || defaultLicensePic}
-            alt="License"
-            className="license-picture"
-          />
-          <div className="license-status">
-            {user?.licensePic ? (
-              <FaCheckCircle className="verified-icon" />
-            ) : (
-              <FaTimesCircle className="not-verified-icon" />
-            )}
           </div>
+        </div>
+
+        <div className="section">
+          <h3>Driving License Information</h3>
+          <div className="info-grid">
+            <div className="info-item">
+              <label>License Number</label>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="licenceNumber"
+                  value={formData.licenceNumber}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <p>{userDetails.drivingLicence?.licenceNumber || 'Not provided'}</p>
+              )}
+            </div>
+            <div className="info-item">
+              <label>Expiry Date</label>
+              {isEditing ? (
+                <input
+                  type="date"
+                  name="expiryDate"
+                  value={formData.expiryDate}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <p>{userDetails.drivingLicence?.expiryDate || 'Not provided'}</p>
+              )}
+            </div>
+          </div>
+          
+          <div className="license-images-section">
+            <h4>License Images</h4>
+            <div className="license-images-container">
+              {userDetails.drivingLicence?.drivingLicenseImages && 
+               userDetails.drivingLicence.drivingLicenseImages.length > 0 ? (
+                <div className="license-images-grid">
+                  {userDetails.drivingLicence.drivingLicenseImages.map((imageUrl, index) => (
+                    <div key={index} className="license-image-item">
+                      <img src={imageUrl} alt={`License image ${index + 1}`} />
+                      {isEditing && (
+                        <button 
+                          className="remove-image-btn"
+                          onClick={() => handleRemoveImage(index)}
+                        >
+                          <FaTimes />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="no-images">No license images uploaded</p>
+              )}
+              
+              {isEditing && (
+                <div className="upload-image-container">
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleImageUpload}
+                    accept="image/*"
+                    className="file-input"
+                    disabled={uploading}
+                  />
+                  <button 
+                    className="upload-image-btn"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploading}
+                  >
+                    {uploading ? 'Uploading...' : <><FaUpload /> Upload License Image</>}
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="actions">
+          {isEditing ? (
+            <>
+              <button className="save-button" onClick={handleSubmit}>
+                <FaSave /> Save Changes
+              </button>
+              <button className="cancel-button" onClick={() => setIsEditing(false)}>
+                <FaTimes /> Cancel
+              </button>
+            </>
+          ) : (
+            <button className="edit-button" onClick={() => setIsEditing(true)}>
+              <FaEdit /> Edit Profile
+            </button>
+          )}
         </div>
       </div>
     </div>

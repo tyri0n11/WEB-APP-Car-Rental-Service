@@ -2,26 +2,26 @@
 .address-root {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    padding: 2rem;
-    background-color: #f8f9fa;
-    max-width: 1200px;
-    margin: 0 auto;
+    gap: 1.5rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* Address Section */
 .address-section {
     background-color: #fff;
-    border-radius: 12px;
+    border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
+    padding: 1.5rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .address-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     padding-bottom: 1rem;
     border-bottom: 2px solid #e1e4e8;
 }
@@ -67,6 +67,8 @@
 .update-section {
     margin-top: 1rem;
     border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .edit-btn {
@@ -99,6 +101,9 @@
 }
 
 .add-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     background-color: #4299e1;
     color: #fff;
     padding: 0.75rem 1.5rem;
@@ -113,18 +118,16 @@
     background-color: #3182ce;
 }
 
-/* Edit Form */
 .edit-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    max-width: 500px;
+    padding: 1.5rem;
+    background-color: #f7fafc;
 }
 
 .form-field {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 .form-field label {
@@ -167,22 +170,20 @@
     padding: 0.75rem;
     border-radius: 6px;
     border: 1px solid #feb2b2;
+    color: #e53e3e;
     margin-bottom: 1rem;
 }
 
 .form-actions {
     display: flex;
     gap: 1rem;
-    margin-top: 1rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid #e1e4e8;
+    margin-top: 1.5rem;
 }
 
 .cancel-btn,
 .save-btn {
     padding: 0.75rem 1.5rem;
     border-radius: 6px;
-    font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -196,7 +197,6 @@
 
 .cancel-btn:hover {
     background-color: #f7fafc;
-    border-color: #cbd5e0;
 }
 
 .save-btn {
@@ -215,39 +215,38 @@
     cursor: not-allowed;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .address-root {
+        padding: 0;
+    }
+    
+    .address-section {
         padding: 1rem;
     }
-
-    .address-section {
-        padding: 1.5rem;
-    }
-
+    
     .address-header {
         flex-direction: column;
-        gap: 1rem;
         align-items: flex-start;
+        gap: 1rem;
     }
-
+    
     .edit-btn {
         width: 100%;
         justify-content: center;
     }
-
+    
     .current-address {
         padding: 1rem;
     }
-
+    
     .edit-form {
-        gap: 1rem;
+        padding: 1rem;
     }
-
+    
     .form-actions {
         flex-direction: column;
     }
-
+    
     .cancel-btn,
     .save-btn {
         width: 100%;

@@ -3,11 +3,11 @@ import { useAuth } from '../../../../../hooks/useAuth';
 import './MyRides.css';
 
 interface Ride {
-    id: string;
-    carName: string;
-    carImage: string;
+    carId: string;
     startDate: string;
     endDate: string;
+    pickupAddress: string;
+    returnAddress: String;
     totalPrice: number;
     status: 'completed' | 'cancelled' | 'upcoming';
 }

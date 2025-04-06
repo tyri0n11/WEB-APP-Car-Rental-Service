@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useReducer } from "react";
 
 const API_AUTHEN_URL = "http://localhost:3000/auth";
+const API_BASE_URL = "http://localhost:3000";
 
 interface User {
   role: string;
@@ -12,10 +13,12 @@ interface User {
   isVerified: boolean;
   drivingLicenceId: string;
 }
+
 interface AuthState {
   user: User | null;
   accessToken: string | null;
 }
+
 interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<boolean>;
   signup: (data: {
@@ -26,7 +29,9 @@ interface AuthContextType extends AuthState {
     phoneNumber: string;
   }) => Promise<void>;
   logout: () => void;
+  updateUserDetails: (userId: string, updateData: any) => Promise<User>;
 }
+
 interface AuthProviderProps {
   children: React.ReactNode;
 }
@@ -90,7 +95,7 @@ const fetchUser = async (accessToken: string): Promise<User | null> => {
   }
 };
 
-const refreshToken = async (): Promise<{ access_token: string } | null> => {
+const refreshToken = async (): Promise<{ accessToken: string } | null> => {
   try {
     const refreshToken = localStorage.getItem("refresh_token");
     if (!refreshToken) return null;
@@ -98,7 +103,7 @@ const refreshToken = async (): Promise<{ access_token: string } | null> => {
     const response = await fetch(`${API_AUTHEN_URL}/refresh-token`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refresh_token: refreshToken }),
+      body: JSON.stringify({ refreshToken }),
     });
 
     if (!response.ok) return null;
@@ -123,9 +128,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       } else {
         const newTokens = await refreshToken();
         if (newTokens) {
-          localStorage.setItem("access_token", newTokens.access_token);
-          dispatch({ type: "SET_TOKEN", payload: newTokens.access_token });
-          const newUser = await fetchUser(newTokens.access_token);
+          localStorage.setItem("access_token", newTokens.accessToken);
+          dispatch({ type: "SET_TOKEN", payload: newTokens.accessToken });
+          const newUser = await fetchUser(newTokens.accessToken);
           dispatch({ type: "SET_USER", payload: newUser });
         } else {
           handleLogout();
@@ -211,9 +216,87 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     dispatch({ type: "LOGOUT" });
   };
 
+  const updateUserDetails = async (userId: string, updateData: any): Promise<User> => {
+    const accessToken = localStorage.getItem("access_token");
+    if (!accessToken) {
+      throw new Error("No authentication token available. Please log in.");
+    }
+
+    console.log("Updating user details with token:", accessToken.substring(0, 10) + "...");
+    console.log("Update data:", updateData);
+
+    const response = await fetch(`${API_BASE_URL}/user/${userId}`, {
+      method: "PATCH",
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updateData),
+    });
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        // Try to refresh the token
+        const newTokens = await refreshToken();
+        if (newTokens) {
+          localStorage.setItem("access_token", newTokens.accessToken);
+          dispatch({ type: "SET_TOKEN", payload: newTokens.accessToken });
+          
+          // Retry the request with the new token
+          const retryResponse = await fetch(`${API_BASE_URL}/user/${userId}`, {
+            method: "PATCH",
+            headers: {
+              "Authorization": `Bearer ${newTokens.accessToken}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updateData),
+          });
+          
+          if (!retryResponse.ok) {
+            const errorData = await retryResponse.json();
+            throw new Error(errorData.message || "Failed to update user details after token refresh");
+          }
+          
+          const result = await retryResponse.json();
+          if (!result?.data) {
+            throw new Error("Invalid response format from update request");
+          }
+          
+          return result.data;
+        } else {
+          throw new Error("Authentication token expired. Please log in again.");
+        }
+      }
+      
+      // Try to get more detailed error information
+      let errorMessage = "Failed to update user details";
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+        console.error("Server error details:", errorData);
+      } catch (parseError) {
+        console.error("Could not parse error response:", parseError);
+      }
+      
+      throw new Error(errorMessage);
+    }
+
+    const result = await response.json();
+    
+    // Check if the response has the expected structure
+    if (!result?.data) {
+      throw new Error("Invalid response format from update request");
+    }
+    
+    // Update the user in the context
+    dispatch({ type: "SET_USER", payload: result.data });
+    
+    return result.data;
+  };
+
   return (
     <AuthContext.Provider
-      value={{ ...state, login, signup, logout: handleLogout }}
+      value={{ ...state, login, signup, logout: handleLogout, updateUserDetails }}
     >
       {children}
     </AuthContext.Provider>

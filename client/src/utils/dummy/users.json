@@ -1,0 +1,61 @@
+[
+  {
+    "id": "user1",
+    "email": "john.doe@example.com",
+    "firstName": "John",
+    "lastName": "Doe",
+    "phoneNumber": "+1-555-123-4567",
+    "isVerified": true,
+    "role": "CUSTOMER",
+    "drivingLicenceId": "dl1",
+    "createdAt": "2024-01-01T08:00:00Z",
+    "updatedAt": "2024-01-15T10:30:00Z"
+  },
+  {
+    "id": "user2",
+    "email": "jane.smith@example.com",
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "phoneNumber": "+1-555-987-6543",
+    "isVerified": true,
+    "role": "CUSTOMER",
+    "drivingLicenceId": "dl2",
+    "createdAt": "2024-01-05T09:15:00Z",
+    "updatedAt": "2024-01-10T09:15:00Z"
+  },
+  {
+    "id": "user3",
+    "email": "robert.johnson@example.com",
+    "firstName": "Robert",
+    "lastName": "Johnson",
+    "phoneNumber": "+1-555-456-7890",
+    "isVerified": true,
+    "role": "CUSTOMER",
+    "drivingLicenceId": "dl3",
+    "createdAt": "2024-01-10T11:30:00Z",
+    "updatedAt": "2024-03-05T11:20:00Z"
+  },
+  {
+    "id": "user4",
+    "email": "emily.williams@example.com",
+    "firstName": "Emily",
+    "lastName": "Williams",
+    "phoneNumber": "+1-555-789-0123",
+    "isVerified": true,
+    "role": "CUSTOMER",
+    "drivingLicenceId": "dl4",
+    "createdAt": "2024-01-15T13:45:00Z",
+    "updatedAt": "2024-02-15T16:30:00Z"
+  },
+  {
+    "id": "admin1",
+    "email": "admin@example.com",
+    "firstName": "Admin",
+    "lastName": "User",
+    "phoneNumber": "+1-555-111-2222",
+    "isVerified": true,
+    "role": "ADMIN",
+    "createdAt": "2023-12-01T00:00:00Z",
+    "updatedAt": "2023-12-01T00:00:00Z"
+  }
+] 

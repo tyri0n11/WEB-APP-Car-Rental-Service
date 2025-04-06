@@ -133,6 +133,32 @@
     align-self: flex-start;
 }
 
+.ride-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.rebook-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background-color: #4299e1;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.rebook-button:hover {
+    background-color: #3182ce;
+}
+
 .my-rides-loading,
 .my-rides-error,
 .my-rides-empty {
@@ -211,6 +237,10 @@
         width: 100%;
         height: 120px;
     }
+    
+    .ride-actions {
+        margin-top: 0.75rem;
+    }
 }
 
 @media (max-width: 576px) {
@@ -233,5 +263,9 @@
     .ride-dates p,
     .ride-price {
         font-size: 0.85rem;
+    }
+    
+    .rebook-button {
+        width: 100%;
     }
 }

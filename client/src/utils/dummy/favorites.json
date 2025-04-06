@@ -1,0 +1,80 @@
+[
+  {
+    "id": "1",
+    "make": "Tesla",
+    "model": "Model 3",
+    "year": 2023,
+    "dailyPrice": 150,
+    "fuelType": "Electric",
+    "numSeats": 5,
+    "rating": 4.8,
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1560958089-b8a1929cea89?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        "isMain": true
+      }
+    ],
+    "categories": [
+      {
+        "category": {
+          "id": "1",
+          "name": "Electric"
+        }
+      },
+      {
+        "category": {
+          "id": "2",
+          "name": "Sedan"
+        }
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "make": "Porsche",
+    "model": "911",
+    "year": 2023,
+    "dailyPrice": 300,
+    "fuelType": "Gasoline",
+    "numSeats": 2,
+    "rating": 4.9,
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        "isMain": true
+      }
+    ],
+    "categories": [
+      {
+        "category": {
+          "id": "3",
+          "name": "Sports Car"
+        }
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "make": "Audi",
+    "model": "Q5",
+    "year": 2023,
+    "dailyPrice": 200,
+    "fuelType": "Gasoline",
+    "numSeats": 5,
+    "rating": 4.7,
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        "isMain": true
+      }
+    ],
+    "categories": [
+      {
+        "category": {
+          "id": "4",
+          "name": "SUV"
+        }
+      }
+    ]
+  }
+] 

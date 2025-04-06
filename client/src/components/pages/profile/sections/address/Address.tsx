@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaEdit, FaSave, FaTimes, FaPlus, FaTrash } from 'react-icons/fa';
 import { useAuth } from '../../../../../hooks/useAuth';
+import addressesDummyData from '../../../../../utils/dummy/addresses.json';
 import './Address.css';
 
 interface Address {
@@ -14,7 +15,7 @@ interface Address {
 }
 
 const Address: React.FC = () => {
-    const { user, accessToken } = useAuth();
+    const { accessToken } = useAuth();
     const [editMode, setEditMode] = useState<boolean>(false);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
@@ -34,52 +35,16 @@ const Address: React.FC = () => {
     useEffect(() => {
         const fetchAddresses = async () => {
             try {
-                // For now, use dummy data since the API is not ready
-                // When the API is ready, uncomment this code
-                /*
-                const response = await fetch('/api/users/addresses', {
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error('Failed to fetch addresses');
-                }
-                const data = await response.json();
-                setAddresses(data);
-                */
-                
-                // Dummy data for testing
-                const dummyAddresses: Address[] = [
-                    {
-                        id: '1',
-                        street: '123 Main Street',
-                        city: 'New York',
-                        state: 'NY',
-                        postalCode: '10001',
-                        country: 'United States',
-                        isDefault: true
-                    },
-                    {
-                        id: '2',
-                        street: '456 Park Avenue',
-                        city: 'Los Angeles',
-                        state: 'CA',
-                        postalCode: '90001',
-                        country: 'United States',
-                        isDefault: false
-                    }
-                ];
+                // Use dummy data from separate JSON file
+                const dummyAddresses: Address[] = addressesDummyData;
                 
                 // Simulate API delay
                 setTimeout(() => {
                     setAddresses(dummyAddresses);
                 }, 1000);
                 
-            } catch (error) {
-                console.error('Error fetching addresses:', error);
-                setErrors({ fetch: 'Failed to load address information' });
+            } catch (err) {
+                console.error('Error fetching addresses:', err);
             }
         };
 
@@ -131,35 +96,6 @@ const Address: React.FC = () => {
             setIsSubmitting(true);
             setSuccessMessage(null);
             
-            // For now, just update the local state
-            // When the API is ready, uncomment this code
-            /*
-            const response = await fetch('/api/users/addresses', {
-                method: editingAddress ? 'PUT' : 'POST',
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(editingAddress 
-                    ? { ...addressInfo, id: editingAddress.id } 
-                    : addressInfo
-                ),
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to update address');
-            }
-
-            const updatedAddress = await response.json();
-            if (editingAddress) {
-                setAddresses(addresses.map(addr => 
-                    addr.id === editingAddress.id ? updatedAddress : addr
-                ));
-            } else {
-                setAddresses([...addresses, updatedAddress]);
-            }
-            */
-            
             // Simulate API delay
             setTimeout(() => {
                 if (editingAddress) {
@@ -190,7 +126,6 @@ const Address: React.FC = () => {
             }, 1000);
             
         } catch (error) {
-            console.error('Error updating address:', error);
             setErrors({ submit: 'Failed to update address. Please try again.' });
             setIsSubmitting(false);
         }
@@ -238,22 +173,6 @@ const Address: React.FC = () => {
 
     const handleDelete = async (addressId: string) => {
         try {
-            // For now, just update the local state
-            // When the API is ready, uncomment this code
-            /*
-            const response = await fetch(`/api/users/addresses/${addressId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json',
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to delete address');
-            }
-            */
-            
             // Simulate API delay
             setTimeout(() => {
                 setAddresses(addresses.filter(addr => addr.id !== addressId));
@@ -264,31 +183,13 @@ const Address: React.FC = () => {
                     setSuccessMessage(null);
                 }, 5000);
             }, 1000);
-            
         } catch (error) {
-            console.error('Error deleting address:', error);
-            setErrors({ delete: 'Failed to delete address. Please try again.' });
+            setErrors({ submit: 'Failed to delete address. Please try again.' });
         }
     };
 
     const handleSetDefault = async (addressId: string) => {
         try {
-            // For now, just update the local state
-            // When the API is ready, uncomment this code
-            /*
-            const response = await fetch(`/api/users/addresses/${addressId}/default`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json',
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to set default address');
-            }
-            */
-            
             // Simulate API delay
             setTimeout(() => {
                 setAddresses(addresses.map(addr => ({
@@ -302,10 +203,8 @@ const Address: React.FC = () => {
                     setSuccessMessage(null);
                 }, 5000);
             }, 1000);
-            
         } catch (error) {
-            console.error('Error setting default address:', error);
-            setErrors({ default: 'Failed to set default address. Please try again.' });
+            setErrors({ submit: 'Failed to update default address. Please try again.' });
         }
     };
 
@@ -325,130 +224,126 @@ const Address: React.FC = () => {
                     )}
                 </div>
 
-                {successMessage && (
-                    <div className="success-message">
-                        {successMessage}
-                    </div>
-                )}
-
                 {errors.fetch && (
-                    <div className="error-message">
-                        {errors.fetch}
-                    </div>
+                    <div className="error-message">{errors.fetch}</div>
                 )}
 
-                {errors.submit && (
-                    <div className="error-message">
-                        {errors.submit}
-                    </div>
-                )}
-
-                {errors.delete && (
-                    <div className="error-message">
-                        {errors.delete}
-                    </div>
-                )}
-
-                {errors.default && (
-                    <div className="error-message">
-                        {errors.default}
-                    </div>
+                {successMessage && (
+                    <div className="success-message">{successMessage}</div>
                 )}
 
                 {editMode ? (
                     <div className="address-form">
-                        <div className="form-group">
-                            <label htmlFor="street">Street Address</label>
-                            <input
-                                type="text"
-                                id="street"
-                                name="street"
-                                value={addressInfo.street}
-                                onChange={handleInputChange}
-                                placeholder="Enter street address"
-                                className={errors.street ? 'error' : ''}
-                            />
-                            {errors.street && <span className="error-text">{errors.street}</span>}
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label htmlFor="street">Street Address</label>
+                                <input
+                                    type="text"
+                                    id="street"
+                                    name="street"
+                                    value={addressInfo.street}
+                                    onChange={handleInputChange}
+                                    className={errors.street ? 'error' : ''}
+                                />
+                                {errors.street && (
+                                    <span className="error-message">{errors.street}</span>
+                                )}
+                            </div>
                         </div>
 
-                        <div className="form-group">
-                            <label htmlFor="city">City</label>
-                            <input
-                                type="text"
-                                id="city"
-                                name="city"
-                                value={addressInfo.city}
-                                onChange={handleInputChange}
-                                placeholder="Enter city"
-                                className={errors.city ? 'error' : ''}
-                            />
-                            {errors.city && <span className="error-text">{errors.city}</span>}
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label htmlFor="city">City</label>
+                                <input
+                                    type="text"
+                                    id="city"
+                                    name="city"
+                                    value={addressInfo.city}
+                                    onChange={handleInputChange}
+                                    className={errors.city ? 'error' : ''}
+                                />
+                                {errors.city && (
+                                    <span className="error-message">{errors.city}</span>
+                                )}
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="state">State</label>
+                                <input
+                                    type="text"
+                                    id="state"
+                                    name="state"
+                                    value={addressInfo.state}
+                                    onChange={handleInputChange}
+                                    className={errors.state ? 'error' : ''}
+                                />
+                                {errors.state && (
+                                    <span className="error-message">{errors.state}</span>
+                                )}
+                            </div>
                         </div>
 
-                        <div className="form-group">
-                            <label htmlFor="state">State/Province</label>
-                            <input
-                                type="text"
-                                id="state"
-                                name="state"
-                                value={addressInfo.state}
-                                onChange={handleInputChange}
-                                placeholder="Enter state or province"
-                                className={errors.state ? 'error' : ''}
-                            />
-                            {errors.state && <span className="error-text">{errors.state}</span>}
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label htmlFor="postalCode">Postal Code</label>
+                                <input
+                                    type="text"
+                                    id="postalCode"
+                                    name="postalCode"
+                                    value={addressInfo.postalCode}
+                                    onChange={handleInputChange}
+                                    className={errors.postalCode ? 'error' : ''}
+                                />
+                                {errors.postalCode && (
+                                    <span className="error-message">{errors.postalCode}</span>
+                                )}
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="country">Country</label>
+                                <input
+                                    type="text"
+                                    id="country"
+                                    name="country"
+                                    value={addressInfo.country}
+                                    onChange={handleInputChange}
+                                    className={errors.country ? 'error' : ''}
+                                />
+                                {errors.country && (
+                                    <span className="error-message">{errors.country}</span>
+                                )}
+                            </div>
                         </div>
 
-                        <div className="form-group">
-                            <label htmlFor="postalCode">Postal Code</label>
-                            <input
-                                type="text"
-                                id="postalCode"
-                                name="postalCode"
-                                value={addressInfo.postalCode}
-                                onChange={handleInputChange}
-                                placeholder="Enter postal code"
-                                className={errors.postalCode ? 'error' : ''}
-                            />
-                            {errors.postalCode && <span className="error-text">{errors.postalCode}</span>}
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="country">Country</label>
-                            <input
-                                type="text"
-                                id="country"
-                                name="country"
-                                value={addressInfo.country}
-                                onChange={handleInputChange}
-                                placeholder="Enter country"
-                                className={errors.country ? 'error' : ''}
-                            />
-                            {errors.country && <span className="error-text">{errors.country}</span>}
-                        </div>
-
-                        <div className="form-group checkbox-group">
-                            <label className="checkbox-label">
+                        <div className="form-row">
+                            <div className="form-group checkbox">
                                 <input
                                     type="checkbox"
+                                    id="isDefault"
                                     name="isDefault"
                                     checked={addressInfo.isDefault}
                                     onChange={handleInputChange}
                                 />
-                                Set as default address for car rentals
-                            </label>
+                                <label htmlFor="isDefault">Set as default address</label>
+                            </div>
                         </div>
 
+                        {errors.submit && (
+                            <div className="error-message">{errors.submit}</div>
+                        )}
+
                         <div className="form-actions">
-                            <button 
-                                className="save-button" 
+                            <button
+                                type="button"
+                                className="save-button"
                                 onClick={handleSave}
                                 disabled={isSubmitting}
                             >
-                                {isSubmitting ? 'Saving...' : <><FaSave /> {editingAddress ? 'Update' : 'Save'}</>}
+                                <FaSave /> {isSubmitting ? 'Saving...' : 'Save Address'}
                             </button>
-                            <button 
-                                className="cancel-button" 
+                            <button
+                                type="button"
+                                className="cancel-button"
                                 onClick={handleCancel}
                                 disabled={isSubmitting}
                             >
@@ -457,32 +352,36 @@ const Address: React.FC = () => {
                         </div>
                     </div>
                 ) : (
-                    <div className="address-list">
-                        {addresses.length > 0 ? (
-                            addresses.map(address => (
+                    <div className="addresses-list">
+                        {addresses.length === 0 ? (
+                            <div className="no-addresses">
+                                <p>No addresses found. Add your first address!</p>
+                            </div>
+                        ) : (
+                            addresses.map((address) => (
                                 <div key={address.id} className="address-card">
-                                    {address.isDefault && (
-                                        <span className="default-badge">Default Address</span>
-                                    )}
-                                    <div className="address-details">
-                                        <p>{formatAddress(address)}</p>
+                                    <div className="address-content">
+                                        <p className="address-text">{formatAddress(address)}</p>
+                                        {address.isDefault && (
+                                            <span className="default-badge">Default</span>
+                                        )}
                                     </div>
                                     <div className="address-actions">
-                                        <button 
-                                            className="edit-address-btn"
+                                        <button
+                                            className="edit-button"
                                             onClick={() => handleEdit(address)}
                                         >
                                             <FaEdit /> Edit
                                         </button>
-                                        <button 
-                                            className="delete-address-btn"
+                                        <button
+                                            className="delete-button"
                                             onClick={() => handleDelete(address.id)}
                                         >
                                             <FaTrash /> Delete
                                         </button>
                                         {!address.isDefault && (
-                                            <button 
-                                                className="set-default-btn"
+                                            <button
+                                                className="default-button"
                                                 onClick={() => handleSetDefault(address.id)}
                                             >
                                                 Set as Default
@@ -491,13 +390,6 @@ const Address: React.FC = () => {
                                     </div>
                                 </div>
                             ))
-                        ) : (
-                            <div className="address-empty">
-                                <p>No addresses saved yet.</p>
-                                <button className="add-button" onClick={handleAddNew}>
-                                    <FaPlus /> Add Address
-                                </button>
-                            </div>
                         )}
                     </div>
                 )}

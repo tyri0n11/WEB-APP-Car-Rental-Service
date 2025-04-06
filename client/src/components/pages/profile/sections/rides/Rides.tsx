@@ -1,103 +1,73 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../../../../hooks/useAuth';
+import { useAuth } from '../../../../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import bookingsDummyData from '../../../../../utils/dummy/bookings.json';
+import carsDummyData from '../../../../../utils/dummy/cars.json';
+import { Car } from '../../../../../contexts/CarContext';
 import './Rides.css';
 
-interface Ride {
+interface Booking {
     id: string;
+    userId: string;
     carId: string;
-    carName?: string;
-    carImage?: string;
     startDate: string;
     endDate: string;
+    totalPrice: number;
+    status: 'COMPLETED' | 'CANCELLED' | 'CONFIRMED' | 'ONGOING';
     pickupAddress: string;
     returnAddress: string;
-    totalPrice: number;
-    status: 'completed' | 'cancelled' | 'upcoming';
+    transactionId: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
+interface BookingWithCar extends Booking {
+    car?: Car;
+}
+
+type BookingStatus = Booking['status'];
+
 const MyRides: React.FC = () => {
-    const { user, accessToken } = useAuth();
-    const [rides, setRides] = useState<Ride[]>([]);
+    const { accessToken } = useAuth();
+    const navigate = useNavigate();
+    const [bookings, setBookings] = useState<BookingWithCar[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [filter, setFilter] = useState<'all' | 'completed' | 'cancelled' | 'upcoming'>('all');
+    const [activeFilter, setActiveFilter] = useState<'all' | BookingStatus>('all');
 
     useEffect(() => {
-        const fetchRides = async () => {
+        const loadBookings = async () => {
             try {
-                // For now, use dummy data since the API is not ready
-                // When the API is ready, uncomment this code
-                /*
-                const response = await fetch('/api/users/rides', {
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`
-                    }
+                setLoading(true);
+                setError(null);
+                
+                // Using dummy data from JSON files
+                const dummyBookings = bookingsDummyData as Booking[];
+                
+                // Add car details to each booking
+                const bookingsWithCars = dummyBookings.map(booking => {
+                    // Find the corresponding car from carsDummyData
+                    const car = carsDummyData.find(c => c.id === booking.carId);
+                    
+                    return {
+                        ...booking,
+                        car
+                    };
                 });
-                if (!response.ok) {
-                    throw new Error('Failed to fetch rides');
-                }
-                const data = await response.json();
-                setRides(data);
-                */
                 
-                // Dummy data for testing
-                const dummyRides: Ride[] = [
-                    {
-                        id: '1',
-                        carId: 'car1',
-                        carName: 'Tesla Model 3',
-                        carImage: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
-                        startDate: '2023-06-15',
-                        endDate: '2023-06-20',
-                        pickupAddress: '123 Main St, New York, NY',
-                        returnAddress: '123 Main St, New York, NY',
-                        totalPrice: 750,
-                        status: 'completed'
-                    },
-                    {
-                        id: '2',
-                        carId: 'car2',
-                        carName: 'Porsche 911',
-                        carImage: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
-                        startDate: '2023-07-10',
-                        endDate: '2023-07-15',
-                        pickupAddress: '456 Oak Ave, Los Angeles, CA',
-                        returnAddress: '456 Oak Ave, Los Angeles, CA',
-                        totalPrice: 1200,
-                        status: 'upcoming'
-                    },
-                    {
-                        id: '3',
-                        carId: 'car3',
-                        carName: 'Audi Q5',
-                        carImage: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
-                        startDate: '2023-05-01',
-                        endDate: '2023-05-05',
-                        pickupAddress: '789 Pine St, Chicago, IL',
-                        returnAddress: '789 Pine St, Chicago, IL',
-                        totalPrice: 600,
-                        status: 'cancelled'
-                    }
-                ];
-                
-                // Simulate API delay
-                setTimeout(() => {
-                    setRides(dummyRides);
-                    setLoading(false);
-                }, 1000);
-                
+                setBookings(bookingsWithCars);
             } catch (err) {
-                setError('Failed to load ride history');
-                console.error('Error fetching rides:', err);
+                setError('Failed to load bookings. Please try again later.');
+            } finally {
                 setLoading(false);
             }
         };
 
-        fetchRides();
+        loadBookings();
     }, [accessToken]);
 
-    const filteredRides = rides.filter(ride =>
-        filter === 'all' ? true : ride.status === filter
+    const filteredBookings = bookings.filter(booking =>
+        activeFilter === 'all' ? true : booking.status === activeFilter
     );
 
     const formatDate = (dateString: string) => {
@@ -108,21 +78,27 @@ const MyRides: React.FC = () => {
         });
     };
 
-    const getStatusColor = (status: Ride['status']) => {
+    const getStatusColor = (status: BookingStatus) => {
         switch (status) {
-            case 'completed':
-                return '#48bb78';
-            case 'cancelled':
-                return '#e53e3e';
-            case 'upcoming':
+            case 'COMPLETED':
                 return '#4299e1';
+            case 'CANCELLED':
+                return '#f56565';
+            case 'CONFIRMED':
+                return '#48bb78';
+            case 'ONGOING':
+                return '#ed8936';
             default:
                 return '#718096';
         }
     };
 
+    const handleRebook = (carId: string) => {
+        navigate(`/cars/${carId}`);
+    };
+
     if (loading) {
-        return <div className="my-rides-loading">Loading ride history...</div>;
+        return <div className="my-rides-loading">Loading booking history...</div>;
     }
 
     if (error) {
@@ -133,67 +109,81 @@ const MyRides: React.FC = () => {
         <div className="my-rides-root">
             <div className="my-rides-section">
                 <div className="my-rides-header">
-                    <h4>My Ride History</h4>
+                    <h4>My Booking History</h4>
                     <div className="filter-buttons">
                         <button
-                            className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
-                            onClick={() => setFilter('all')}
+                            className={`filter-btn ${activeFilter === 'all' ? 'active' : ''}`}
+                            onClick={() => setActiveFilter('all')}
                         >
                             All
                         </button>
                         <button
-                            className={`filter-btn ${filter === 'upcoming' ? 'active' : ''}`}
-                            onClick={() => setFilter('upcoming')}
-                        >
-                            Upcoming
-                        </button>
-                        <button
-                            className={`filter-btn ${filter === 'completed' ? 'active' : ''}`}
-                            onClick={() => setFilter('completed')}
+                            className={`filter-btn ${activeFilter === 'COMPLETED' ? 'active' : ''}`}
+                            onClick={() => setActiveFilter('COMPLETED')}
                         >
                             Completed
                         </button>
                         <button
-                            className={`filter-btn ${filter === 'cancelled' ? 'active' : ''}`}
-                            onClick={() => setFilter('cancelled')}
+                            className={`filter-btn ${activeFilter === 'CANCELLED' ? 'active' : ''}`}
+                            onClick={() => setActiveFilter('CANCELLED')}
                         >
                             Cancelled
+                        </button>
+                        <button
+                            className={`filter-btn ${activeFilter === 'CONFIRMED' ? 'active' : ''}`}
+                            onClick={() => setActiveFilter('CONFIRMED')}
+                        >
+                            Confirmed
+                        </button>
+                        <button
+                            className={`filter-btn ${activeFilter === 'ONGOING' ? 'active' : ''}`}
+                            onClick={() => setActiveFilter('ONGOING')}
+                        >
+                            Ongoing
                         </button>
                     </div>
                 </div>
 
-                {filteredRides.length === 0 ? (
+                {filteredBookings.length === 0 ? (
                     <div className="my-rides-empty">
-                        <p>No rides found for the selected filter.</p>
+                        <p>No bookings found for the selected filter.</p>
                     </div>
                 ) : (
                     <div className="rides-list">
-                        {filteredRides.map((ride) => (
-                            <div key={ride.id} className="ride-card">
+                        {filteredBookings.map((booking) => (
+                            <div key={booking.id} className="ride-card">
                                 <img 
-                                    src={ride.carImage || 'https://via.placeholder.com/150'} 
-                                    alt={ride.carName || 'Car'} 
+                                    src={booking.car?.images?.[0]?.url || `https://via.placeholder.com/150x100/4299e1/ffffff?text=Car+${booking.carId}`}
+                                    alt={`${booking.car?.make || 'Car'} ${booking.car?.model || booking.carId}`} 
                                     className="ride-car-image" 
                                 />
                                 <div className="ride-info">
-                                    <h5>{ride.carName || 'Car'}</h5>
+                                    <h5>{booking.car ? `${booking.car.make} ${booking.car.model}` : `Car ID: ${booking.carId}`}</h5>
                                     <div className="ride-dates">
                                         <p>
-                                            <strong>From:</strong> {formatDate(ride.startDate)}
+                                            <strong>From:</strong> {formatDate(booking.startDate)}
                                         </p>
                                         <p>
-                                            <strong>To:</strong> {formatDate(ride.endDate)}
+                                            <strong>To:</strong> {formatDate(booking.endDate)}
                                         </p>
                                     </div>
-                                    <p className="ride-price">
-                                        <strong>Total Price:</strong> ${ride.totalPrice}
-                                    </p>
+                                    <p className="ride-price">Total: ${booking.totalPrice.toFixed(2)}</p>
                                     <span
                                         className="ride-status"
-                                        style={{ backgroundColor: getStatusColor(ride.status) }}
+                                        style={{ backgroundColor: getStatusColor(booking.status) }}
                                     >
-                                        {ride.status.charAt(0).toUpperCase() + ride.status.slice(1)}
+                                        {booking.status.charAt(0) + booking.status.slice(1).toLowerCase()}
                                     </span>
+                                    <div className="ride-actions">
+                                        {(booking.status === 'COMPLETED' || booking.status === 'CANCELLED') && (
+                                            <button
+                                                className="rebook-button"
+                                                onClick={() => handleRebook(booking.carId)}
+                                            >
+                                                Rebook
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         ))}

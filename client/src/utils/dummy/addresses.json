@@ -1,27 +1,21 @@
 [
   {
-    "id": "addr1",
-    "userId": "user1",
+    "id": "1",
     "street": "123 Main Street",
     "city": "New York",
     "state": "NY",
     "postalCode": "10001",
     "country": "United States",
-    "isDefault": true,
-    "createdAt": "2024-01-15T10:30:00Z",
-    "updatedAt": "2024-01-15T10:30:00Z"
+    "isDefault": true
   },
   {
-    "id": "addr2",
-    "userId": "user1",
+    "id": "2",
     "street": "456 Park Avenue",
     "city": "Los Angeles",
     "state": "CA",
     "postalCode": "90001",
     "country": "United States",
-    "isDefault": false,
-    "createdAt": "2024-02-20T14:45:00Z",
-    "updatedAt": "2024-02-20T14:45:00Z"
+    "isDefault": false
   },
   {
     "id": "addr3",
@@ -31,9 +25,7 @@
     "state": "IL",
     "postalCode": "60601",
     "country": "United States",
-    "isDefault": true,
-    "createdAt": "2024-01-10T09:15:00Z",
-    "updatedAt": "2024-01-10T09:15:00Z"
+    "isDefault": false
   },
   {
     "id": "addr4",
@@ -43,9 +35,7 @@
     "state": "TX",
     "postalCode": "77001",
     "country": "United States",
-    "isDefault": true,
-    "createdAt": "2024-03-05T11:20:00Z",
-    "updatedAt": "2024-03-05T11:20:00Z"
+    "isDefault": false
   },
   {
     "id": "addr5",
@@ -55,8 +45,6 @@
     "state": "FL",
     "postalCode": "33101",
     "country": "United States",
-    "isDefault": true,
-    "createdAt": "2024-02-15T16:30:00Z",
-    "updatedAt": "2024-02-15T16:30:00Z"
+    "isDefault": false
   }
 ] 

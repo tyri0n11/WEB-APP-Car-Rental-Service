@@ -33,24 +33,23 @@
     margin: 0;
 }
 
-.edit-button {
+.add-button {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 0.75rem;
-    background-color: #f7fafc;
-    border: 1px solid #e1e4e8;
+    background-color: #4299e1;
+    border: none;
     border-radius: 6px;
-    color: #4a5568;
+    color: #fff;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
     font-size: 0.9rem;
 }
 
-.edit-button:hover {
-    background-color: #edf2f7;
-    border-color: #cbd5e0;
+.add-button:hover {
+    background-color: #3182ce;
 }
 
 .success-message {
@@ -71,7 +70,7 @@
     font-size: 0.9rem;
 }
 
-.address-list {
+.addresses-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1rem;
@@ -92,36 +91,25 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.address-type {
-    display: inline-block;
-    padding: 0.25rem 0.5rem;
-    background-color: #edf2f7;
-    color: #4a5568;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    margin-bottom: 0.75rem;
-}
-
-.address-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+.address-content {
     margin-bottom: 1rem;
 }
 
-.address-detail {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
+.address-text {
+    margin: 0 0 0.5rem 0;
     color: #4a5568;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
 }
 
-.address-detail svg {
-    color: #718096;
-    font-size: 0.9rem;
-    margin-top: 0.25rem;
+.default-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background-color: #c6f6d5;
+    color: #2f855a;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
 }
 
 .address-actions {
@@ -130,9 +118,9 @@
     flex-wrap: wrap;
 }
 
-.edit-address-btn,
-.delete-address-btn,
-.set-default-btn {
+.edit-button,
+.delete-button,
+.default-button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -145,35 +133,35 @@
     font-size: 0.9rem;
 }
 
-.edit-address-btn {
+.edit-button {
     background-color: #fff;
     border: 1px solid #4299e1;
     color: #4299e1;
 }
 
-.edit-address-btn:hover {
+.edit-button:hover {
     background-color: #4299e1;
     color: #fff;
 }
 
-.delete-address-btn {
+.delete-button {
     background-color: #fff;
     border: 1px solid #e53e3e;
     color: #e53e3e;
 }
 
-.delete-address-btn:hover {
+.delete-button:hover {
     background-color: #e53e3e;
     color: #fff;
 }
 
-.set-default-btn {
+.default-button {
     background-color: #fff;
     border: 1px solid #48bb78;
     color: #48bb78;
 }
 
-.set-default-btn:hover {
+.default-button:hover {
     background-color: #48bb78;
     color: #fff;
 }
@@ -184,10 +172,18 @@
     gap: 1rem;
 }
 
+.form-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
 .form-group {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    flex: 1;
+    min-width: 200px;
 }
 
 .form-group label {
@@ -214,36 +210,21 @@
     border-color: #e53e3e;
 }
 
-.checkbox-group {
+.form-group.checkbox {
     flex-direction: row;
     align-items: center;
-    gap: 0.5rem;
 }
 
-.checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    font-size: 0.9rem;
-    color: #4a5568;
-}
-
-.checkbox-label input[type="checkbox"] {
+.form-group.checkbox input[type="checkbox"] {
     width: 1rem;
     height: 1rem;
     margin: 0;
 }
 
-.error-text {
-    color: #e53e3e;
-    font-size: 0.8rem;
-}
-
 .form-actions {
     display: flex;
     gap: 0.75rem;
-    margin-top: 0.5rem;
+    margin-top: 1rem;
 }
 
 .save-button, .cancel-button {
@@ -251,7 +232,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
+    padding: 0.75rem 1rem;
     border-radius: 6px;
     font-weight: 500;
     cursor: pointer;
@@ -261,8 +242,8 @@
 
 .save-button {
     background-color: #4299e1;
-    color: #fff;
     border: none;
+    color: #fff;
 }
 
 .save-button:hover {
@@ -276,8 +257,8 @@
 
 .cancel-button {
     background-color: #fff;
-    color: #4a5568;
     border: 1px solid #e1e4e8;
+    color: #4a5568;
 }
 
 .cancel-button:hover {
@@ -287,36 +268,12 @@
 
 .cancel-button:disabled {
     background-color: #f7fafc;
+    border-color: #e1e4e8;
     color: #a0aec0;
     cursor: not-allowed;
 }
 
-.address-display {
-    padding: 0.5rem 0;
-}
-
-.address-details {
-    background-color: #f7fafc;
-    padding: 1rem;
-    border-radius: 6px;
-    border: 1px solid #e1e4e8;
-}
-
-.address-details p {
-    margin: 0;
-    color: #4a5568;
-    font-size: 0.95rem;
-    line-height: 1.5;
-}
-
-.address-note {
-    margin-top: 0.75rem !important;
-    font-size: 0.85rem !important;
-    color: #718096 !important;
-    font-style: italic;
-}
-
-.address-empty {
+.no-addresses {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -324,26 +281,14 @@
     padding: 2rem 1rem;
     text-align: center;
     color: #4a5568;
-    gap: 1rem;
+    background-color: #f7fafc;
+    border-radius: 8px;
+    border: 1px dashed #cbd5e0;
 }
 
-.add-button {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.6rem 1.25rem;
-    background-color: #4299e1;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 0.9rem;
-}
-
-.add-button:hover {
-    background-color: #3182ce;
+.no-addresses p {
+    margin: 0;
+    font-size: 0.95rem;
 }
 
 @media (max-width: 768px) {
@@ -352,11 +297,14 @@
     }
     
     .address-header {
-        margin-bottom: 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
     }
     
-    .address-list {
-        grid-template-columns: 1fr;
+    .form-row {
+        flex-direction: column;
+        gap: 0.75rem;
     }
     
     .form-actions {
@@ -382,16 +330,16 @@
     }
     
     .save-button, .cancel-button {
-        padding: 0.6rem 1rem;
+        padding: 0.6rem 0.75rem;
     }
     
     .address-actions {
         flex-direction: column;
     }
     
-    .edit-address-btn,
-    .delete-address-btn,
-    .set-default-btn {
+    .edit-button,
+    .delete-button,
+    .default-button {
         width: 100%;
     }
 }

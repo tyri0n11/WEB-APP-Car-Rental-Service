@@ -47,7 +47,7 @@ export const fetchRides = async (accessToken: string): Promise<Ride[]> => {
         const result = await response.json();
         return result.data;
         */
-        
+
         // Return dummy data for now
         return dummyBookings as Ride[];
     } catch (error) {
@@ -89,7 +89,7 @@ export const cancelRide = async (rideId: string, accessToken: string): Promise<R
         const result = await response.json();
         return result.data;
         */
-        
+
         // Simulate canceling on the server
         const cancelledRide: Ride = {
             id: rideId,
@@ -103,7 +103,7 @@ export const cancelRide = async (rideId: string, accessToken: string): Promise<R
             totalPrice: 750,
             status: 'cancelled'
         };
-        
+
         return cancelledRide;
     } catch (error) {
         console.error('Error canceling ride:', error);

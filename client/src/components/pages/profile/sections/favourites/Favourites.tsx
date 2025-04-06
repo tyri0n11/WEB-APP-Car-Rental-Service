@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../../../hooks/useAuth';
-import { Car, fetchDummyFavorites, removeDummyFavorite } from '../../../../../utils/favoritesUtils';
+import { removeDummyFavorite } from '../../../../../utils/favoritesUtils';
+import { Car } from '../../../../../contexts/CarContext';
+import favoritesDummyData from '../../../../../utils/dummy/favorites.json';
 import './Favourites.css';
 
 /**
@@ -41,8 +43,8 @@ const Favourites: React.FC = () => {
             
             try {
                 if (useDummyData) {
-                    // Use dummy data for testing
-                    const dummyFavorites = await fetchDummyFavorites();
+                    // Use dummy data from separate JSON file
+                    const dummyFavorites = favoritesDummyData as Car[];
                     setFavorites(dummyFavorites);
                 } else {
                     // Use backend API
@@ -61,7 +63,6 @@ const Favourites: React.FC = () => {
                     setFavorites(data);
                 }
             } catch (err) {
-                console.error('Error loading favorites:', err);
                 setLocalError('Failed to load favorites');
             } finally {
                 setIsLoading(false);
@@ -92,7 +93,6 @@ const Favourites: React.FC = () => {
                 setFavorites(favorites.filter(car => car.id !== carId));
             }
         } catch (err) {
-            console.error('Error removing favorite:', err);
             setLocalError('Failed to remove favorite');
         }
     };

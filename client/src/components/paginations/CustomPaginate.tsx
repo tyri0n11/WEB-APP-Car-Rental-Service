@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Car, CarQueryParams, getCars } from '../../apis/cars';
-import { CarStatus, FuelType } from '../../types/car';
-import CarCard from '../cards/CarCard';
-import CarSearchFilter from '../filters/CarSearchFilter';
-import './CustomePaginate.css';
+import React, { useEffect, useState } from "react";
+import { Car, CarQueryParams, getCars } from "../../apis/cars";
+import { CarStatus, FuelType } from "../../types/car";
+import CarCard from "../cards/CarCard";
+import CarSearchFilter from "../filters/CarSearchFilter";
+import "./CustomPaginate.css";
 
-const DEFAULT_CAR_IMAGE = "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&auto=format&fit=crop&q=60";
+const DEFAULT_CAR_IMAGE =
+  "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&auto=format&fit=crop&q=60";
 
 interface Pagination {
   total: number;
@@ -16,9 +17,23 @@ interface Pagination {
   next: number | null;
 }
 
-const ITEMS_PER_PAGE = 12; // Số lượng xe hiển thị trên mỗi trang
+interface CustomePaginateProps {
+  maxDisplay?: number;
+  itemPerPage?: number;
+  showFilter?: boolean;
+  showPagination?: boolean;
+}
 
-const CustomePaginate: React.FC = () => {
+const CustomePaginate: React.FC<CustomePaginateProps> = ({
+  maxDisplay,
+  itemPerPage,
+  showFilter,
+  showPagination,
+}) => {
+  const ITEMS_PER_PAGE = itemPerPage ? itemPerPage : 12;
+  const SHOW_FILTER = showFilter !== undefined ? showFilter : true;
+  const SHOW_PAGINATION = showPagination !== undefined ? showPagination : true;
+
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -32,36 +47,38 @@ const CustomePaginate: React.FC = () => {
     currentPage: 1,
     perPage: ITEMS_PER_PAGE,
     prev: null,
-    next: null
+    next: null,
   });
 
   const addDefaultImage = (car: any): Car => ({
     ...car,
     fuelType: car.fuelType as FuelType,
     status: car.status as CarStatus,
-    images: car.images?.length ? car.images : [{
-      id: 'default',
-      url: DEFAULT_CAR_IMAGE,
-      isMain: true
-    }]
+    images: car.images?.length
+      ? car.images
+      : [
+          {
+            id: "default",
+            url: DEFAULT_CAR_IMAGE,
+            isMain: true,
+          },
+        ],
   });
 
   const handleSearch = (params: CarQueryParams | undefined) => {
     if (!params) {
-      // Nếu không có tham số, reset về trạng thái mặc định
       setSearchParams({
         page: 1,
         perPage: ITEMS_PER_PAGE,
       });
     } else {
-      // Lọc bỏ các tham số rỗng hoặc undefined
       const filteredParams: CarQueryParams = {
         page: 1,
         perPage: ITEMS_PER_PAGE,
       };
 
       Object.entries(params).forEach(([key, value]) => {
-        if (value !== '' && value !== undefined && value !== null) {
+        if (value !== "" && value !== undefined && value !== null) {
           filteredParams[key as keyof CarQueryParams] = value as any;
         }
       });
@@ -75,7 +92,7 @@ const CustomePaginate: React.FC = () => {
       setLoading(true);
       setError(null);
       const response = await getCars(searchParams);
-      
+
       if (response) {
         setCars(response.data?.cars?.map(addDefaultImage) || []);
         setPagination({
@@ -84,20 +101,20 @@ const CustomePaginate: React.FC = () => {
           currentPage: response.data?.pagination?.currentPage || 1,
           perPage: response.data?.pagination?.perPage || ITEMS_PER_PAGE,
           prev: response.data?.pagination?.prev,
-          next: response.data?.pagination?.next
+          next: response.data?.pagination?.next,
         });
       } else {
-        throw new Error('Invalid response format');
+        throw new Error("Invalid response format");
       }
     } catch (err) {
-      console.error('Error fetching cars:', err);
-      setError('Failed to load cars. Please try again.');
+      console.error("Error fetching cars:", err);
+      setError("Failed to load cars. Please try again.");
       setCars([]);
-      setPagination(prev => ({
+      setPagination((prev) => ({
         ...prev,
         total: 0,
         lastPage: 1,
-        currentPage: 1
+        currentPage: 1,
       }));
     } finally {
       setLoading(false);
@@ -110,9 +127,11 @@ const CustomePaginate: React.FC = () => {
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= pagination.lastPage) {
-      setSearchParams(prev => ({ ...prev, page: newPage }));
+      setSearchParams((prev) => ({ ...prev, page: newPage }));
     }
   };
+
+  const displayedCars = maxDisplay ? cars.slice(0, maxDisplay) : cars; // Use maxDisplay prop
 
   if (loading) {
     return (
@@ -133,25 +152,27 @@ const CustomePaginate: React.FC = () => {
 
   return (
     <div className="paginate-container">
-      <CarSearchFilter onSearch={handleSearch} />
-      
-      {cars.length === 0 ? (
+      {SHOW_FILTER && <CarSearchFilter onSearch={handleSearch} />}
+
+      {displayedCars.length === 0 ? (
         <div className="empty-container">
           <p>No cars available at the moment.</p>
         </div>
       ) : (
         <>
           <div className="cars-grid">
-            {cars.map((car) => (
+            {displayedCars.map((car) => (
               <div key={car.id} className="car-item">
                 <CarCard car={car} />
               </div>
             ))}
           </div>
 
-          <div className="pagination-controls">
+          {SHOW_PAGINATION && <div className="pagination-controls">
             <button
-              className={`pagination-button ${!pagination.prev ? 'disabled' : ''}`}
+              className={`pagination-button ${
+                !pagination.prev ? "disabled" : ""
+              }`}
               onClick={() => handlePageChange(pagination.currentPage - 1)}
               disabled={!pagination.prev}
             >
@@ -163,13 +184,15 @@ const CustomePaginate: React.FC = () => {
             </span>
 
             <button
-              className={`pagination-button ${!pagination.next ? 'disabled' : ''}`}
+              className={`pagination-button ${
+                !pagination.next ? "disabled" : ""
+              }`}
               onClick={() => handlePageChange(pagination.currentPage + 1)}
               disabled={!pagination.next}
             >
               Next
             </button>
-          </div>
+          </div>}
         </>
       )}
     </div>

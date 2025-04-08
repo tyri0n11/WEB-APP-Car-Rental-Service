@@ -1,5 +1,5 @@
 import React from 'react';
-import CustomePaginate from '../../paginations/CustomePaginate';
+import CustomPaginate from '../../paginations/CustomPaginate';
 
 const Service: React.FC = () => {
   const styles = {
@@ -25,7 +25,7 @@ const Service: React.FC = () => {
     <div style={styles.container}>
       <div style={styles.content}>
         <h1 style={styles.title}>Available Cars</h1>
-        <CustomePaginate />
+        <CustomPaginate />
       </div>
     </div>
   );

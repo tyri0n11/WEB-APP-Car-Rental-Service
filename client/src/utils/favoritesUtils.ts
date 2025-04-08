@@ -1,4 +1,4 @@
-import dummyFavoriteCars from './dummy/favoriteCars.json';
+import dummyFavoriteCars from './dummy/favorites.json';
 import axios from 'axios';
 import { Car } from '../contexts/CarContext.tsx';
 

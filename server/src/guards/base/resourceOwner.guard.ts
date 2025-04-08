@@ -1,11 +1,10 @@
 import { RequestWithUser } from '@/types/request.type';
 import {
-  Injectable,
   CanActivate,
   ExecutionContext,
   ForbiddenException,
+  Injectable,
 } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
 import { Role } from '@prisma/client';
 
 @Injectable()
@@ -16,11 +15,6 @@ export abstract class ResourceOwnerGuard implements CanActivate {
     const request: RequestWithUser = context.switchToHttp().getRequest();
     const user = request.user;
     const resourceId = request.params.id;
-
-    // Admin bypass
-    if (user.role === Role.ADMIN) {
-      return true;
-    }
 
     const isOwner = await this.checkOwnership(user.id, resourceId);
     if (!isOwner) {

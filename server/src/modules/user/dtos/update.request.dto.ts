@@ -44,10 +44,4 @@ export class UpdateUserRequestDTO {
   @IsNotEmpty()
   @ApiPropertyOptional()
   phoneNumber?: string;
-
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => UpdateDrivingLicenceDTO)
-  @ApiPropertyOptional({ type: UpdateDrivingLicenceDTO })
-  drivingLicence?: UpdateDrivingLicenceDTO;
 }

@@ -21,7 +21,7 @@ import { LoginResponseDTO } from './dto/response/login.response.dto';
 import { ApiPost } from '@/decorators/apiPost.decorator';
 import { LocalUserAuthGuard } from './guards/local/local.guard';
 import { JwtAccessGuard } from './guards/jwt/jwtAccess.guard';
-import { UserResponseDTO } from '../user/dto/response.dto';
+import { UserResponseDTO } from '../user/dtos/response.dto';
 import { JwtRefreshGuard } from './guards/jwt/jwtRefresh.guard';
 import { RefreshTokenRequestDTO } from './dto/request/refreshToken.request.dto';
 import { ResetPasswordRequestDTO } from './dto/request/resetPassword.dto';

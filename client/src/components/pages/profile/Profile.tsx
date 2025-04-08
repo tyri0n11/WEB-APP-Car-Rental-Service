@@ -2,23 +2,27 @@ import React, { useState } from "react";
 import { FaAddressCard, FaCar, FaHeart, FaLock, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { useAuth } from "../../../hooks/useAuth";
 import "./Profile.css";
-import MyAccount from "./sections/myaccount/MyAccount";
+import MyAccount from "./sections/account/Account";
+import ChangePassword from "./sections/change-password/ChangePassword";
+import Address from "./sections/address/Address";
+import Favourites from "./sections/favourites/Favourites";
+import MyRides from "./sections/rides/Rides";
 
 const Profile: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
   const menuItems = [
     { label: "My Account", icon: <FaUser />, content: <MyAccount /> },
-    { label: "Favourites", icon: <FaHeart />, content: "Favourite items..." },
-    { label: "My Ride", icon: <FaCar />, content: "Ride details..." },
+    { label: "Favourites", icon: <FaHeart />, content: <Favourites /> },
+    { label: "My Ride", icon: <FaCar />, content: <MyRides /> },
     {
       label: "Address",
       icon: <FaAddressCard />,
-      content: "Address details...",
+      content: <Address />,
     },
     {
       label: "Change Password",
       icon: <FaLock />,
-      content: "Password change form...",
+      content: <ChangePassword />,
     },
     {
       label: "Log Out",
@@ -64,7 +68,7 @@ const Profile: React.FC = () => {
             ))}
           </div>
           <div className="profileContent">
-            <div className="profileTitle">Profile Content</div>
+            <div className="profileTitle">{menuItems[activeTab].label}</div>
             <div className="profileDetails">{menuItems[activeTab].content}</div>
           </div>
         </div>

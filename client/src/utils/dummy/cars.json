@@ -1,88 +1,328 @@
 [
-    {
-      "id": "1",
-      "image": "https://imageio.forbes.com/specials-images/imageserve/5d35eacaf1176b0008974b54/2020-Chevrolet-Corvette-Stingray/0x0.jpg?format=jpg&crop=4560,2565,x790,y784,safe&width=1440",
-      "make": "HONDA",
-      "model": "CRV G",
-      "year": 2018,
-      "autoGearbox": true,
-      "numSeats": 7,
-      "fuelType": "Gasoline",
-      "status": "available",
-      "address": "Hanoi",
-      "rating": 5.0,
-      "kilometers": 100,
-      "dailyPrice": 1125,
-      "licensePlate": "1D",
-      "description": "car 4"
-    },
-    {
-      "id": "2",
-      "image": "https://m.atcdn.co.uk/ect/media/w1224/4b14ab0c7868451baf5912779f112f40.jpg",
-      "make": "TOYOTA",
-      "model": "INNOVA",
-      "year": 2010,
-      "autoGearbox": false,
-      "numSeats": 7,
-      "fuelType": "Diesel",
-      "status": "available",
-      "address": "HCM",
-      "rating": 0,
-      "kilometers": 0,
-      "dailyPrice": 746,
-      "licensePlate": "1C",
-      "description": "car 1"
-    },
-    {
-      "id": "3",
-      "image": "https://www.autotrainingcentre.com/wp-content/webp-express/webp-images/uploads/2014/02/Automotive-training.jpg.webp",
-      "make": "KIA",
-      "model": "SEDONA PREMIUM",
-      "year": 2017,
-      "autoGearbox": false,
-      "numSeats": 7,
-      "fuelType": "Electric",
-      "status": "available",
-      "address": "Hanoi",
-      "rating": 5.0,
-      "kilometers": 31,
-      "dailyPrice": 1366,
-      "licensePlate": "1B",
-      "description": "car 2"
-    },
-    {
-      "id": "4",
-      "image": "https://kvdbil-object-images.imgix.net/7236330/26238362.jpg?w=1920&auto=format",
-      "make": "HONDA",
-      "model": "CIVIC G",
-      "year": 2018,
-      "autoGearbox": true,
-      "numSeats": 7,
-      "fuelType": "Gasoline",
-      "status": "available",
-      "address": "HCM",
-      "rating": 4.5,
-      "kilometers": 12,
-      "dailyPrice": 1068,
-      "licensePlate": "1A",
-      "description": "car 3"
-    },
-
-    {
-        "id": "5",
-        "image": "https://kvdbil-object-images.imgix.net/7236330/26238362.jpg?w=1920&auto=format",
-        "make": "LEXUS",
-        "model": "IS250",
-        "year": 2009,
-        "autoGearbox": true,
-        "numSeats": 7,
-        "fuelType": "Electric",
-        "status": "available",
-        "address": "HCM",
-        "rating": 4.5,
-        "kilometers": 12,
-        "dailyPrice": 1068,
-        "licensePlate": "1A",
-        "description": "car 3"
+  {
+    "id": "car1",
+    "make": "Tesla",
+    "model": "Model 3",
+    "year": 2023,
+    "kilometers": 15000,
+    "description": "Electric sedan with autopilot",
+    "dailyPrice": 150,
+    "licensePlate": "ABC123",
+    "numSeats": 5,
+    "address": "123 Main St, New York, NY",
+    "autoGearbox": true,
+    "rating": 4.8,
+    "fuelType": "ELECTRIC",
+    "status": "AVAILABLE",
+    "categories": [
+      {
+        "category": {
+          "id": "cat1",
+          "name": "Electric"
+        }
+      },
+      {
+        "category": {
+          "id": "cat2",
+          "name": "Sedan"
+        }
       }
-  ]
+    ],
+    "images": [
+      {
+        "id": "img1",
+        "url": "https://images.unsplash.com/photo-1560958089-b8a1929cea89?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        "isMain": true
+      }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "car2",
+    "make": "Porsche",
+    "model": "911",
+    "year": 2022,
+    "kilometers": 12000,
+    "description": "High-performance sports car",
+    "dailyPrice": 300,
+    "licensePlate": "XYZ789",
+    "numSeats": 2,
+    "address": "456 Oak Ave, Los Angeles, CA",
+    "autoGearbox": true,
+    "rating": 4.9,
+    "fuelType": "PETROL",
+    "status": "AVAILABLE",
+    "categories": [
+      {
+        "category": {
+          "id": "cat3",
+          "name": "Sports Car"
+        }
+      }
+    ],
+    "images": [
+      {
+        "id": "img2",
+        "url": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        "isMain": true
+      }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "car3",
+    "make": "Audi",
+    "model": "Q5",
+    "year": 2023,
+    "kilometers": 8000,
+    "description": "Luxury SUV with advanced features",
+    "dailyPrice": 200,
+    "licensePlate": "DEF456",
+    "numSeats": 5,
+    "address": "789 Pine St, Chicago, IL",
+    "autoGearbox": true,
+    "rating": 4.7,
+    "fuelType": "DIESEL",
+    "status": "AVAILABLE",
+    "categories": [
+      {
+        "category": {
+          "id": "cat4",
+          "name": "SUV"
+        }
+      }
+    ],
+    "images": [
+      {
+        "id": "img3",
+        "url": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        "isMain": true
+      }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "car4",
+    "make": "BMW",
+    "model": "X5",
+    "year": 2022,
+    "kilometers": 20000,
+    "description": "Premium SUV with luxury features",
+    "dailyPrice": 250,
+    "licensePlate": "GHI789",
+    "numSeats": 5,
+    "address": "321 Elm St, Boston, MA",
+    "autoGearbox": true,
+    "rating": 4.6,
+    "fuelType": "PETROL",
+    "status": "AVAILABLE",
+    "categories": [
+      {
+        "category": {
+          "id": "cat4",
+          "name": "SUV"
+        }
+      }
+    ],
+    "images": [
+      {
+        "id": "img4",
+        "url": "https://images.unsplash.com/photo-1555215695-3004980ad54e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        "isMain": true
+      }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "car5",
+    "make": "Mercedes-Benz",
+    "model": "C-Class",
+    "year": 2023,
+    "kilometers": 10000,
+    "description": "Luxury sedan with premium features",
+    "dailyPrice": 180,
+    "licensePlate": "JKL012",
+    "numSeats": 5,
+    "address": "654 Maple Dr, Seattle, WA",
+    "autoGearbox": true,
+    "rating": 4.8,
+    "fuelType": "PETROL",
+    "status": "AVAILABLE",
+    "categories": [
+      {
+        "category": {
+          "id": "cat2",
+          "name": "Sedan"
+        }
+      }
+    ],
+    "images": [
+      {
+        "id": "img5",
+        "url": "https://images.unsplash.com/photo-1553440569-bcc63803a83d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        "isMain": true
+      }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "car6",
+    "make": "Toyota",
+    "model": "Camry",
+    "year": 2023,
+    "kilometers": 5000,
+    "description": "Reliable sedan with good fuel economy",
+    "dailyPrice": 120,
+    "licensePlate": "MNO345",
+    "numSeats": 5,
+    "address": "987 Cedar Ln, Miami, FL",
+    "autoGearbox": true,
+    "rating": 4.5,
+    "fuelType": "HYBRID",
+    "status": "AVAILABLE",
+    "categories": [
+      {
+        "category": {
+          "id": "cat2",
+          "name": "Sedan"
+        }
+      }
+    ],
+    "images": [
+      {
+        "id": "img6",
+        "url": "https://images.unsplash.com/photo-1621007947382-bb3c0c0c0c0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        "isMain": true
+      }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "car7",
+    "make": "Honda",
+    "model": "Civic",
+    "year": 2023,
+    "kilometers": 3000,
+    "description": "Compact car with excellent fuel efficiency",
+    "dailyPrice": 100,
+    "licensePlate": "PQR678",
+    "numSeats": 5,
+    "address": "147 Birch Ave, Denver, CO",
+    "autoGearbox": true,
+    "rating": 4.6,
+    "fuelType": "PETROL",
+    "status": "AVAILABLE",
+    "categories": [
+      {
+        "category": {
+          "id": "cat5",
+          "name": "Compact"
+        }
+      }
+    ],
+    "images": [
+      {
+        "id": "img7",
+        "url": "https://images.unsplash.com/photo-1606611013012-23c1f7c5e0a3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        "isMain": true
+      }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "car8",
+    "make": "Ford",
+    "model": "Mustang",
+    "year": 2022,
+    "kilometers": 15000,
+    "description": "Iconic American muscle car",
+    "dailyPrice": 200,
+    "licensePlate": "STU901",
+    "numSeats": 4,
+    "address": "258 Willow St, Austin, TX",
+    "autoGearbox": true,
+    "rating": 4.7,
+    "fuelType": "PETROL",
+    "status": "AVAILABLE",
+    "categories": [
+      {
+        "category": {
+          "id": "cat3",
+          "name": "Sports Car"
+        }
+      }
+    ],
+    "images": [
+      {
+        "id": "img8",
+        "url": "https://images.unsplash.com/photo-1583121274602-3e2820c69888?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        "isMain": true
+      }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "car9",
+    "make": "Chevrolet",
+    "model": "Corvette",
+    "year": 2023,
+    "kilometers": 5000,
+    "description": "High-performance sports car",
+    "dailyPrice": 350,
+    "licensePlate": "VWX234",
+    "numSeats": 2,
+    "address": "369 Spruce Rd, Portland, OR",
+    "autoGearbox": true,
+    "rating": 4.9,
+    "fuelType": "PETROL",
+    "status": "AVAILABLE",
+    "categories": [
+      {
+        "category": {
+          "id": "cat3",
+          "name": "Sports Car"
+        }
+      }
+    ],
+    "images": [
+      {
+        "id": "img9",
+        "url": "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        "isMain": true
+      }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "car10",
+    "make": "Jeep",
+    "model": "Wrangler",
+    "year": 2023,
+    "kilometers": 8000,
+    "description": "Off-road capable SUV",
+    "dailyPrice": 180,
+    "licensePlate": "YZA567",
+    "numSeats": 5,
+    "address": "741 Aspen Ct, Nashville, TN",
+    "autoGearbox": true,
+    "rating": 4.6,
+    "fuelType": "PETROL",
+    "status": "AVAILABLE",
+    "categories": [
+      {
+        "category": {
+          "id": "cat4",
+          "name": "SUV"
+        }
+      }
+    ],
+    "images": [
+      {
+        "id": "img10",
+        "url": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        "isMain": true
+      }
+    ],
+    "reviews": []
+  }
+]

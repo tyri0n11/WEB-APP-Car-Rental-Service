@@ -4,7 +4,6 @@ const API_AUTHEN_URL = "http://localhost:3000/auth";
 const API_BASE_URL = "http://localhost:3000";
 
 export interface User {
-  role: string;
   id: string;
   email: string;
   firstName: string;
@@ -80,7 +79,6 @@ const fetchUser = async (accessToken: string): Promise<User | null> => {
     const result = await response.json();
     if (result?.statusCode === 200 && result?.data) {
       const user: User = {
-        role: result.data.role,
         id: result.data.id,
         email: result.data.email,
         firstName: result.data.firstName,

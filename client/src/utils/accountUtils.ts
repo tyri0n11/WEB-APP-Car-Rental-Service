@@ -193,7 +193,6 @@ export const updateUserDetails = async (formData: User, accessToken: string): Pr
     }
 
     try {
-        // Prepare the update payload according to the API's expected format
         const updatePayload: UserUpdatePayload = {
             firstName: formData.firstName,
             lastName: formData.lastName,
@@ -209,7 +208,7 @@ export const updateUserDetails = async (formData: User, accessToken: string): Pr
             url: `${API_BASE_URL}/user/${formData.id}`,
             payload: updatePayload
         });
-
+        console.log(accessToken);
         const response = await fetch(`${API_BASE_URL}/user/${formData.id}`, {
             method: 'PATCH',
             headers: {
@@ -233,7 +232,7 @@ export const updateUserDetails = async (formData: User, accessToken: string): Pr
         }
 
         const { data: updatedUser } = await response.json();
-        
+
         // Update cache with new data
         if (userDetailsCache) {
             userDetailsCache.data = updatedUser;

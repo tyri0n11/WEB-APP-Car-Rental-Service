@@ -29,9 +29,8 @@ const Account: React.FC = () => {
     lastName: '',
     email: '',
     phoneNumber: '',
-    role: '',
     id: '',
-    isVerified: false,
+    isVerified: true,
     drivingLicenceId: {
       licenceNumber: '',
       drivingLicenseImages: [],

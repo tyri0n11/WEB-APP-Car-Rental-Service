@@ -23,7 +23,7 @@ import { TokenService } from '../token/interfaces/token.service';
 import { SignupRequestDTO } from './dto/request/signup.request.dto';
 import { SignupResponseDTO } from './dto/response/signup.response.dto';
 import { LoginResponseDTO } from './dto/response/login.response.dto';
-import { UserResponseDTO } from '../user/dto/response.dto';
+import { UserResponseDTO } from '../user/dtos/response.dto';
 import { ResetPasswordRequestDTO } from './dto/request/resetPassword.dto';
 import { ChangePasswordRequestDTO } from './dto/request/changePassword.request.dto';
 

@@ -8,6 +8,9 @@
     "isVerified": true,
     "role": "CUSTOMER",
     "drivingLicenceId": "dl1",
+    "drivingLicenceNumber": "DL123456",
+    "drivingLicenceExpiry": "2025-12-31",
+    "drivingLicenceImage": "https://example.com/dl1.jpg",
     "createdAt": "2024-01-01T08:00:00Z",
     "updatedAt": "2024-01-15T10:30:00Z"
   },
@@ -20,6 +23,9 @@
     "isVerified": true,
     "role": "CUSTOMER",
     "drivingLicenceId": "dl2",
+    "drivingLicenceNumber": "DL789012",
+    "drivingLicenceExpiry": "2024-12-31",
+    "drivingLicenceImage": "https://example.com/dl2.jpg",
     "createdAt": "2024-01-05T09:15:00Z",
     "updatedAt": "2024-01-10T09:15:00Z"
   },
@@ -32,6 +38,9 @@
     "isVerified": true,
     "role": "CUSTOMER",
     "drivingLicenceId": "dl3",
+    "drivingLicenceNumber": "DL345678",
+    "drivingLicenceExpiry": "2025-06-30",
+    "drivingLicenceImage": "https://example.com/dl3.jpg",
     "createdAt": "2024-01-10T11:30:00Z",
     "updatedAt": "2024-03-05T11:20:00Z"
   },
@@ -44,6 +53,9 @@
     "isVerified": true,
     "role": "CUSTOMER",
     "drivingLicenceId": "dl4",
+    "drivingLicenceNumber": "DL901234",
+    "drivingLicenceExpiry": "2024-09-30",
+    "drivingLicenceImage": "https://example.com/dl4.jpg",
     "createdAt": "2024-01-15T13:45:00Z",
     "updatedAt": "2024-02-15T16:30:00Z"
   },

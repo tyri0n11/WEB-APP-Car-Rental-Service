@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../../../contexts/AuthContext';
+import { useBooking, BookingStatus } from '../../../../../contexts/BookingContext';
+import { useCar, Car } from '../../../../../contexts/CarContext';
+import { useNotification } from '../../../../../contexts/NotificationContext';
 import { useNavigate } from 'react-router-dom';
-import bookingsDummyData from '../../../../../utils/dummy/bookings.json';
-import carsDummyData from '../../../../../utils/dummy/cars.json';
-import { Car } from '../../../../../contexts/CarContext';
 import './Rides.css';
 
-interface Booking {
+interface BookingWithCar {
     id: string;
     userId: string;
     carId: string;
+    car?: Car;
     startDate: string;
     endDate: string;
     totalPrice: number;
-    status: 'COMPLETED' | 'CANCELLED' | 'CONFIRMED' | 'ONGOING';
+    status: BookingStatus;
     pickupAddress: string;
     returnAddress: string;
     transactionId: string;
@@ -21,50 +22,34 @@ interface Booking {
     updatedAt: string;
 }
 
-interface BookingWithCar extends Booking {
-    car?: Car;
-}
-
-type BookingStatus = Booking['status'];
-
 const MyRides: React.FC = () => {
     const { accessToken } = useAuth();
+    const { bookings, fetchBookings } = useBooking();
+    const { fetchCars } = useCar();
+    const { showNotification } = useNotification();
     const navigate = useNavigate();
-    const [bookings, setBookings] = useState<BookingWithCar[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [activeFilter, setActiveFilter] = useState<'all' | BookingStatus>('all');
 
     useEffect(() => {
         const loadBookings = async () => {
+            if (!accessToken) return;
+            
             try {
                 setLoading(true);
                 setError(null);
-                
-                // Using dummy data from JSON files
-                const dummyBookings = bookingsDummyData as Booking[];
-                
-                // Add car details to each booking
-                const bookingsWithCars = dummyBookings.map(booking => {
-                    // Find the corresponding car from carsDummyData
-                    const car = carsDummyData.find(c => c.id === booking.carId);
-                    
-                    return {
-                        ...booking,
-                        car
-                    };
-                });
-                
-                setBookings(bookingsWithCars);
+                await fetchBookings();
             } catch (err) {
                 setError('Failed to load bookings. Please try again later.');
+                showNotification('error', 'Failed to load bookings');
             } finally {
                 setLoading(false);
             }
         };
 
         loadBookings();
-    }, [accessToken]);
+    }, [accessToken, fetchBookings, showNotification]);
 
     const filteredBookings = bookings.filter(booking =>
         activeFilter === 'all' ? true : booking.status === activeFilter
@@ -80,14 +65,16 @@ const MyRides: React.FC = () => {
 
     const getStatusColor = (status: BookingStatus) => {
         switch (status) {
-            case 'COMPLETED':
+            case BookingStatus.COMPLETED:
                 return '#4299e1';
-            case 'CANCELLED':
+            case BookingStatus.CANCELLED:
                 return '#f56565';
-            case 'CONFIRMED':
+            case BookingStatus.CONFIRMED:
                 return '#48bb78';
-            case 'ONGOING':
+            case BookingStatus.ONGOING:
                 return '#ed8936';
+            case BookingStatus.PENDING:
+                return '#718096';
             default:
                 return '#718096';
         }
@@ -118,28 +105,34 @@ const MyRides: React.FC = () => {
                             All
                         </button>
                         <button
-                            className={`filter-btn ${activeFilter === 'COMPLETED' ? 'active' : ''}`}
-                            onClick={() => setActiveFilter('COMPLETED')}
+                            className={`filter-btn ${activeFilter === BookingStatus.COMPLETED ? 'active' : ''}`}
+                            onClick={() => setActiveFilter(BookingStatus.COMPLETED)}
                         >
                             Completed
                         </button>
                         <button
-                            className={`filter-btn ${activeFilter === 'CANCELLED' ? 'active' : ''}`}
-                            onClick={() => setActiveFilter('CANCELLED')}
+                            className={`filter-btn ${activeFilter === BookingStatus.CANCELLED ? 'active' : ''}`}
+                            onClick={() => setActiveFilter(BookingStatus.CANCELLED)}
                         >
                             Cancelled
                         </button>
                         <button
-                            className={`filter-btn ${activeFilter === 'CONFIRMED' ? 'active' : ''}`}
-                            onClick={() => setActiveFilter('CONFIRMED')}
+                            className={`filter-btn ${activeFilter === BookingStatus.CONFIRMED ? 'active' : ''}`}
+                            onClick={() => setActiveFilter(BookingStatus.CONFIRMED)}
                         >
                             Confirmed
                         </button>
                         <button
-                            className={`filter-btn ${activeFilter === 'ONGOING' ? 'active' : ''}`}
-                            onClick={() => setActiveFilter('ONGOING')}
+                            className={`filter-btn ${activeFilter === BookingStatus.ONGOING ? 'active' : ''}`}
+                            onClick={() => setActiveFilter(BookingStatus.ONGOING)}
                         >
                             Ongoing
+                        </button>
+                        <button
+                            className={`filter-btn ${activeFilter === BookingStatus.PENDING ? 'active' : ''}`}
+                            onClick={() => setActiveFilter(BookingStatus.PENDING)}
+                        >
+                            Pending
                         </button>
                     </div>
                 </div>
@@ -154,11 +147,11 @@ const MyRides: React.FC = () => {
                             <div key={booking.id} className="ride-card">
                                 <img 
                                     src={booking.car?.images?.[0]?.url || `https://via.placeholder.com/150x100/4299e1/ffffff?text=Car+${booking.carId}`}
-                                    alt={`${booking.car?.make || 'Car'} ${booking.car?.model || booking.carId}`} 
+                                    alt={`${booking.car?.brand || 'Car'} ${booking.car?.model || booking.carId}`} 
                                     className="ride-car-image" 
                                 />
                                 <div className="ride-info">
-                                    <h5>{booking.car ? `${booking.car.make} ${booking.car.model}` : `Car ID: ${booking.carId}`}</h5>
+                                    <h5>{booking.car ? `${booking.car.brand} ${booking.car.model}` : `Car ID: ${booking.carId}`}</h5>
                                     <div className="ride-dates">
                                         <p>
                                             <strong>From:</strong> {formatDate(booking.startDate)}
@@ -175,7 +168,7 @@ const MyRides: React.FC = () => {
                                         {booking.status.charAt(0) + booking.status.slice(1).toLowerCase()}
                                     </span>
                                     <div className="ride-actions">
-                                        {(booking.status === 'COMPLETED' || booking.status === 'CANCELLED') && (
+                                        {(booking.status === BookingStatus.COMPLETED || booking.status === BookingStatus.CANCELLED) && (
                                             <button
                                                 className="rebook-button"
                                                 onClick={() => handleRebook(booking.carId)}

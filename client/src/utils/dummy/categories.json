@@ -1,0 +1,37 @@
+[
+  {
+    "id": "cat1",
+    "name": "Electric",
+    "description": "Electric vehicles with zero emissions",
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "cat2",
+    "name": "Sedan",
+    "description": "Classic four-door passenger cars",
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "cat3",
+    "name": "Sports Car",
+    "description": "High-performance sports vehicles",
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "cat4",
+    "name": "SUV",
+    "description": "Sport Utility Vehicles",
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "cat5",
+    "name": "Luxury",
+    "description": "Premium luxury vehicles",
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-01T00:00:00Z"
+  }
+] 

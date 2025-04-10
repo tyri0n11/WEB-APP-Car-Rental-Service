@@ -1,0 +1,52 @@
+[
+  {
+    "id": "review1",
+    "userId": "user1",
+    "userName": "John Doe",
+    "carId": "car1",
+    "rating": 5,
+    "comment": "Great car, very smooth ride. The autopilot feature works perfectly.",
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  },
+  {
+    "id": "review2",
+    "userId": "user2",
+    "userName": "Jane Smith",
+    "carId": "car2",
+    "rating": 5,
+    "comment": "Amazing performance and handling. The Porsche 911 is a dream car come true.",
+    "createdAt": "2024-01-20T14:30:00Z",
+    "updatedAt": "2024-01-20T14:30:00Z"
+  },
+  {
+    "id": "review3",
+    "userId": "user3",
+    "userName": "Robert Johnson",
+    "carId": "car3",
+    "rating": 4,
+    "comment": "Comfortable and spacious SUV. Perfect for family trips.",
+    "createdAt": "2024-01-25T09:15:00Z",
+    "updatedAt": "2024-01-25T09:15:00Z"
+  },
+  {
+    "id": "review4",
+    "userId": "user4",
+    "userName": "Emily Williams",
+    "carId": "car4",
+    "rating": 4,
+    "comment": "The BMW X5 is a great luxury SUV with excellent features.",
+    "createdAt": "2024-01-30T16:45:00Z",
+    "updatedAt": "2024-01-30T16:45:00Z"
+  },
+  {
+    "id": "review5",
+    "userId": "user1",
+    "userName": "John Doe",
+    "carId": "car5",
+    "rating": 5,
+    "comment": "The Mercedes C-Class offers a perfect blend of luxury and performance.",
+    "createdAt": "2024-02-05T11:20:00Z",
+    "updatedAt": "2024-02-05T11:20:00Z"
+  }
+] 

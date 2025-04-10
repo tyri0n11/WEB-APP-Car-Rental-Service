@@ -1,39 +1,31 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FaUser, FaEdit, FaSave, FaTimes, FaUpload } from 'react-icons/fa';
-import { useAuth, User } from '../../../../../contexts/AuthContext';
-import {
-  fetchUserDetails,
-  uploadImage,
-  validateFormData,
-  updateUserDetails
-} from '../../../../../utils/accountUtils';
+import { FaUser, FaEdit, FaSave, FaTimes, FaUpload, FaSpinner } from 'react-icons/fa';
+import { useAuth } from '../../../../../contexts/AuthContext';
+import { useNotification } from '../../../../../contexts/NotificationContext';
+import { uploadImage, validateImage } from '../../../../../utils/imageUtils';
 import './Account.css';
 
 const Account: React.FC = () => {
-  const { accessToken, user } = useAuth();
+  const { user, updateProfile, accessToken } = useAuth();
+  const { showNotification } = useNotification();
   const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
   const [uploadingFront, setUploadingFront] = useState(false);
   const [uploadingBack, setUploadingBack] = useState(false);
   const [frontImage, setFrontImage] = useState<string>('');
   const [backImage, setBackImage] = useState<string>('');
-  const [debugPayload, setDebugPayload] = useState<string | null>(null);
   const frontLicenseInputRef = useRef<HTMLInputElement>(null);
   const backLicenseInputRef = useRef<HTMLInputElement>(null);
 
-  const [formData, setFormData] = useState<User>({
+  const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    email: '',
     phoneNumber: '',
-    id: '',
-    isVerified: true,
     drivingLicenceId: {
+      id: '',
       licenceNumber: '',
-      drivingLicenseImages: [],
+      drivingLicenseImages: [] as string[],
       expiryDate: ''
     }
   });
@@ -41,23 +33,27 @@ const Account: React.FC = () => {
   const loadUserDetails = async () => {
     try {
       setLoading(true);
-      const details = await fetchUserDetails(accessToken || '');
+      if (!user) {
+        throw new Error('No user data available');
+      }
 
-      // Set front and back images from user details
-      const licenseImages = details.drivingLicenceId?.drivingLicenseImages || [];
+      const licenseImages = user.drivingLicenceId?.drivingLicenseImages || [];
       setFrontImage(licenseImages[0] || '');
       setBackImage(licenseImages[1] || '');
 
       setFormData({
-        ...details,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        phoneNumber: user.phoneNumber,
         drivingLicenceId: {
-          licenceNumber: details.drivingLicenceId?.licenceNumber || '',
+          id: user.drivingLicenceId?.id || '',
+          licenceNumber: user.drivingLicenceId?.licenceNumber || '',
           drivingLicenseImages: licenseImages,
-          expiryDate: details.drivingLicenceId?.expiryDate || ''
+          expiryDate: user.drivingLicenceId?.expiryDate || ''
         }
       });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load user details');
+      showNotification('error', err instanceof Error ? err.message : 'Failed to load user details');
     } finally {
       setLoading(false);
       setInitialLoad(false);
@@ -65,13 +61,13 @@ const Account: React.FC = () => {
   };
 
   useEffect(() => {
-    if (accessToken) {
+    if (user) {
       loadUserDetails();
     } else {
-      setError('No authentication token available');
+      setInitialLoad(false);
       setLoading(false);
     }
-  }, [accessToken]);
+  }, [user]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -90,13 +86,11 @@ const Account: React.FC = () => {
         [name]: value
       }));
     }
-    setError(null);
-    setSuccess(null);
   };
 
   const handleLicenseImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, side: 'front' | 'back') => {
     const file = e.target.files?.[0];
-    if (!file || !accessToken) return;
+    if (!file) return;
 
     try {
       if (side === 'front') {
@@ -104,53 +98,44 @@ const Account: React.FC = () => {
       } else {
         setUploadingBack(true);
       }
-      setError(null);
 
-      // Upload the image using the image/upload endpoint
-      const imageUrl = await uploadImage(file, accessToken, 'license');
+      const validationError = validateImage(file);
+      if (validationError) {
+        showNotification('error', validationError);
+        return;
+      }
 
-      // Update the appropriate image state
+      // Upload the image directly
+      const imageUrl = await uploadImage(
+        file,
+        accessToken || localStorage.getItem('access_token') || '',
+        'license'
+      );
+
       if (side === 'front') {
         setFrontImage(imageUrl);
       } else {
         setBackImage(imageUrl);
       }
 
-      // Create the images array with both images
-      const images = [frontImage, backImage];
+      const updatedImages = [...formData.drivingLicenceId.drivingLicenseImages];
       if (side === 'front') {
-        images[0] = imageUrl;
+        updatedImages[0] = imageUrl;
       } else {
-        images[1] = imageUrl;
+        updatedImages[1] = imageUrl;
       }
 
-      // Update formData with both images
       setFormData(prev => ({
         ...prev,
         drivingLicenceId: {
           ...prev.drivingLicenceId,
-          drivingLicenseImages: images
+          drivingLicenseImages: updatedImages
         }
       }));
 
-      // Show success message
-      setSuccess(`${side === 'front' ? 'Front' : 'Back'} license image uploaded successfully`);
-
-      // Prepare the update payload with the correct structure
-      const updatePayload = {
-        ...formData,
-        drivingLicenceId: {
-          licenceNumber: formData.drivingLicenceId?.licenceNumber || '',
-          drivingLicenseImages: images,
-          expiryDate: formData.drivingLicenceId?.expiryDate || ''
-        }
-      };
-
-      // Update the user with the new images
-      await updateUserDetails(updatePayload, accessToken);
-      await loadUserDetails(); // Reload user details to get the updated data
+      showNotification('success', `${side === 'front' ? 'Front' : 'Back'} license image uploaded successfully`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : `Failed to upload ${side} license image`);
+      showNotification('error', err instanceof Error ? err.message : `Failed to upload ${side} license image`);
     } finally {
       if (side === 'front') {
         setUploadingFront(false);
@@ -162,40 +147,30 @@ const Account: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!accessToken) return;
-
-    // Validate form data
-    const validationErrors = validateFormData(formData);
-    if (validationErrors) {
-      setError(Object.values(validationErrors)[0]);
-      return;
-    }
+    if (!user) return;
 
     try {
       setLoading(true);
-      setError(null);
 
-      // Create the images array with both images
-      const images = [frontImage, backImage];
-
-      // Update the formData with the new images
-      const updatedFormData = {
-        ...formData,
+      // Prepare update data
+      const updateData = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        phoneNumber: formData.phoneNumber,
         drivingLicenceId: {
-          ...formData.drivingLicenceId,
-          drivingLicenseImages: images
+          id: formData.drivingLicenceId.id,
+          licenceNumber: formData.drivingLicenceId.licenceNumber,
+          drivingLicenseImages: [frontImage, backImage].filter(Boolean),
+          expiryDate: formData.drivingLicenceId.expiryDate
         }
       };
 
-      // Set the debug payload
-      setDebugPayload(JSON.stringify(updatedFormData, null, 2));
-
-      await updateUserDetails(updatedFormData, accessToken);
-      await loadUserDetails(); // Reload user details to get the updated data
-      setSuccess('Profile updated successfully');
+      await updateProfile(updateData);
+      await loadUserDetails();
+      showNotification('success', 'Profile updated successfully');
       setIsEditing(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update profile');
+      showNotification('error', err instanceof Error ? err.message : 'Failed to update profile');
     } finally {
       setLoading(false);
     }
@@ -203,227 +178,205 @@ const Account: React.FC = () => {
 
   const toggleEdit = () => {
     setIsEditing(!isEditing);
-    if (!isEditing) {
-      // Reset form data and images when entering edit mode
-      setFormData({
-        ...user!,
-        drivingLicenceId: {
-          licenceNumber: user?.drivingLicenceId?.licenceNumber || '',
-          drivingLicenseImages: [frontImage, backImage],
-          expiryDate: user?.drivingLicenceId?.expiryDate || ''
-        }
-      });
+    if (!isEditing && user) {
+      loadUserDetails();
     }
   };
 
   if (loading && initialLoad) {
-    return <div className="loading">Loading...</div>;
+    return (
+      <div className="profile-section">
+        <div className="profile-section-header">
+          <h2>Account Information</h2>
+        </div>
+        <div className="profile-section-content">
+          <div className="text-center p-8">
+            <FaSpinner className="animate-spin mr-2" /> 
+            <span>Loading account details...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user && !initialLoad) {
+    return (
+      <div className="profile-section">
+        <div className="profile-section-header">
+          <h2>Account Information</h2>
+        </div>
+        <div className="profile-section-content">
+          <p className="error-message text-center p-8">
+            Please log in to view your account details.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="myaccount-root">
-      <div className="content">
-        <div className="section">
-          <div className="section-header">
-            <h2>Account Information</h2>
-            {!isEditing ? (
-              <button className="edit-button" onClick={toggleEdit}>
-                <FaEdit /> Edit
-              </button>
-            ) : (
-              <button className="cancel-button" onClick={toggleEdit}>
-                <FaTimes /> Cancel
-              </button>
-            )}
+    <div className="profile-section">
+      <div className="profile-section-header">
+        <h2>Account Information</h2>
+        {!isEditing ? (
+          <button className="profile-button profile-button-primary" onClick={toggleEdit}>
+            <FaEdit className="mr-1" /> Edit
+          </button>
+        ) : (
+          <button className="profile-button profile-button-secondary" onClick={toggleEdit}>
+            <FaTimes className="mr-1" /> Cancel
+          </button>
+        )}
+      </div>
+
+      <form onSubmit={handleSubmit} className="profile-form">
+        <div className="form-group">
+          <label htmlFor="firstName" className="form-label">First Name</label>
+          <input
+            id="firstName"
+            name="firstName"
+            type="text"
+            value={formData.firstName}
+            onChange={handleInputChange}
+            className="form-input"
+            disabled={!isEditing}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="lastName" className="form-label">Last Name</label>
+          <input
+            id="lastName"
+            name="lastName"
+            type="text"
+            value={formData.lastName}
+            onChange={handleInputChange}
+            className="form-input"
+            disabled={!isEditing}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="phoneNumber" className="form-label">Phone Number</label>
+          <input
+            id="phoneNumber"
+            name="phoneNumber"
+            type="tel"
+            value={formData.phoneNumber}
+            onChange={handleInputChange}
+            className="form-input"
+            disabled={!isEditing}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="licenceNumber" className="form-label">License Number</label>
+          <input
+            id="licenceNumber"
+            name="licenceNumber"
+            type="text"
+            value={formData.drivingLicenceId.licenceNumber}
+            onChange={handleInputChange}
+            className="form-input"
+            disabled={!isEditing}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="expiryDate" className="form-label">License Expiry Date</label>
+          <input
+            id="expiryDate"
+            name="expiryDate"
+            type="date"
+            value={formData.drivingLicenceId.expiryDate}
+            onChange={handleInputChange}
+            className="form-input"
+            disabled={!isEditing}
+            required
+          />
+        </div>
+
+        <div className="license-images">
+          <div className="license-image-group">
+            <label className="form-label">Front License Image</label>
+            <div className="license-image-container">
+              {frontImage ? (
+                <img src={frontImage} alt="Front License" className="license-image" />
+              ) : (
+                <div className="license-image-placeholder">
+                  <FaUser />
+                </div>
+              )}
+              {isEditing && (
+                <div className="license-image-upload">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleLicenseImageUpload(e, 'front')}
+                    ref={frontLicenseInputRef}
+                    className="license-image-input"
+                  />
+                  <button
+                    type="button"
+                    className="license-image-button"
+                    onClick={() => frontLicenseInputRef.current?.click()}
+                    disabled={uploadingFront}
+                  >
+                    {uploadingFront ? <FaSpinner className="animate-spin mr-1" /> : <FaUpload className="mr-1" />} 
+                    {uploadingFront ? 'Uploading...' : 'Upload Front'}
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
-          {error && <div className="error-message">{error}</div>}
-          {success && <div className="success-message">{success}</div>}
-
-          {debugPayload && (
-            <div className="debug-section">
-              <h4>Debug Information</h4>
-              <div className="debug-payload">
-                <pre>{debugPayload}</pre>
-              </div>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="account-form">
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="firstName">First Name</label>
-                <input
-                  type="text"
-                  id="firstName"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                  className={error && !formData.firstName ? 'error' : ''}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="lastName">Last Name</label>
-                <input
-                  type="text"
-                  id="lastName"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                  className={error && !formData.lastName ? 'error' : ''}
-                />
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  disabled={true}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="phoneNumber">Phone Number</label>
-                <input
-                  type="tel"
-                  id="phoneNumber"
-                  name="phoneNumber"
-                  value={formData.phoneNumber}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                  className={error && !formData.phoneNumber ? 'error' : ''}
-                />
-              </div>
-            </div>
-
-            <h3>Driving License Information</h3>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="licenceNumber">License Number</label>
-                <input
-                  type="text"
-                  id="licenceNumber"
-                  name="licenceNumber"
-                  value={formData.drivingLicenceId?.licenceNumber || ''}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="expiryDate">Expiry Date</label>
-                <input
-                  type="date"
-                  id="expiryDate"
-                  name="expiryDate"
-                  value={formData.drivingLicenceId?.expiryDate || ''}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                />
-              </div>
-            </div>
-
-            <div className="license-images-section">
-              <h4>License Images</h4>
-              <div className="license-images-container">
-                <div className="license-image-box">
-                  <h5>Front of License</h5>
-                  <div className="license-image-container">
-                    {frontImage ? (
-                      <img
-                        src={frontImage}
-                        alt="Front of Driving License"
-                        className="license-image"
-                      />
-                    ) : (
-                      <div className="image-placeholder">
-                        <FaUser />
-                        <span>No front image</span>
-                      </div>
-                    )}
-
-                    {isEditing && (
-                      <div className="upload-button-container">
-                        <button
-                          type="button"
-                          className="upload-button"
-                          onClick={() => frontLicenseInputRef.current?.click()}
-                          disabled={uploadingFront}
-                        >
-                          {uploadingFront ? 'Uploading...' : <><FaUpload /> Upload Front</>}
-                        </button>
-                        <input
-                          type="file"
-                          id="frontLicenseImage"
-                          ref={frontLicenseInputRef}
-                          accept="image/*"
-                          onChange={(e) => handleLicenseImageUpload(e, 'front')}
-                          className="hidden-input"
-                        />
-                      </div>
-                    )}
-                  </div>
+          <div className="license-image-group">
+            <label className="form-label">Back License Image</label>
+            <div className="license-image-container">
+              {backImage ? (
+                <img src={backImage} alt="Back License" className="license-image" />
+              ) : (
+                <div className="license-image-placeholder">
+                  <FaUser />
                 </div>
-
-                <div className="license-image-box">
-                  <h5>Back of License</h5>
-                  <div className="license-image-container">
-                    {backImage ? (
-                      <img
-                        src={backImage}
-                        alt="Back of Driving License"
-                        className="license-image"
-                      />
-                    ) : (
-                      <div className="image-placeholder">
-                        <FaUser />
-                        <span>No back image</span>
-                      </div>
-                    )}
-
-                    {isEditing && (
-                      <div className="upload-button-container">
-                        <button
-                          type="button"
-                          className="upload-button"
-                          onClick={() => backLicenseInputRef.current?.click()}
-                          disabled={uploadingBack}
-                        >
-                          {uploadingBack ? 'Uploading...' : <><FaUpload /> Upload Back</>}
-                        </button>
-                        <input
-                          type="file"
-                          id="backLicenseImage"
-                          ref={backLicenseInputRef}
-                          accept="image/*"
-                          onChange={(e) => handleLicenseImageUpload(e, 'back')}
-                          className="hidden-input"
-                        />
-                      </div>
-                    )}
-                  </div>
+              )}
+              {isEditing && (
+                <div className="license-image-upload">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleLicenseImageUpload(e, 'back')}
+                    ref={backLicenseInputRef}
+                    className="license-image-input"
+                  />
+                  <button
+                    type="button"
+                    className="license-image-button"
+                    onClick={() => backLicenseInputRef.current?.click()}
+                    disabled={uploadingBack}
+                  >
+                    {uploadingBack ? <FaSpinner className="animate-spin mr-1" /> : <FaUpload className="mr-1" />}
+                    {uploadingBack ? 'Uploading...' : 'Upload Back'}
+                  </button>
                 </div>
-              </div>
+              )}
             </div>
-
-            {isEditing && (
-              <button type="submit" className="submit-button" disabled={loading}>
-                {loading ? 'Saving...' : <><FaSave /> Save Changes</>}
-              </button>
-            )}
-          </form>
+          </div>
         </div>
-      </div>
+
+        {isEditing && (
+          <div className="form-actions">
+            <button type="submit" className="profile-button profile-button-primary" disabled={loading}>
+              {loading ? <FaSpinner className="animate-spin mr-1" /> : <FaSave className="mr-1" />} 
+              {loading ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
+        )}
+      </form>
     </div>
   );
 };

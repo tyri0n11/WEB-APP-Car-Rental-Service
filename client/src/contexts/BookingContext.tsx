@@ -1,365 +1,261 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useReducer, useCallback } from 'react';
 import { useAuth } from './AuthContext';
+import { useNotification } from './NotificationContext';
+import { Car } from './CarContext';
 
-// Define the API base URL
-const API_BASE_URL = 'http://localhost:3000/';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
 
-// Define the booking status enum to match the backend
 export enum BookingStatus {
+  PENDING = 'PENDING',
   CONFIRMED = 'CONFIRMED',
   ONGOING = 'ONGOING',
   COMPLETED = 'COMPLETED',
   CANCELLED = 'CANCELLED',
 }
 
-// Define the payment provider enum to match the backend
 export enum PaymentProvider {
+  STRIPE = 'STRIPE',
   PAYPAL = 'PAYPAL',
-  ZALOPAY = 'ZALOPAY',
 }
 
-// Define the booking interface
 export interface Booking {
   id: string;
   userId: string;
   carId: string;
-  startDate: Date;
-  endDate: Date;
+  car: Car;
+  startDate: string;
+  endDate: string;
   totalPrice: number;
   status: BookingStatus;
-  pickupAddress: string;
-  returnAddress: string;
-  car?: {
-    id: string;
-    make: string;
-    model: string;
-    year: number;
-    dailyPrice: number;
-    licensePlate: string;
-    images?: { url: string; isMain: boolean }[];
-  };
+  paymentProvider: PaymentProvider;
+  paymentStatus: 'PENDING' | 'COMPLETED' | 'FAILED';
+  createdAt: string;
+  updatedAt: string;
 }
 
-// Define the booking context interface
-interface BookingContextType {
+interface CreateBookingData {
+  carId: string;
+  startDate: string;
+  endDate: string;
+  paymentProvider: PaymentProvider;
+}
+
+interface BookingState {
   bookings: Booking[];
-  currentBooking: Booking | null;
+  selectedBooking: Booking | null;
   loading: boolean;
   error: string | null;
-  createBooking: (bookingData: CreateBookingData) => Promise<{ bookingCode: string; paymentUrl: string }>;
-  fetchBookings: () => Promise<void>;
+  totalPages: number;
+  currentPage: number;
+}
+
+type BookingAction =
+  | { type: 'SET_BOOKINGS'; payload: { bookings: Booking[]; totalPages: number; currentPage: number } }
+  | { type: 'SET_SELECTED_BOOKING'; payload: Booking | null }
+  | { type: 'SET_LOADING'; payload: boolean }
+  | { type: 'SET_ERROR'; payload: string | null };
+
+interface BookingContextType {
+  bookings: Booking[];
+  selectedBooking: Booking | null;
+  loading: boolean;
+  error: string | null;
+  totalPages: number;
+  currentPage: number;
+  fetchBookings: (query?: {
+    page?: number;
+    limit?: number;
+    status?: BookingStatus;
+  }) => Promise<void>;
   fetchBookingById: (id: string) => Promise<void>;
-  returnCar: (id: string) => Promise<void>;
-  cancelBooking: (id: string) => Promise<void>;
+  createBooking: (data: CreateBookingData) => Promise<void>;
+  returnCar: (bookingId: string) => Promise<void>;
 }
 
-// Define the create booking data interface
-export interface CreateBookingData {
-  carId: string;
-  startDate: Date;
-  endDate: Date;
-  pickupAddress: string;
-  returnAddress: string;
-  paymentProvider: PaymentProvider;
-  returnUrl: string;
-}
+const initialState: BookingState = {
+  bookings: [],
+  selectedBooking: null,
+  loading: false,
+  error: null,
+  totalPages: 1,
+  currentPage: 1,
+};
 
-// Create the booking context
+const bookingReducer = (state: BookingState, action: BookingAction): BookingState => {
+  switch (action.type) {
+    case 'SET_BOOKINGS':
+      return {
+        ...state,
+        bookings: action.payload.bookings,
+        totalPages: action.payload.totalPages,
+        currentPage: action.payload.currentPage,
+        error: null,
+      };
+    case 'SET_SELECTED_BOOKING':
+      return { ...state, selectedBooking: action.payload, error: null };
+    case 'SET_LOADING':
+      return { ...state, loading: action.payload };
+    case 'SET_ERROR':
+      return { ...state, error: action.payload, loading: false };
+    default:
+      return state;
+  }
+};
+
 const BookingContext = createContext<BookingContextType | undefined>(undefined);
 
-// Create the booking provider component
-export const BookingProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { user, accessToken } = useAuth();
-  const [bookings, setBookings] = useState<Booking[]>([]);
-  const [currentBooking, setCurrentBooking] = useState<Booking | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+export const BookingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [state, dispatch] = useReducer(bookingReducer, initialState);
+  const { accessToken } = useAuth();
+  const { showNotification } = useNotification();
 
-  // Fetch bookings when the component mounts or when the user changes
-  useEffect(() => {
-    if (user && accessToken) {
-      fetchBookings();
-    }
-  }, [user, accessToken]);
-
-  // Fetch all bookings for the current user
-  const fetchBookings = async () => {
-    if (!accessToken) {
-      setError('No authentication token available');
-      return;
-    }
-
-    if (!user?.id) {
-      setError('User ID not available');
-      return;
-    }
+  const fetchBookings = useCallback(async (query?: {
+    page?: number;
+    limit?: number;
+    status?: BookingStatus;
+  }) => {
+    if (!accessToken) return;
 
     try {
-      setLoading(true);
-      setError(null);
+      dispatch({ type: 'SET_LOADING', payload: true });
+      const queryParams = new URLSearchParams();
+      if (query?.page) queryParams.append('page', query.page.toString());
+      if (query?.limit) queryParams.append('limit', query.limit.toString());
+      if (query?.status) queryParams.append('status', query.status);
 
-      // Add a delay before making the request to avoid rate limiting
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      console.log('Fetching bookings...');
-      
-      const response = await fetch(`${API_BASE_URL}/bookings`, {
+      const response = await fetch(`${API_BASE_URL}/bookings?${queryParams.toString()}`, {
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
         },
       });
 
       if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error('Authentication token expired. Please log in again.');
-        }
-        if (response.status === 429) {
-          throw new Error('Server is busy. Please try again in a few moments.');
-        }
         throw new Error('Failed to fetch bookings');
       }
 
-      const result = await response.json();
-      
-      if (result?.data) {
-        // Filter bookings for the current user on the client side
-        const userBookings = result.data.filter((booking: Booking) => booking.userId === user.id);
-        setBookings(userBookings);
-      } else {
-        throw new Error('Invalid response format');
-      }
-    } catch (err) {
-      console.error('Error fetching bookings:', err);
-      setError(err instanceof Error ? err.message : 'Failed to fetch bookings');
+      const data = await response.json();
+      dispatch({
+        type: 'SET_BOOKINGS',
+        payload: {
+          bookings: data.bookings,
+          totalPages: data.totalPages,
+          currentPage: data.currentPage,
+        },
+      });
+    } catch (error) {
+      dispatch({ type: 'SET_ERROR', payload: 'Failed to fetch bookings' });
+      showNotification('error', 'Failed to fetch bookings');
     } finally {
-      setLoading(false);
+      dispatch({ type: 'SET_LOADING', payload: false });
     }
-  };
+  }, [accessToken, showNotification]);
 
-  // Fetch a specific booking by ID
-  const fetchBookingById = async (id: string) => {
-    if (!accessToken) {
-      setError('No authentication token available');
-      return;
-    }
+  const fetchBookingById = useCallback(async (id: string) => {
+    if (!accessToken) return;
 
     try {
-      setLoading(true);
-      setError(null);
-
+      dispatch({ type: 'SET_LOADING', payload: true });
       const response = await fetch(`${API_BASE_URL}/bookings/${id}`, {
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
         },
       });
 
       if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error('Authentication token expired. Please log in again.');
-        }
-        throw new Error('Failed to fetch booking');
+        throw new Error('Failed to fetch booking details');
       }
 
-      const result = await response.json();
-      
-      if (result?.data) {
-        setCurrentBooking(result.data);
-      } else {
-        throw new Error('Invalid response format');
-      }
-    } catch (err) {
-      console.error('Error fetching booking:', err);
-      setError(err instanceof Error ? err.message : 'Failed to fetch booking');
+      const booking = await response.json();
+      dispatch({ type: 'SET_SELECTED_BOOKING', payload: booking });
+    } catch (error) {
+      dispatch({ type: 'SET_ERROR', payload: 'Failed to fetch booking details' });
+      showNotification('error', 'Failed to fetch booking details');
     } finally {
-      setLoading(false);
+      dispatch({ type: 'SET_LOADING', payload: false });
     }
-  };
+  }, [accessToken, showNotification]);
 
-  // Create a new booking
-  const createBooking = async (bookingData: CreateBookingData): Promise<{ bookingCode: string; paymentUrl: string }> => {
-    if (!accessToken) {
-      throw new Error('No authentication token available');
-    }
+  const createBooking = useCallback(async (data: CreateBookingData) => {
+    if (!accessToken) return;
 
     try {
-      setLoading(true);
-      setError(null);
-
+      dispatch({ type: 'SET_LOADING', payload: true });
       const response = await fetch(`${API_BASE_URL}/bookings`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify(bookingData),
+        body: JSON.stringify(data),
       });
 
       if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error('Authentication token expired. Please log in again.');
-        }
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to create booking');
+        throw new Error('Failed to create booking');
       }
 
-      const result = await response.json();
-      
-      if (result?.data) {
-        return {
-          bookingCode: result.data.bookingCode,
-          paymentUrl: result.data.paymentUrl,
-        };
-      } else {
-        throw new Error('Invalid response format');
-      }
-    } catch (err) {
-      console.error('Error creating booking:', err);
-      setError(err instanceof Error ? err.message : 'Failed to create booking');
-      throw err;
+      const booking = await response.json();
+      showNotification('success', 'Booking created successfully');
+      fetchBookings();
+    } catch (error) {
+      dispatch({ type: 'SET_ERROR', payload: 'Failed to create booking' });
+      showNotification('error', 'Failed to create booking');
+      throw error;
     } finally {
-      setLoading(false);
+      dispatch({ type: 'SET_LOADING', payload: false });
     }
-  };
+  }, [accessToken, showNotification, fetchBookings]);
 
-  // Return a car (complete a booking)
-  const returnCar = async (id: string) => {
-    if (!accessToken) {
-      setError('No authentication token available');
-      return;
-    }
+  const returnCar = useCallback(async (bookingId: string) => {
+    if (!accessToken) return;
 
     try {
-      setLoading(true);
-      setError(null);
-
-      const response = await fetch(`${API_BASE_URL}/bookings/${id}/return`, {
+      dispatch({ type: 'SET_LOADING', payload: true });
+      const response = await fetch(`${API_BASE_URL}/bookings/${bookingId}/return`, {
         method: 'PATCH',
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
         },
       });
 
       if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error('Authentication token expired. Please log in again.');
-        }
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to return car');
+        throw new Error('Failed to return car');
       }
 
-      const result = await response.json();
-      
-      if (result?.data) {
-        // Update the booking in the state
-        setBookings(prevBookings => 
-          prevBookings.map(booking => 
-            booking.id === id ? result.data : booking
-          )
-        );
-        
-        if (currentBooking?.id === id) {
-          setCurrentBooking(result.data);
-        }
-      } else {
-        throw new Error('Invalid response format');
-      }
-    } catch (err) {
-      console.error('Error returning car:', err);
-      setError(err instanceof Error ? err.message : 'Failed to return car');
+      showNotification('success', 'Car returned successfully');
+      fetchBookings();
+    } catch (error) {
+      dispatch({ type: 'SET_ERROR', payload: 'Failed to return car' });
+      showNotification('error', 'Failed to return car');
+      throw error;
     } finally {
-      setLoading(false);
+      dispatch({ type: 'SET_LOADING', payload: false });
     }
-  };
+  }, [accessToken, showNotification, fetchBookings]);
 
-  // Cancel a booking
-  const cancelBooking = async (id: string) => {
-    if (!accessToken) {
-      setError('No authentication token available');
-      return;
-    }
-
-    try {
-      setLoading(true);
-      setError(null);
-
-      const response = await fetch(`${API_BASE_URL}/bookings/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ status: BookingStatus.CANCELLED }),
-      });
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error('Authentication token expired. Please log in again.');
-        }
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to cancel booking');
-      }
-
-      const result = await response.json();
-      
-      if (result?.data) {
-        // Update the booking in the state
-        setBookings(prevBookings => 
-          prevBookings.map(booking => 
-            booking.id === id ? result.data : booking
-          )
-        );
-        
-        if (currentBooking?.id === id) {
-          setCurrentBooking(result.data);
-        }
-      } else {
-        throw new Error('Invalid response format');
-      }
-    } catch (err) {
-      console.error('Error canceling booking:', err);
-      setError(err instanceof Error ? err.message : 'Failed to cancel booking');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Provide the booking context value
-  const value: BookingContextType = {
-    bookings,
-    currentBooking,
-    loading,
-    error,
-    createBooking,
-    fetchBookings,
-    fetchBookingById,
-    returnCar,
-    cancelBooking,
-  };
-
-  return <BookingContext.Provider value={value}>{children}</BookingContext.Provider>;
+  return (
+    <BookingContext.Provider
+      value={{
+        bookings: state.bookings,
+        selectedBooking: state.selectedBooking,
+        loading: state.loading,
+        error: state.error,
+        totalPages: state.totalPages,
+        currentPage: state.currentPage,
+        fetchBookings,
+        fetchBookingById,
+        createBooking,
+        returnCar,
+      }}
+    >
+      {children}
+    </BookingContext.Provider>
+  );
 };
 
-// Create a custom hook to use the booking context
 export const useBooking = (): BookingContextType => {
   const context = useContext(BookingContext);
-  if (context === undefined) {
-    // Return a default context instead of throwing an error
-    return {
-      bookings: [],
-      currentBooking: null,
-      loading: false,
-      error: 'Booking context not available',
-      createBooking: async () => { throw new Error('Booking context not available'); },
-      fetchBookings: async () => { throw new Error('Booking context not available'); },
-      fetchBookingById: async () => { throw new Error('Booking context not available'); },
-      returnCar: async () => { throw new Error('Booking context not available'); },
-      cancelBooking: async () => { throw new Error('Booking context not available'); },
-    };
+  if (!context) {
+    throw new Error('useBooking must be used within a BookingProvider');
   }
   return context;
 };
-
-export default BookingContext;

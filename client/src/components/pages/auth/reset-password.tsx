@@ -1,142 +1,109 @@
 import React, { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useAuth } from "../../../contexts/AuthContext";
+import { useNotification } from "../../../contexts/NotificationContext";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import "./reset-password.css";
 
 const ResetPassword: React.FC = () => {
-    const [searchParams, setSearchParams] = useSearchParams();
     const [newPassword, setNewPassword] = useState("");
-    const [message, setMessage] = useState("");
-    const [error, setError] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [loading, setLoading] = useState(false);
-
+    const { resetPassword } = useAuth();
+    const { showNotification } = useNotification();
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const token = searchParams.get("token");
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError("");
-        setMessage("");
         setLoading(true);
 
-        if (!newPassword || !token) {
-            setError("Password and token are required");
+        if (!token) {
+            showNotification("error", "Invalid or missing reset token");
+            setLoading(false);
+            return;
+        }
+
+        if (!newPassword || !confirmPassword) {
+            showNotification("error", "Please fill in all fields");
+            setLoading(false);
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            showNotification("error", "Passwords do not match");
+            setLoading(false);
+            return;
+        }
+
+        if (newPassword.length < 8) {
+            showNotification("error", "Password must be at least 8 characters long");
             setLoading(false);
             return;
         }
 
         try {
-            const API_HOST = import.meta.env.VITE_HOST || "http://localhost:3000";
-            const RP_PATH = import.meta.env.VITE_RP_PATH || "/auth/reset-password";
-            const API_URL = `${API_HOST}${RP_PATH}`;
-
-            const response = await fetch(API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ token, newPassword }),
-            });
-
-            const data = await response.json();
-            if (!response.ok) {
-                throw new Error(data.message || "Failed to reset password.");
-            }
-
-            setMessage("Password reset successfully!");
-
-            setTimeout(() => {
-                window.history.replaceState({}, document.title, window.location.pathname);
-                setSearchParams({});
-            }, 500);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "An error occurred.");
+            await resetPassword(token, newPassword);
+            showNotification("success", "Password reset successfully!");
+            navigate("/login");
+        } catch (error) {
+            // Error is already handled in the context
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div style={styles.container}>
-            <div style={styles.overlay}>
-                <div style={styles.box}>
-                    <h1 style={styles.title}>Reset Password</h1>
-                    {error && <p style={styles.error}>{error}</p>}
-                    {message && <p style={styles.message}>{message}</p>}
-                    <form onSubmit={handleSubmit}>
+        <div className="auth-container">
+            <div className="auth-box">
+                <h1 className="auth-title">Reset Password</h1>
+                
+                <form onSubmit={handleSubmit} className="auth-form">
+                    <div className="form-group">
+                        <label htmlFor="newPassword" className="form-label">
+                            New Password
+                        </label>
                         <input
+                            id="newPassword"
                             type="password"
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
-                            placeholder="Enter your new password"
-                            style={styles.input}
+                            placeholder="Enter new password"
+                            className="form-input"
                             required
                         />
-                        <button type="submit" style={styles.button(loading)} disabled={loading}>
-                            {loading ? "Resetting..." : "Reset Password"}
-                        </button>
-                    </form>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="confirmPassword" className="form-label">
+                            Confirm Password
+                        </label>
+                        <input
+                            id="confirmPassword"
+                            type="password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            placeholder="Confirm new password"
+                            className="form-input"
+                            required
+                        />
+                    </div>
+                    
+                    <button 
+                        type="submit" 
+                        className="submit-button"
+                        disabled={loading}
+                    >
+                        {loading ? "Resetting..." : "Reset Password"}
+                    </button>
+                </form>
+                
+                <div className="auth-link">
+                    <Link to="/login">Back to Login</Link>
                 </div>
             </div>
         </div>
     );
-};
-
-// Updated responsive styles
-const styles = {
-    container: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-        width: "100vw", // Full width of the browser
-        padding: "20px", // Prevents content from touching edges on small screens
-        //backgroundImage: `url(${images.background})`,]
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-    },
-    overlay: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: "100%",
-        height: "100%",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-    },
-    box: {
-        width: "90%", // Responsive width for mobile screens
-        maxWidth: "500px", // Prevents it from being too wide on larger screens
-        padding: "40px",
-        background: "white",
-        borderRadius: "10px",
-        boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
-        textAlign: "center",
-    },
-    title: {
-        fontSize: "22px",
-        color: "#333",
-        marginBottom: "15px",
-    },
-    error: {
-        color: "red",
-    },
-    message: {
-        color: "green",
-    },
-    input: {
-        width: "100%",
-        padding: "12px",
-        border: "1px solid #ddd",
-        borderRadius: "6px",
-        fontSize: "16px",
-        marginBottom: "15px",
-    },
-    button: (loading: boolean) => ({
-        width: "100%",
-        padding: "12px",
-        background: loading ? "#aaa" : "#007bff",
-        color: "white",
-        border: "none",
-        borderRadius: "6px",
-        fontSize: "16px",
-        cursor: loading ? "not-allowed" : "pointer",
-        transition: "background-color 0.3s ease",
-    }),
 };
 
 export default ResetPassword;

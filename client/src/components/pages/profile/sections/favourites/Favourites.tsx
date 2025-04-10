@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../../../../hooks/useAuth';
-import { removeDummyFavorite } from '../../../../../utils/favoritesUtils';
-import { Car } from '../../../../../contexts/CarContext';
-import favoritesDummyData from '../../../../../utils/dummy/favorites.json';
+import { useAuth } from '../../../../../contexts/AuthContext';
+import { useCar, Car } from '../../../../../contexts/CarContext';
+import { useNotification } from '../../../../../contexts/NotificationContext';
 import './Favourites.css';
 
 /**
@@ -31,79 +30,43 @@ import './Favourites.css';
 
 const Favourites: React.FC = () => {
     const { accessToken } = useAuth();
-    const [favorites, setFavorites] = useState<Car[]>([]);
-    const [localError, setLocalError] = useState<string | null>(null);
+    const { favoriteCars, fetchFavoriteCars, removeFromFavorites } = useCar();
+    const { showNotification } = useNotification();
     const [isLoading, setIsLoading] = useState(true);
-    const [useDummyData, setUseDummyData] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const loadFavorites = async () => {
+            if (!accessToken) return;
+            
             setIsLoading(true);
-            setLocalError(null);
+            setError(null);
             
             try {
-                if (useDummyData) {
-                    // Use dummy data from separate JSON file
-                    const dummyFavorites = favoritesDummyData as Car[];
-                    setFavorites(dummyFavorites);
-                } else {
-                    // Use backend API
-                    const response = await fetch('/api/cars/favorite', {
-                        headers: {
-                            'Authorization': `Bearer ${accessToken}`,
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch favorites');
-                    }
-                    
-                    const data = await response.json();
-                    setFavorites(data);
-                }
+                await fetchFavoriteCars();
             } catch (err) {
-                setLocalError('Failed to load favorites');
+                setError('Failed to load favorites');
+                showNotification('error', 'Failed to load favorites');
             } finally {
                 setIsLoading(false);
             }
         };
 
         loadFavorites();
-    }, [accessToken, useDummyData]);
+    }, [accessToken, fetchFavoriteCars, showNotification]);
 
     const handleRemoveFavorite = async (carId: string) => {
         try {
-            if (useDummyData) {
-                const updatedFavorites = await removeDummyFavorite(carId, favorites);
-                setFavorites(updatedFavorites);
-            } else {
-                const response = await fetch(`/api/cars/${carId}/favorite`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Failed to remove favorite');
-                }
-                
-                setFavorites(favorites.filter(car => car.id !== carId));
-            }
+            await removeFromFavorites(carId);
+            showNotification('success', 'Car removed from favorites');
         } catch (err) {
-            setLocalError('Failed to remove favorite');
+            showNotification('error', 'Failed to remove from favorites');
         }
     };
 
     const handleBookCar = (carId: string) => {
-        // This will be implemented later
-        console.log('Booking car with ID:', carId);
-    };
-
-    const toggleDataSource = () => {
-        setUseDummyData(!useDummyData);
+        // This will be implemented later with BookingContext
+        window.location.href = `/cars/${carId}`;
     };
 
     if (isLoading) {
@@ -115,16 +78,16 @@ const Favourites: React.FC = () => {
         );
     }
 
-    if (localError) {
+    if (error) {
         return (
             <div className="favourites-error">
-                <p>{localError}</p>
+                <p>{error}</p>
                 <button onClick={() => setIsLoading(true)}>Try Again</button>
             </div>
         );
     }
 
-    if (favorites.length === 0) {
+    if (favoriteCars.length === 0) {
         return (
             <div className="favourites-empty">
                 <p>No favorite cars yet.</p>
@@ -137,59 +100,43 @@ const Favourites: React.FC = () => {
             <div className="favourites-section">
                 <div className="favourites-header">
                     <h4>My Favorite Cars</h4>
-                    <div className="data-source-toggle">
-                        <button 
-                            className={useDummyData ? 'active' : ''} 
-                            onClick={toggleDataSource}
-                        >
-                            Dummy Data
-                        </button>
-                        <button 
-                            className={!useDummyData ? 'active' : ''} 
-                            onClick={toggleDataSource}
-                        >
-                            Backend Data
-                        </button>
-                    </div>
                 </div>
 
                 <div className="favourites-grid">
-                    {favorites.map((car) => (
+                    {favoriteCars.map((car) => (
                         <div key={car.id} className="favourite-card">
                             <div className="car-image-container">
                                 <img 
                                     className="car-image"
-                                    src={car.images.find(img => img.isMain)?.url || car.images[0]?.url} 
-                                    alt={`${car.make} ${car.model}`} 
+                                    src={car.images.find(img => img.isPrimary)?.url || car.images[0]?.url || 'https://via.placeholder.com/300x200?text=No+Image'} 
+                                    alt={`${car.brand} ${car.model}`} 
                                 />
                             </div>
                             <div className="car-info">
-                                <h5 className="car-name">{car.make} {car.model}</h5>
+                                <h5 className="car-name">{car.brand} {car.model}</h5>
                                 <div className="car-details">
                                     <div className="car-detail">
                                         <span>Year: {car.year}</span>
                                     </div>
                                     <div className="car-detail">
-                                        <span>Price: ${car.dailyPrice}/day</span>
+                                        <span>Price: ${car.pricePerDay}/day</span>
                                     </div>
                                     <div className="car-detail">
                                         <span>Fuel: {car.fuelType}</span>
                                     </div>
                                     <div className="car-detail">
-                                        <span>Seats: {car.numSeats}</span>
+                                        <span>Seats: {car.seats}</span>
                                     </div>
                                 </div>
                                 <div className="car-rating">
                                     <span>★</span>
-                                    <span>{car.rating}/5</span>
+                                    <span>{car.averageRating}/5</span>
                                 </div>
-                                <div className="car-categories">
-                                    {car.categories.map((cat) => (
-                                        <span key={cat.category.id} className="car-category">
-                                            {cat.category.name}
-                                        </span>
-                                    ))}
-                                </div>
+                                {car.category && (
+                                    <div className="car-category">
+                                        <span>{car.category}</span>
+                                    </div>
+                                )}
                                 <div className="car-actions">
                                     <button 
                                         className="book-car"
@@ -198,10 +145,10 @@ const Favourites: React.FC = () => {
                                         Book Now
                                     </button>
                                     <button 
-                                        className="remove-favourite"
+                                        className="remove-favorite"
                                         onClick={() => handleRemoveFavorite(car.id)}
                                     >
-                                        Remove
+                                        Remove from Favorites
                                     </button>
                                 </div>
                             </div>

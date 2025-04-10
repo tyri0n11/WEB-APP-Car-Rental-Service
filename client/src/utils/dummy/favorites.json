@@ -1,79 +1,119 @@
 [
   {
-    "id": "1",
+    "id": "car1",
     "make": "Tesla",
     "model": "Model 3",
     "year": 2023,
     "dailyPrice": 150,
-    "fuelType": "Electric",
+    "fuelType": "ELECTRIC",
     "numSeats": 5,
+    "autoGearbox": true,
+    "kilometers": 15000,
+    "licensePlate": "ABC123",
+    "address": "123 Main St, New York, NY",
+    "description": "Electric sedan with advanced autopilot",
+    "status": "AVAILABLE",
     "rating": 4.8,
     "images": [
       {
-        "url": "https://images.unsplash.com/photo-1560958089-b8a1929cea89?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        "url": "https://images.unsplash.com/photo-1560958089-b8a1929cea89",
         "isMain": true
       }
     ],
     "categories": [
       {
-        "category": {
-          "id": "1",
-          "name": "Electric"
-        }
+        "id": "cat1",
+        "name": "Electric"
       },
       {
-        "category": {
-          "id": "2",
-          "name": "Sedan"
-        }
+        "id": "cat2",
+        "name": "Sedan"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "review1",
+        "userId": "user1",
+        "userName": "John Doe",
+        "rating": 5,
+        "comment": "Great car, very smooth ride",
+        "createdAt": "2024-01-15T10:00:00Z"
       }
     ]
   },
   {
-    "id": "2",
+    "id": "car2",
     "make": "Porsche",
     "model": "911",
     "year": 2023,
     "dailyPrice": 300,
-    "fuelType": "Gasoline",
+    "fuelType": "GASOLINE",
     "numSeats": 2,
+    "autoGearbox": true,
+    "kilometers": 5000,
+    "licensePlate": "XYZ789",
+    "address": "456 Oak Ave, Los Angeles, CA",
+    "description": "High-performance sports car",
+    "status": "AVAILABLE",
     "rating": 4.9,
     "images": [
       {
-        "url": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        "url": "https://images.unsplash.com/photo-1503376780353-7e6692767b70",
         "isMain": true
       }
     ],
     "categories": [
       {
-        "category": {
-          "id": "3",
-          "name": "Sports Car"
-        }
+        "id": "cat3",
+        "name": "Sports Car"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "review2",
+        "userId": "user2",
+        "userName": "Jane Smith",
+        "rating": 5,
+        "comment": "Amazing performance and handling",
+        "createdAt": "2024-01-20T14:30:00Z"
       }
     ]
   },
   {
-    "id": "3",
+    "id": "car3",
     "make": "Audi",
     "model": "Q5",
     "year": 2023,
     "dailyPrice": 200,
-    "fuelType": "Gasoline",
+    "fuelType": "GASOLINE",
     "numSeats": 5,
+    "autoGearbox": true,
+    "kilometers": 10000,
+    "licensePlate": "DEF456",
+    "address": "789 Pine St, Chicago, IL",
+    "description": "Luxury SUV with advanced features",
+    "status": "AVAILABLE",
     "rating": 4.7,
     "images": [
       {
-        "url": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        "url": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6",
         "isMain": true
       }
     ],
     "categories": [
       {
-        "category": {
-          "id": "4",
-          "name": "SUV"
-        }
+        "id": "cat4",
+        "name": "SUV"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "review3",
+        "userId": "user3",
+        "userName": "Robert Johnson",
+        "rating": 4,
+        "comment": "Comfortable and spacious",
+        "createdAt": "2024-01-25T09:15:00Z"
       }
     ]
   }

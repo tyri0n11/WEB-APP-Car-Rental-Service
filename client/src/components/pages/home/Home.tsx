@@ -1,4 +1,4 @@
-import CarList from "./sections/CarList";
+import CustomePaginate from "../../paginations/CustomePaginate";
 import Hero from "./sections/hero/Hero";
 import UniqueValue from "./sections/UniqueValue";
 
@@ -7,9 +7,9 @@ const Home: React.FC = () => {
 
 
   return (
-    <div>
+    <div style={{gap: "100px"}}>
       <Hero />
-      <CarList />
+      <CustomePaginate limit={4} showFilter = {false} showPagination={false} />
       <UniqueValue />
     </div>
   );

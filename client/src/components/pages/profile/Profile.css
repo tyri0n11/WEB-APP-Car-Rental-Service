@@ -1,15 +1,17 @@
 .profilePage {
   display: flex;
-  padding: 96px 0;
+  padding: 80px 0;
   justify-content: center;
-  width: 100vw;
+  width: 100%;
   background-color: #f9f9f9;
   min-height: 100vh;
+  box-sizing: border-box;
 }
 
 .profileLayout {
   display: flex;
-  width: 80%;
+  width: 90%;
+  max-width: 1200px;
 }
 
 .profileContainer {
@@ -21,44 +23,53 @@
 .profileSidebar {
   padding: 0 10px;
   display: flex;
-  flex: 30%;
+  flex: 25%;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
   flex-wrap: nowrap;
+  min-width: 220px;
+  max-width: 280px;
 }
 
 .profileContent {
   display: flex;
-  flex: 70%;
+  flex: 75%;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding-bottom: 16px;
+  overflow: hidden;
 }
 
 .profileTitle {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
   padding: 16px;
   color: #007bff;
+  border-bottom: 1px solid #e1e4e8;
 }
 
 .profileDetails {
-  padding: 16px;
+  padding: 0 16px 16px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .profileSidebarItem {
-  width: 240px;
+  width: 100%;
   position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
+  gap: 10px;
+  padding: 10px 14px;
   cursor: pointer;
   color: #333;
   text-decoration: none;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  font-size: 14px;
 }
 
 .profileSidebarItemHover {
@@ -81,9 +92,10 @@
 .profileLogoutButton {
   color: #ff4444 !important;
   border-top: 1px solid #eee;
-  padding-top: 20px;
+  padding-top: 16px;
   display: flex;
   align-items: center;
+  margin-top: auto;
 }
 
 .profileLogoutButton:hover {
@@ -92,4 +104,76 @@
 
 .profileLogoutButton svg {
   color: inherit;
+}
+
+/* Responsive styles */
+@media (max-width: 1200px) {
+  .profileLayout {
+    width: 95%;
+  }
+}
+
+@media (max-width: 992px) {
+  .profileContainer {
+    flex-direction: column;
+  }
+  
+  .profileSidebar {
+    flex: 100%;
+    max-width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0;
+    margin-bottom: 16px;
+  }
+  
+  .profileSidebarItem {
+    width: auto;
+    min-width: 110px;
+  }
+  
+  .profileContent {
+    flex: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .profilePage {
+    padding: 60px 0;
+  }
+  
+  .profileSidebar {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .profileSidebarItem {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .profileTitle {
+    font-size: 18px;
+    padding: 12px 16px;
+  }
+  
+  .profileDetails {
+    padding: 0 12px 12px;
+  }
+}
+
+@media (max-width: 576px) {
+  .profilePage {
+    padding: 40px 0;
+  }
+  
+  .profileLayout {
+    width: 100%;
+  }
+  
+  .profileSidebarItem {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
 }

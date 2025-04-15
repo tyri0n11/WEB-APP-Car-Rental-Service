@@ -1,8 +1,9 @@
 import React, { createContext, useEffect, useReducer } from "react";
 
 const API_AUTHEN_URL = "http://localhost:3000/auth";
+const API_BASE_URL = "http://localhost:3000";
 
-interface User {
+export interface User {
   role: string;
   id: string;
   email: string;
@@ -10,12 +11,19 @@ interface User {
   lastName: string;
   phoneNumber: string;
   isVerified: boolean;
-  drivingLicenceId: string;
+  drivingLicenceId: DrivingLicence;
 }
+interface DrivingLicence {
+  licenceNumber: string;
+  drivingLicenseImages: string[];
+  expiryDate: string;
+}
+
 interface AuthState {
   user: User | null;
   accessToken: string | null;
 }
+
 interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<boolean>;
   signup: (data: {
@@ -27,6 +35,7 @@ interface AuthContextType extends AuthState {
   }) => Promise<void>;
   logout: () => void;
 }
+
 interface AuthProviderProps {
   children: React.ReactNode;
 }
@@ -90,7 +99,7 @@ const fetchUser = async (accessToken: string): Promise<User | null> => {
   }
 };
 
-const refreshToken = async (): Promise<{ access_token: string } | null> => {
+const refreshToken = async (): Promise<{ accessToken: string } | null> => {
   try {
     const refreshToken = localStorage.getItem("refresh_token");
     if (!refreshToken) return null;
@@ -98,7 +107,7 @@ const refreshToken = async (): Promise<{ access_token: string } | null> => {
     const response = await fetch(`${API_AUTHEN_URL}/refresh-token`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refresh_token: refreshToken }),
+      body: JSON.stringify({ refreshToken }),
     });
 
     if (!response.ok) return null;
@@ -123,9 +132,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       } else {
         const newTokens = await refreshToken();
         if (newTokens) {
-          localStorage.setItem("access_token", newTokens.access_token);
-          dispatch({ type: "SET_TOKEN", payload: newTokens.access_token });
-          const newUser = await fetchUser(newTokens.access_token);
+          localStorage.setItem("access_token", newTokens.accessToken);
+          dispatch({ type: "SET_TOKEN", payload: newTokens.accessToken });
+          const newUser = await fetchUser(newTokens.accessToken);
           dispatch({ type: "SET_USER", payload: newUser });
         } else {
           handleLogout();
@@ -159,7 +168,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const refresh = result?.data?.refreshToken;
       localStorage.setItem("access_token", access);
       localStorage.setItem("refresh_token", refresh);
-      
+
       const user = await fetchUser(access);
       if (!user) {
         throw new Error("Failed to fetch user");
@@ -183,7 +192,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       if (!response.ok) {
         throw new Error("Login failed");
-        
+
       }
 
       const data = await response.json();
@@ -201,7 +210,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       });
       return true;
     } catch (error) {
-        throw new Error("Login error");
+      throw new Error("Login error");
     }
   };
 
@@ -218,4 +227,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       {children}
     </AuthContext.Provider>
   );
+};
+
+export const useAuth = () => {
+  const context = React.useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 };

@@ -1,4 +1,4 @@
-import { CarResponseDTO } from '@/modules/car/dto/response.dto';
+import { CarResponseDTO } from '@/modules/car/dtos/response.dto';
 import { DatabaseService } from '../../modules/database/database.service';
 import { BaseServiceInterface } from './interfaces/base.interface';
 import { paginator, PaginatorTypes } from '@nodeteam/nestjs-prisma-pagination';

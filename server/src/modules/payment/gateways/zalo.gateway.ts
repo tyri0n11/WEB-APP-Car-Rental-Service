@@ -9,7 +9,7 @@ import { AxiosResponse } from 'axios';
 import * as crypto from 'crypto';
 import * as dayjs from 'dayjs';
 import { PaymentGatewayInterface } from '../interfaces/paymentGateway.interface';
-import { ZalopayCallbackResponseDTO } from '../dto/zaloCallback.response';
+import { ZalopayCallbackResponseDTO } from '../dtos/zaloCallback.response';
 
 interface ZaloPayRequestConfigInterface {
   amount: number;

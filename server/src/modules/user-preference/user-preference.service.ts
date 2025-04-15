@@ -2,7 +2,7 @@ import { BaseService } from '@/services/base/base.service';
 import { Injectable } from '@nestjs/common';
 import { UserPreference } from '@prisma/client';
 import { DatabaseService } from '../database/database.service';
-import { UserPreferenceResponseDTO } from './dto/userPreference.response.dto';
+import { UserPreferenceResponseDTO } from './dtos/userPreference.response.dto';
 
 @Injectable()
 export class UserPreferenceService extends BaseService<UserPreference> {

@@ -1,6 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
-import { CarSortBy } from '../dto/findMany.request.dto';
+import { CarSortBy } from '../dtos/findMany.request.dto';
 import { CarStatus } from '@prisma/client';
 
 export function ApiCarQueries() {

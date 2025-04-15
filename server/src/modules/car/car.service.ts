@@ -11,10 +11,10 @@ import { DatabaseService } from '../database/database.service';
 import {
   CarResponseDTO,
   CarsWithPaginationResponseDTO,
-} from './dto/response.dto';
-import { UpdateCarRequestDTO } from './dto/update.request.dto';
-import { CreateCarRequestDTO } from './dto/create.request.dto';
-import { CarSortBy, FindManyCarsQueryDTO } from './dto/findMany.request.dto';
+} from './dtos/response.dto';
+import { UpdateCarRequestDTO } from './dtos/update.request.dto';
+import { CreateCarRequestDTO } from './dtos/create.request.dto';
+import { CarSortBy, FindManyCarsQueryDTO } from './dtos/findMany.request.dto';
 import * as crypto from 'crypto';
 import * as dayjs from 'dayjs';
 import { CategoryService } from '../category/category.service';
@@ -35,7 +35,13 @@ export class CarService extends BaseService<Car> {
         },
       },
     },
+    _count: {
+      select: {
+        reviews: true,
+      },
+    },
   };
+
   private genCarId(): string {
     const now = dayjs().format('YYMMDD').toString();
     const randomNumber = crypto
@@ -65,6 +71,24 @@ export class CarService extends BaseService<Car> {
       default:
         return { createdAt: 'desc' };
     }
+  }
+
+  private processCarResponse(car: any): CarResponseDTO {
+    const { _count, categories, images, ...rest } = car;
+    const processedCategories = categories.map((cat) => ({
+      id: cat.category.id,
+      name: cat.category.name,
+    }));
+    return {
+      ...rest,
+      categories: processedCategories,
+      reviewCount: _count.reviews,
+      images: images.map((img) => ({
+        id: img.id,
+        url: img.url,
+        isMain: img.isMain,
+      })),
+    };
   }
 
   constructor(
@@ -122,7 +146,7 @@ export class CarService extends BaseService<Car> {
       throw new BadRequestException(`Car with ID ${id} not found`);
     }
 
-    return car;
+    return this.processCarResponse(car);
   }
 
   async findManyWithQuery(query: FindManyCarsQueryDTO) {
@@ -176,31 +200,17 @@ export class CarService extends BaseService<Car> {
       perPage,
       options: {
         include: {
-          images: {
-            where: { isMain: true },
-            take: 1,
-          },
-          reviews: {
-            select: {
-              rating: true,
-            },
-          },
-          categories: {
-            select: {
-              category: true,
-            },
-          },
-          _count: {
-            select: {
-              reviews: true,
-            },
-          },
+          ...this.defaultIncludes,
         },
       },
     });
 
+    const processedCars = result.data.map((car) =>
+      this.processCarResponse(car),
+    );
+
     return new CarsWithPaginationResponseDTO({
-      cars: result.data,
+      cars: processedCars,
       pagination: {
         total: result.total,
         lastPage: result.lastPage,
@@ -212,19 +222,16 @@ export class CarService extends BaseService<Car> {
     });
   }
 
-  async update(
-    id: string,
-    input: Prisma.CarUpdateInput,
-  ): Promise<CarResponseDTO> {
+  async update(id: string, input: Prisma.CarUpdateInput): Promise<void> {
     const foundCar = await this.findOne({ id });
     if (!foundCar) {
       throw new BadRequestException('Car not found');
     }
-    return await super.update(id, input);
+    await super.update(id, input);
   }
 
-  async updateStatus(id: string, status: CarStatus): Promise<CarResponseDTO> {
-    return await this.update(id, { status });
+  async updateStatus(id: string, status: CarStatus): Promise<void> {
+    await this.update(id, { status });
   }
 
   async updateCategories(
@@ -260,13 +267,13 @@ export class CarService extends BaseService<Car> {
     });
   }
 
-  async updateImages(id: string, imageUrls: string[]): Promise<CarResponseDTO> {
+  async updateImages(id: string, imageUrls: string[]): Promise<void> {
     const foundCar = await this.findOne({ id });
     if (!foundCar) {
       throw new BadRequestException('Car not found');
     }
 
-    return await super.update(id, {
+    await super.update(id, {
       images: {
         deleteMany: {},
         create: imageUrls.map((url) => ({ url })),
@@ -282,7 +289,7 @@ export class CarService extends BaseService<Car> {
     return await super.remove({ id });
   }
 
-  async setMainImage(id: string, imageId: string): Promise<CarResponseDTO> {
+  async setMainImage(id: string, imageId: string): Promise<void> {
     const car = await this.findById(id);
 
     await this.databaseService.carImage.updateMany({
@@ -294,14 +301,22 @@ export class CarService extends BaseService<Car> {
       where: { id: imageId },
       data: { isMain: true },
     });
-
-    return this.findById(id);
   }
 
   async addToFavorite(userId: string, carId: string): Promise<void> {
-    const car = await this.findById(carId);
+    const [car, existingFavorite] = await Promise.all([
+      this.findById(carId),
+      this.databaseService.favoriteCar.findUnique({
+        where: { userId_carId: { userId, carId } },
+      }),
+    ]);
+
     if (!car) {
       throw new BadRequestException('Car not found');
+    }
+
+    if (existingFavorite) {
+      return;
     }
 
     await this.databaseService.favoriteCar.create({
@@ -325,12 +340,16 @@ export class CarService extends BaseService<Car> {
     });
   }
 
-  async getFavoriteCars(userId: string): Promise<any> {
+  async getFavoriteCars(userId: string): Promise<CarResponseDTO[]> {
     const favoriteCars = await this.databaseService.car.findMany({
       where: { favoritedBy: { some: { userId } } },
       include: this.defaultIncludes,
     });
 
-    return favoriteCars;
+    const processedCars = favoriteCars.map((car) =>
+      this.processCarResponse(car),
+    );
+
+    return processedCars;
   }
 }

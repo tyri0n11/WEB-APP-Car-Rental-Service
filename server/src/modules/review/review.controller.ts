@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { JwtAccessGuard } from '../auth/guards/jwt/jwtAccess.guard';
-import { CreateReviewRequestDTO } from './dto/create.request.dto';
+import { CreateReviewRequestDTO } from './dtos/create.request.dto';
 import { ReviewOwnerGuard } from './guards/reviewOwner.guard';
 import { ReviewService } from './review.service';
 

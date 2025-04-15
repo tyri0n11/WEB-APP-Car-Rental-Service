@@ -1,4 +1,4 @@
-import { CategoryResponseDTO } from '@/modules/category/dto/response.dto';
+import { CategoryResponseDTO } from '@/modules/category/dtos/response.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { $Enums, Car, CarStatus, FuelType } from '@prisma/client';
 import { Exclude, Expose, Type } from 'class-transformer';
@@ -33,6 +33,9 @@ export class CarResponseDTO implements Car {
 
   @Expose()
   rating: number;
+
+  @Expose()
+  reviewCount: number;
 
   @Expose()
   @ApiProperty({ enum: FuelType, enumName: 'fuelType' })

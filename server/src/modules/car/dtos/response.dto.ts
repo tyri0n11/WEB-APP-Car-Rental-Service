@@ -35,9 +35,6 @@ export class CarResponseDTO implements Car {
   rating: number;
 
   @Expose()
-  reviewCount: number;
-
-  @Expose()
   @ApiProperty({ enum: FuelType, enumName: 'fuelType' })
   fuelType: FuelType;
 

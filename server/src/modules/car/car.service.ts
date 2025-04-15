@@ -1,23 +1,16 @@
 import { BaseService } from '@/services/base/base.service';
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { Car, CarStatus, Prisma } from '@prisma/client';
+import * as crypto from 'crypto';
+import * as dayjs from 'dayjs';
+import { CategoryService } from '../category/category.service';
 import { DatabaseService } from '../database/database.service';
+import { CreateCarRequestDTO } from './dtos/create.request.dto';
+import { CarSortBy, FindManyCarsQueryDTO } from './dtos/findMany.request.dto';
 import {
   CarResponseDTO,
   CarsWithPaginationResponseDTO,
 } from './dtos/response.dto';
-import { UpdateCarRequestDTO } from './dtos/update.request.dto';
-import { CreateCarRequestDTO } from './dtos/create.request.dto';
-import { CarSortBy, FindManyCarsQueryDTO } from './dtos/findMany.request.dto';
-import * as crypto from 'crypto';
-import * as dayjs from 'dayjs';
-import { CategoryService } from '../category/category.service';
 
 @Injectable()
 export class CarService extends BaseService<Car> {
@@ -27,17 +20,7 @@ export class CarService extends BaseService<Car> {
     reviews: true,
     categories: {
       select: {
-        category: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-    },
-    _count: {
-      select: {
-        reviews: true,
+        category: true,
       },
     },
   };
@@ -74,7 +57,7 @@ export class CarService extends BaseService<Car> {
   }
 
   private processCarResponse(car: any): CarResponseDTO {
-    const { _count, categories, images, ...rest } = car;
+    const { categories, images, ...rest } = car;
     const processedCategories = categories.map((cat) => ({
       id: cat.category.id,
       name: cat.category.name,
@@ -82,7 +65,6 @@ export class CarService extends BaseService<Car> {
     return {
       ...rest,
       categories: processedCategories,
-      reviewCount: _count.reviews,
       images: images.map((img) => ({
         id: img.id,
         url: img.url,
@@ -117,8 +99,9 @@ export class CarService extends BaseService<Car> {
         );
       }
     }
+
     const carId = this.genCarId();
-    return await super.create(
+    const car = await super.create(
       {
         id: carId,
         ...carData,
@@ -138,6 +121,8 @@ export class CarService extends BaseService<Car> {
         include: this.defaultIncludes,
       },
     );
+
+    return this.processCarResponse(car);
   }
 
   async findById(id: string): Promise<CarResponseDTO> {

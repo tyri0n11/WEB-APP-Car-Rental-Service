@@ -1,13 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CreateRecommendationDto } from './dto/create-recommendation.dto';
-import { UpdateRecommendationDto } from './dto/update-recommendation.dto';
+import { CreateRecommendationDto } from './dtos/create-recommendation.dto';
+import { UpdateRecommendationDto } from './dtos/update-recommendation.dto';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { UserActionService } from '../user-action/user-action.service';
 import { CarService } from '../car/car.service';
 import Redis from 'ioredis';
 import { InjectRedis } from '@nestjs-modules/ioredis';
-import { CarSortBy } from '../car/dto/findMany.request.dto';
+import { CarSortBy } from '../car/dtos/findMany.request.dto';
 import { firstValueFrom } from 'rxjs';
 import { UserPreferenceService } from '../user-preference/user-preference.service';
 

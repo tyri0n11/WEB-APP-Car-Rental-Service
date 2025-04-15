@@ -13,20 +13,20 @@ import { Response } from 'express';
 import { RequestWithUser } from 'src/types/request.type';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
-import { ForgotPasswordRequestDTO } from './dto/request/forgotPassword.request.dto';
-import { LoginRequestDTO } from './dto/request/login.request.dto';
-import { SignupRequestDTO } from './dto/request/signup.request.dto';
-import { VerifyAccountRequestQuery } from './dto/request/verifyAccount.request.dto';
-import { LoginResponseDTO } from './dto/response/login.response.dto';
+import { ForgotPasswordRequestDTO } from './dtos/request/forgotPassword.request.dto';
+import { LoginRequestDTO } from './dtos/request/login.request.dto';
+import { SignupRequestDTO } from './dtos/request/signup.request.dto';
+import { VerifyAccountRequestQuery } from './dtos/request/verifyAccount.request.dto';
+import { LoginResponseDTO } from './dtos/response/login.response.dto';
 import { ApiPost } from '@/decorators/apiPost.decorator';
 import { LocalUserAuthGuard } from './guards/local/local.guard';
 import { JwtAccessGuard } from './guards/jwt/jwtAccess.guard';
 import { UserResponseDTO } from '../user/dtos/response.dto';
 import { JwtRefreshGuard } from './guards/jwt/jwtRefresh.guard';
-import { RefreshTokenRequestDTO } from './dto/request/refreshToken.request.dto';
-import { ResetPasswordRequestDTO } from './dto/request/resetPassword.dto';
-import { SendEmailVerfiyRequestDTO } from './dto/request/sendVerifyEmail.request.dto';
-import { ChangePasswordRequestDTO } from './dto/request/changePassword.request.dto';
+import { RefreshTokenRequestDTO } from './dtos/request/refreshToken.request.dto';
+import { ResetPasswordRequestDTO } from './dtos/request/resetPassword.dto';
+import { SendEmailVerfiyRequestDTO } from './dtos/request/sendVerifyEmail.request.dto';
+import { ChangePasswordRequestDTO } from './dtos/request/changePassword.request.dto';
 
 @Controller('auth')
 // @UseInterceptors(new PrismaInterceptor(User))

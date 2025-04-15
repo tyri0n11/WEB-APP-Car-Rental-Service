@@ -2,14 +2,14 @@ import { BaseService } from '@/services/base/base.service';
 import { Injectable } from '@nestjs/common';
 import { ActionType, UserAction } from '@prisma/client';
 import { DatabaseService } from '../database/database.service';
-import { UserActionResponseDTO } from './dto/user-action.response.dto';
+import { UserActionResponseDTO } from './dtos/user-action.response.dto';
 import {
   TrackBookInterface,
   TrackFavoriteInterface,
   TrackSearchInterface,
   TrackUserActionDTO,
   TrackViewInterface,
-} from './dto/trackUserAction.dto';
+} from './dtos/trackUserAction.dto';
 import { UserPreferenceService } from '../user-preference/user-preference.service';
 import { CarService } from '../car/car.service';
 

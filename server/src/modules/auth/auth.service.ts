@@ -20,12 +20,12 @@ import {
 } from './interfaces/token.interface';
 import { EmailService } from '../email/email.service';
 import { TokenService } from '../token/interfaces/token.service';
-import { SignupRequestDTO } from './dto/request/signup.request.dto';
-import { SignupResponseDTO } from './dto/response/signup.response.dto';
-import { LoginResponseDTO } from './dto/response/login.response.dto';
+import { SignupRequestDTO } from './dtos/request/signup.request.dto';
+import { SignupResponseDTO } from './dtos/response/signup.response.dto';
+import { LoginResponseDTO } from './dtos/response/login.response.dto';
 import { UserResponseDTO } from '../user/dtos/response.dto';
-import { ResetPasswordRequestDTO } from './dto/request/resetPassword.dto';
-import { ChangePasswordRequestDTO } from './dto/request/changePassword.request.dto';
+import { ResetPasswordRequestDTO } from './dtos/request/resetPassword.dto';
+import { ChangePasswordRequestDTO } from './dtos/request/changePassword.request.dto';
 
 @Injectable()
 export class AuthService {

@@ -7,9 +7,9 @@ import {
 import { Review } from '@prisma/client';
 import { BookingService } from '../booking/booking.service';
 import { DatabaseService } from '../database/database.service';
-import { CreateReviewRequestDTO } from './dto/create.request.dto';
-import { ReviewResponseDTO } from './dto/response.dto';
-import { FindManyByCarIdQueryDTO } from './dto/findManyByCarId.request.dto';
+import { CreateReviewRequestDTO } from './dtos/create.request.dto';
+import { ReviewResponseDTO } from './dtos/response.dto';
+import { FindManyByCarIdQueryDTO } from './dtos/findManyByCarId.request.dto';
 import { CarService } from '../car/car.service';
 
 @Injectable()

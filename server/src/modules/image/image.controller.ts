@@ -7,7 +7,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImageService } from './image.service';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
-import { FileUploadDto } from './dto/uploadImage.request.dto';
+import { FileUploadDto } from './dtos/uploadImage.request.dto';
 
 @Controller('image')
 export class ImageController {

@@ -16,13 +16,13 @@ import { CreatePaymentData } from '../payment/interfaces/paymentGateway.interfac
 import { PaymentService } from '../payment/payment.service';
 import { TransactionService } from '../transaction/transaction.service';
 import { UserActionService } from '../user-action/user-action.service';
-import { CreateBookingRequestDTO } from './dto/create.request.dto';
-import { CrearteBookingResponseDTO } from './dto/create.response.dto';
-import { FindManyBookingsQueryDTO } from './dto/findMany.request.dto';
+import { CreateBookingRequestDTO } from './dtos/create.request.dto';
+import { CrearteBookingResponseDTO } from './dtos/create.response.dto';
+import { FindManyBookingsQueryDTO } from './dtos/findMany.request.dto';
 import {
   BookingResponseDTO,
   BookingResponseOnRedisDTO,
-} from './dto/response.dto';
+} from './dtos/response.dto';
 import { UnlockCarQueue } from './enums/queue';
 @Injectable()
 export class BookingService extends BaseService<Booking> {

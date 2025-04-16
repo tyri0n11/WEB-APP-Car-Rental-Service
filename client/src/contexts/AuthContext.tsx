@@ -160,23 +160,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-
-      if (!response.ok) throw new Error("Signup failed");
-
-      const result = await response.json();
-      const access = result?.data?.accessToken;
-      const refresh = result?.data?.refreshToken;
-      localStorage.setItem("access_token", access);
-      localStorage.setItem("refresh_token", refresh);
-
-      const user = await fetchUser(access);
-      if (!user) {
-        throw new Error("Failed to fetch user");
+      if (!response.ok) {
+        throw new Error("Signup failed");
       }
-      dispatch({
-        type: "LOGIN",
-        payload: { user, accessToken: access },
-      });
     } catch (error) {
       throw new Error("Signup error");
     }

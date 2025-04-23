@@ -17,6 +17,10 @@ class DrivingLicenceResponseDTO implements DrivingLicence {
 
   @Exclude()
   @ApiHideProperty()
+  userId: string;
+
+  @Exclude()
+  @ApiHideProperty()
   createdAt: Date;
 
   @Exclude()
@@ -48,15 +52,15 @@ export class UserResponseDTO implements User {
   isVerified: boolean;
 
   @Expose()
-  drivingLicenceId: string;
-
-  @Expose()
   @ApiProperty({ enum: Role, enumName: 'role' })
   role: Role;
 
   @Exclude()
   @ApiHideProperty()
   password: string;
+
+  @Expose()
+  drivingLicence: DrivingLicenceResponseDTO;
 
   @Exclude()
   @ApiHideProperty()

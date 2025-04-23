@@ -13,22 +13,21 @@ enum ActionType {
 }
 
 model User {
-    id               String           @id @default(uuid())
-    email            String           @unique
-    password         String
-    firstName        String
-    lastName         String
-    phoneNumber      String?
-    isVerified       Boolean          @default(false)
-    role             Role             @default(CUSTOMER)
-    drivingLicence   DrivingLicence?  @relation(fields: [drivingLicenceId], references: [id], onDelete: Cascade)
-    bookings         Booking[]
-    drivingLicenceId String?          @unique
-    userActions      UserAction[]
-    userPreferences  UserPreference[]
-    favoriteCars     FavoriteCar[]
-    createdAt        DateTime         @default(now())
-    updatedAt        DateTime         @updatedAt
+    id              String           @id @default(uuid())
+    email           String           @unique
+    password        String
+    firstName       String
+    lastName        String
+    phoneNumber     String?
+    isVerified      Boolean          @default(false)
+    role            Role             @default(CUSTOMER)
+    drivingLicence  DrivingLicence?
+    bookings        Booking[]
+    userActions     UserAction[]
+    userPreferences UserPreference[]
+    favoriteCars    FavoriteCar[]
+    createdAt       DateTime         @default(now())
+    updatedAt       DateTime         @updatedAt
 
     @@map("users")
 }
@@ -38,9 +37,10 @@ model DrivingLicence {
     licenceNumber        String
     drivingLicenseImages String[]
     expiryDate           DateTime
+    user                 User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId               String?  @unique
     createdAt            DateTime @default(now())
     updatedAt            DateTime @updatedAt
-    user                 User?
 
     @@map("driving_licences")
 }

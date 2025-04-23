@@ -12,17 +12,27 @@ export class UserService extends BaseService<User> {
     super(databaseService, 'user', UserResponseDTO);
   }
 
+  private readonly includeDrivingLicense = {
+    drivingLicence: true,
+  };
+
   async findByEmail(email: string) {
-    const user = await super.findOne({
-      email,
-    });
+    const user = await super.findOne(
+      {
+        email,
+      },
+      { include: this.includeDrivingLicense },
+    );
     return user;
   }
 
   async findById(id: string) {
-    const user = await super.findOne({
-      id,
-    });
+    const user = await super.findOne(
+      {
+        id,
+      },
+      { include: this.includeDrivingLicense },
+    );
     return user;
   }
 
@@ -41,14 +51,18 @@ export class UserService extends BaseService<User> {
       throw new BadRequestException('User not found');
     }
 
-    const drivingLicence = await this.databaseService.drivingLicence.create({
-      data: {
-        licenceNumber: dto.licenceNumber,
-        drivingLicenseImages: dto.imageUrls,
-        expiryDate: new Date(dto.expiryDate),
+    return await super.update(
+      { id },
+      {
+        drivingLicence: {
+          create: {
+            licenceNumber: dto.licenceNumber,
+            drivingLicenseImages: dto.imageUrls,
+            expiryDate: new Date(dto.expiryDate),
+          },
+        },
       },
-    });
-
-    return await super.update({ id }, { drivingLicenceId: drivingLicence.id });
+      { include: this.includeDrivingLicense },
+    );
   }
 }

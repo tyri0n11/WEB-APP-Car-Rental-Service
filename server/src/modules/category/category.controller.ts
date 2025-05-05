@@ -27,8 +27,8 @@ export class CategoryController {
   }
 
   @Get()
-  findAll() {
-    return this.categoryService.findMany();
+  async findAll() {
+    return this.categoryService.findMany({});
   }
 
   @Get(':id')

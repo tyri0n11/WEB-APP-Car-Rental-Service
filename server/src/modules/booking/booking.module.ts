@@ -13,7 +13,6 @@ import { TransactionQueue } from '../payment/enums/queue';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { ProcessTransactionWorker } from './workers/processTransaction.worker';
 import { UnlockCarQueue } from './enums/queue';
-import { UserActionModule } from '../user-action/user-action.module';
 
 @Module({
   controllers: [BookingController],

@@ -11,6 +11,7 @@ model Booking {
     userId        String
     car           Car           @relation(fields: [carId], references: [id], onDelete: Cascade)
     carId         String
+    code          String        @unique
     startDate     DateTime
     endDate       DateTime
     totalPrice    Float

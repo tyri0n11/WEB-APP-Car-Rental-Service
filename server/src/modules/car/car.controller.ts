@@ -30,7 +30,6 @@ import {
   CarsWithPaginationResponseDTO,
 } from './dtos/response.dto';
 import { RequestWithUser } from '@/types/request.type';
-import { TrackViewInterceptor } from '@/interceptors/action-tracking/track-view.interceptor';
 
 @Controller('cars')
 export class CarController {
@@ -67,7 +66,6 @@ export class CarController {
   }
 
   @Get(':id')
-  @UseInterceptors(TrackViewInterceptor)
   @ApiOkResponse({ type: CarResponseDTO })
   findOne(@Param('id') id: string) {
     return this.carService.findById(id);

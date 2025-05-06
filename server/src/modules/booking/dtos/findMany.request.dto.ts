@@ -14,6 +14,7 @@ export class FindManyBookingsQueryDTO {
   @ApiPropertyOptional({
     enum: BookingStatus,
   })
+  @IsOptional()
   @IsEnum(BookingStatus)
   status?: BookingStatus;
 

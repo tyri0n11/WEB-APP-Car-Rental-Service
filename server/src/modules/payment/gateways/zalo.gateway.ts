@@ -56,7 +56,6 @@ export class ZalopayGateWay implements PaymentGatewayInterface {
       amount: data.amount,
       app_trans_id: transID + '_' + data.orderCode,
       embed_data: JSON.stringify({
-        preferred_payment_method: [],
         redirecturl: data.returnUrl,
       }),
       expire_duration_seconds: this.ORDER_TIMEOUT_SECONDS,

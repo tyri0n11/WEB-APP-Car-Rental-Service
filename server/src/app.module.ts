@@ -27,9 +27,6 @@ import { ExpressAdapter } from '@bull-board/express';
 import { TransactionModule } from './modules/transaction/transaction.module';
 import { ReviewModule } from './modules/review/review.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
-import { UserActionModule } from './modules/user-action/user-action.module';
-import { RecommendationModule } from './modules/recommendation/recommendation.module';
-import { UserPreferenceModule } from './modules/user-preference/user-preference.module';
 
 @Module({
   imports: [
@@ -112,9 +109,6 @@ import { UserPreferenceModule } from './modules/user-preference/user-preference.
     PaymentModule,
     TransactionModule,
     ReviewModule,
-    UserActionModule,
-    RecommendationModule,
-    UserPreferenceModule,
   ],
   controllers: [AppController],
   providers: [

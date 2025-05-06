@@ -32,7 +32,7 @@ async function main() {
     }),
   ]);
 
-  // Car data
+  // Car data with realistic Vietnamese prices (in VND)
   const cars = [
     {
       make: 'Toyota',
@@ -40,7 +40,7 @@ async function main() {
       year: 2022,
       kilometers: 15000,
       description: 'Spacious SUV perfect for family trips',
-      dailyPrice: 80.0,
+      dailyPrice: 1200000, // Standard SUV
       licensePlate: 'ABC123',
       numSeats: 5,
       address: '123 Main St, City',
@@ -65,7 +65,7 @@ async function main() {
       year: 2023,
       kilometers: 5000,
       description: 'Modern electric sedan with impressive range',
-      dailyPrice: 120.0,
+      dailyPrice: 2500000, // Premium electric vehicle
       licensePlate: 'XYZ789',
       numSeats: 5,
       address: '456 Electric Ave, City',
@@ -90,7 +90,7 @@ async function main() {
       year: 2022,
       kilometers: 20000,
       description: 'High-performance sports sedan',
-      dailyPrice: 150.0,
+      dailyPrice: 3000000, // Luxury sports car
       licensePlate: 'SPT456',
       numSeats: 5,
       address: '789 Speed St, City',
@@ -115,7 +115,7 @@ async function main() {
       year: 2023,
       kilometers: 3000,
       description: 'Luxury sedan with premium comfort',
-      dailyPrice: 200.0,
+      dailyPrice: 4000000, // High-end luxury sedan
       licensePlate: 'LUX789',
       numSeats: 5,
       address: '101 Luxury Lane, City',
@@ -140,7 +140,7 @@ async function main() {
       year: 2022,
       kilometers: 10000,
       description: 'Iconic sports car with exceptional performance',
-      dailyPrice: 250.0,
+      dailyPrice: 5000000, // Premium sports car
       licensePlate: 'SPT911',
       numSeats: 4,
       address: '202 Sports Blvd, City',
@@ -165,7 +165,7 @@ async function main() {
       year: 2023,
       kilometers: 8000,
       description: 'Premium SUV with advanced technology',
-      dailyPrice: 130.0,
+      dailyPrice: 2200000, // Premium SUV
       licensePlate: 'AUD456',
       numSeats: 5,
       address: '303 Tech Ave, City',
@@ -190,7 +190,7 @@ async function main() {
       year: 2022,
       kilometers: 25000,
       description: 'Reliable and efficient compact car',
-      dailyPrice: 70.0,
+      dailyPrice: 800000, // Economy car
       licensePlate: 'VW789',
       numSeats: 5,
       address: '404 Compact St, City',
@@ -215,7 +215,7 @@ async function main() {
       year: 2023,
       kilometers: 5000,
       description: 'Classic American muscle car',
-      dailyPrice: 180.0,
+      dailyPrice: 3500000, // Premium sports car
       licensePlate: 'MUS789',
       numSeats: 4,
       address: '505 Muscle Ave, City',
@@ -240,7 +240,7 @@ async function main() {
       year: 2022,
       kilometers: 18000,
       description: 'Modern SUV with great value',
-      dailyPrice: 85.0,
+      dailyPrice: 1000000, // Standard SUV
       licensePlate: 'HYU456',
       numSeats: 5,
       address: '606 Value St, City',
@@ -265,7 +265,7 @@ async function main() {
       year: 2023,
       kilometers: 3000,
       description: 'Popular electric vehicle with great range',
-      dailyPrice: 110.0,
+      dailyPrice: 1800000, // Electric car
       licensePlate: 'NIS789',
       numSeats: 5,
       address: '707 Electric Blvd, City',
@@ -290,7 +290,7 @@ async function main() {
       year: 2022,
       kilometers: 12000,
       description: 'Luxury SUV with hybrid technology',
-      dailyPrice: 160.0,
+      dailyPrice: 2800000, // Luxury SUV
       licensePlate: 'LEX456',
       numSeats: 5,
       address: '808 Luxury Ave, City',
@@ -315,7 +315,7 @@ async function main() {
       year: 2023,
       kilometers: 2000,
       description: 'High-performance sports car',
-      dailyPrice: 280.0,
+      dailyPrice: 5500000, // Premium sports car
       licensePlate: 'COR789',
       numSeats: 4,
       address: '909 Speed St, City',
@@ -340,7 +340,7 @@ async function main() {
       year: 2022,
       kilometers: 15000,
       description: 'Safe and comfortable luxury SUV',
-      dailyPrice: 170.0,
+      dailyPrice: 3200000, // Premium SUV
       licensePlate: 'VOL456',
       numSeats: 7,
       address: '1010 Safety Ave, City',
@@ -365,7 +365,7 @@ async function main() {
       year: 2023,
       kilometers: 4000,
       description: 'Fun and agile convertible sports car',
-      dailyPrice: 140.0,
+      dailyPrice: 2300000, // Sports car
       licensePlate: 'MAZ789',
       numSeats: 4,
       address: '1111 Fun St, City',
@@ -390,7 +390,7 @@ async function main() {
       year: 2023,
       kilometers: 6000,
       description: 'Modern electric crossover',
-      dailyPrice: 130.0,
+      dailyPrice: 2000000, // Electric SUV
       licensePlate: 'KIA456',
       numSeats: 5,
       address: '1212 Electric Ave, City',
@@ -415,7 +415,7 @@ async function main() {
       year: 2022,
       kilometers: 22000,
       description: 'Reliable all-wheel drive wagon',
-      dailyPrice: 90.0,
+      dailyPrice: 1500000, // Standard SUV/wagon
       licensePlate: 'SUB789',
       numSeats: 5,
       address: '1313 Adventure St, City',
@@ -440,7 +440,7 @@ async function main() {
       year: 2023,
       kilometers: 3000,
       description: 'British luxury sports car',
-      dailyPrice: 220.0,
+      dailyPrice: 4500000, // Premium sports car
       licensePlate: 'JAG456',
       numSeats: 4,
       address: '1414 British Ave, City',
@@ -465,7 +465,7 @@ async function main() {
       year: 2022,
       kilometers: 10000,
       description: 'Premium luxury SUV with off-road capability',
-      dailyPrice: 240.0,
+      dailyPrice: 4800000, // Premium luxury SUV
       licensePlate: 'RNG789',
       numSeats: 5,
       address: '1515 Luxury Blvd, City',
@@ -490,7 +490,7 @@ async function main() {
       year: 2023,
       kilometers: 5000,
       description: 'High-performance electric sports car',
-      dailyPrice: 260.0,
+      dailyPrice: 5200000, // Premium electric sports car
       licensePlate: 'POR456',
       numSeats: 4,
       address: '1616 Electric St, City',
@@ -515,7 +515,7 @@ async function main() {
       year: 2023,
       kilometers: 4000,
       description: 'High-performance electric luxury sedan',
-      dailyPrice: 290.0,
+      dailyPrice: 5800000, // Premium electric luxury car
       licensePlate: 'AUD789',
       numSeats: 5,
       address: '1717 Performance Ave, City',

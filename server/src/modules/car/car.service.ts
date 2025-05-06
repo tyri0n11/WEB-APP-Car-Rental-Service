@@ -212,7 +212,7 @@ export class CarService extends BaseService<Car> {
     if (!foundCar) {
       throw new BadRequestException('Car not found');
     }
-    await super.update(id, input);
+    await super.update({ id }, input);
   }
 
   async updateStatus(id: string, status: CarStatus): Promise<void> {

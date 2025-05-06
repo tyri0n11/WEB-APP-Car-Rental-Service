@@ -8,6 +8,8 @@ export class BookingResponseDTO implements Booking {
   @Expose()
   id: string;
   @Expose()
+  code: string;
+  @Expose()
   userId: string;
   @Expose()
   carId: string;

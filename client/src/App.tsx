@@ -14,12 +14,14 @@ import Home from "./components/pages/home/Home";
 import Profile from "./components/pages/profile/Profile";
 import Services from "./components/pages/service/Service";
 import ProtectedRoute from "./routes/ProtectedRoute";
-
-import "./App.css";
 import ForgotPassword from "./components/pages/auth/forgot-password";
 import ResetPassword from "./components/pages/auth/reset-password";
 import NotFound from "./components/pages/NotFound";
 import { NotificationProvider } from './contexts/NotificationContext';
+import { BookingProvider } from './contexts/BookingContext';
+import BookingConfirmation from "./components/pages/booking/BookingConfirmation";
+import Payment from "./components/pages/booking/Payment";
+import CompletedBooking from "./components/pages/booking/CompletedBooking";
 
 function App() {
   const [showSignIn, setShowSignIn] = useState(false);
@@ -48,13 +50,13 @@ function App() {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
-
   return (
     <NotificationProvider>
-      <div className="App">
-        <header className="navbar">
-          <Banner />
-          <NavBar
+      <BookingProvider>
+        <div className="App">
+          <header className="navbar">
+            <Banner />
+            <NavBar
             onSignInClick={() => {
               setShowSignIn(true);
               setShowSignUp(false);
@@ -73,10 +75,13 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/auth/forgot-password" element={<ForgotPassword />} />
             <Route path="/auth/reset-password" element={<ResetPassword />} />
-            <Route path="services" element={<Services />} />
-
+            <Route path="services" element={<Services />} />            
             <Route path="/cars/:id" element={<CarDetail />} />
+            
             <Route element={<ProtectedRoute />}>
+              <Route path="/booking-confirmation" element={<BookingConfirmation />} />
+              <Route path="/payment-hold" element={<Payment />} />
+              <Route path="/completed-booking" element={<CompletedBooking />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/profile" element={<Profile />} />
             </Route>
@@ -105,7 +110,8 @@ function App() {
 
         <Footer />
       </div>
-    </NotificationProvider>
+    </BookingProvider>
+  </NotificationProvider>
   );
 }
 

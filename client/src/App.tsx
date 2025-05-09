@@ -4,22 +4,15 @@ import "./App.css";
 import Banner from "./components/layout/Banner";
 import Footer from "./components/layout/Footer";
 import NavBar from "./components/layout/Navbar";
-import About from "./components/pages/about/About";
 import SignIn from "./components/pages/auth/signin/SignIn";
 import SignUp from "./components/pages/auth/signup/SignUp";
-import CarDetail from "./components/pages/car/carDetail";
-import Contact from "./components/pages/contact/Contact";
-import Dashboard from "./components/pages/dashboard/Dashboard";
-import Home from "./components/pages/home/Home";
-import Profile from "./components/pages/profile/Profile";
-import Services from "./components/pages/service/Service";
-import ProtectedRoute from "./routes/ProtectedRoute";
+import { ProtectedRoutes } from "./routes/ProtectedRoutes";
 
 import "./App.css";
-import ForgotPassword from "./components/pages/auth/forgot-password";
-import ResetPassword from "./components/pages/auth/reset-password";
 import NotFound from "./components/pages/NotFound";
 import { NotificationProvider } from './contexts/NotificationContext';
+import { AuthRoutes } from "./routes/AuthRoutes";
+import { PublicRoutes } from "./routes/PublicRoutes";
 
 function App() {
   const [showSignIn, setShowSignIn] = useState(false);
@@ -67,19 +60,17 @@ function App() {
         </header>
 
         <section className="main-content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/auth/forgot-password" element={<ForgotPassword />} />
-            <Route path="/auth/reset-password" element={<ResetPassword />} />
-            <Route path="services" element={<Services />} />
-
-            <Route path="/cars/:id" element={<CarDetail />} />
-            <Route element={<ProtectedRoute />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/profile" element={<Profile />} />
-            </Route>
+        <Routes>
+            {/* Public Routes */}
+            <Route path="/*" element={<PublicRoutes />} />
+            
+            {/* Auth Routes */}
+            <Route path="/auth/*" element={<AuthRoutes />} />
+            
+            {/* Protected Routes */}
+            <Route path="/protected/*" element={<ProtectedRoutes />} />
+            
+            {/* 404 Route */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </section>

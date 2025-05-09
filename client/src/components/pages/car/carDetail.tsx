@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FaBluetooth, FaCamera, FaDesktop, FaMoneyBillWave, FaRoad, FaShieldAlt, FaUsb } from 'react-icons/fa';
 import { MdAirlineSeatReclineNormal } from 'react-icons/md';
 import { useParams } from 'react-router-dom';
 import { Car, computeTotalPrice, getCarById } from '../../../apis/cars';
+import { useAuth } from '../../../contexts/AuthContext';
 import { FuelType } from '../../../types/car';
 import './carDetail.css'; // Import the CSS file
 
@@ -10,6 +12,8 @@ const DEFAULT_CAR_IMAGE = "https://images.unsplash.com/photo-1503376780353-7e669
 
 const CarDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [car, setCar] = useState<Car | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -100,6 +104,45 @@ const CarDetail: React.FC = () => {
         return 'Unknown';
     }
   };
+
+  // Handle Booking
+const handleBooking = () => {
+  if (!user) {
+    alert('User is not logged in!');
+    return;
+  }
+
+  if (!startDate || !endDate) {
+    alert('Please select start and end dates for your booking');
+    return;
+  }
+  
+  if (!car?.id) {
+    alert('Car information is missing');
+    return;
+  }
+
+  navigate('/booking-confirmation', {
+    state: {
+      customerName: user.firstName + ' ' + user.lastName,
+      phoneNumber: user.phoneNumber,
+      startTime: startDate,
+      endTime: endDate,
+      totalPrice: totalPrice,
+      carId: car.id,
+      pickupLocation: car.address || 'Default pickup location', // Add default pickup location
+      returnLocation: car.address || 'Default pickup location', // Same location for return
+      car: {
+        make: car.make,
+        model: car.model,
+        year: car.year,
+        images: car.images,
+        dailyPrice: car.dailyPrice,
+      }
+    },
+  });
+};
+
 
   if (loading) {
     return (
@@ -201,8 +244,8 @@ const CarDetail: React.FC = () => {
 
       <div className="booking-card">
         <div className="price-info">
-          <span className="price">{car.dailyPrice?.toLocaleString()} USD</span>
-          <span className="per-day">/ngày</span>
+          <span className="price">{car.dailyPrice?.toLocaleString()} VND</span>
+          <span className="per-day">/day</span>
         </div>
 
         <div className="date-range">
@@ -224,8 +267,8 @@ const CarDetail: React.FC = () => {
 
         {totalPrice > 0 && (
           <div className="total-price">
-            <span>Tổng cộng:</span>
-            <span className="price">{totalPrice.toLocaleString()} USD</span>
+            <span>Total price:</span>
+            <span className="price">{totalPrice.toLocaleString()} VND</span>
           </div>
         )}
 
@@ -237,8 +280,8 @@ const CarDetail: React.FC = () => {
           <p>Bảo hiểm xe và bảo hiểm tai nạn hành khách</p>
         </div>
 
-        <button className="book-button">
-          Đặt xe ngay
+        <button className="book-button" onClick={handleBooking}>
+          Booking Now!
         </button>
       </div>
     </div>

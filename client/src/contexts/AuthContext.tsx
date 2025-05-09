@@ -1,7 +1,6 @@
 import React, { createContext, useEffect, useReducer } from "react";
 
 const API_AUTHEN_URL = "http://localhost:3000/auth";
-const API_BASE_URL = "http://localhost:3000";
 
 export interface User {
   role: string;
@@ -25,7 +24,7 @@ interface AuthState {
 }
 
 interface AuthContextType extends AuthState {
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<User | null>;
   signup: (data: {
     email: string;
     password: string;
@@ -168,7 +167,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<User | null> => {
     try {
       const response = await fetch(`${API_AUTHEN_URL}/login`, {
         method: "POST",
@@ -178,7 +177,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       if (!response.ok) {
         throw new Error("Login failed");
-
       }
 
       const data = await response.json();
@@ -194,7 +192,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         type: "LOGIN",
         payload: { user, accessToken: access },
       });
-      return true;
+      return user;
     } catch (error) {
       throw new Error("Login error");
     }

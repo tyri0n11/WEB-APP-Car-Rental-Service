@@ -6,6 +6,7 @@ import Footer from "./components/layout/Footer";
 import NavBar from "./components/layout/Navbar";
 import SignIn from "./components/pages/auth/signin/SignIn";
 import SignUp from "./components/pages/auth/signup/SignUp";
+import { AdminRoutes } from "./routes/AdminRoutes";
 import { ProtectedRoutes } from "./routes/ProtectedRoutes";
 
 import "./App.css";
@@ -69,6 +70,9 @@ function App() {
             
             {/* Protected Routes */}
             <Route path="/protected/*" element={<ProtectedRoutes />} />
+
+            {/* Admin Routes */}
+            <Route path="/admin/*" element={<AdminRoutes />} />
             
             {/* 404 Route */}
             <Route path="*" element={<NotFound />} />

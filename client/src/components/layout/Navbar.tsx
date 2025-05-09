@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import styles from "./Navbar.module.css";
 
@@ -9,15 +9,24 @@ const Navbar: React.FC<{
 }> = ({ onSignInClick, onSignUpClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const { user, logout } = useAuth(); // Get user and logout function
+  const location = useLocation();
+  const { user, logout } = useAuth();
+
+  // Ẩn navbar nếu là admin và đang ở /admin
+  if (user && user.role === 'ADMIN' && location.pathname.startsWith('/admin')) {
+    return null;
+  }
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
   const handleLogout = () => {
     logout();
     setIsMenuOpen(false);
+    navigate('/'); // Chuyển về trang chủ sau khi logout
   };
+
   const handleNavigation = (path: string) => {
     navigate(path);
     setIsMenuOpen(false);
@@ -79,17 +88,30 @@ const Navbar: React.FC<{
 
       {user ? (
         <div className={styles.privateContainer}>
-          <div className={styles.dropdown}>
-            <button className={styles.dropdownButton}                 onClick={() => handleNavigation("/profile")}
-            >
-              <img
-                className={styles.userAvatar}
-                src={"https://cdn-icons-png.flaticon.com/128/1077/1077012.png"}
-                alt="User Avatar"
-              />
-              <p className={styles.userGreet}>Welcome, {user.lastName}</p>
-            </button>
-          </div>
+          {user.role === 'ADMIN' ? (
+            <div className={styles.adminControls}>
+              <button 
+                className={styles.logoutButton}
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <div className={styles.dropdown}>
+              <button 
+                className={styles.dropdownButton}
+                onClick={() => handleNavigation("/profile")}
+              >
+                <img
+                  className={styles.userAvatar}
+                  src={"https://cdn-icons-png.flaticon.com/128/1077/1077012.png"}
+                  alt="User Avatar"
+                />
+                <p className={styles.userGreet}>Welcome, {user.lastName}</p>
+              </button>
+            </div>
+          )}
         </div>
       ) : (
         <div className={styles.authButtons}>

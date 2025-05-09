@@ -20,4 +20,9 @@ export const ROUTES = {
       DASHBOARD: '/dashboard',
       PROFILE: '/profile',
     },
+
+    // Admin routes
+    ADMIN: {
+      DASHBOARD: '/admin',
+    },
   } as const;

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AUTH_NOTIFICATIONS } from "../../../../constants/notificationMessages";
 import { useNotificationWithState } from "../../../../contexts/NotificationContext";
 import { useAuth } from "../../../../hooks/useAuth";
@@ -12,18 +12,24 @@ const SignIn: React.FC<{
   onSwitchToSignUp: () => void;
 }> = ({ onClose, onSwitchToSignUp }) => {
   const { login } = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { isLoading, handleAsync } = useNotificationWithState();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
 
     const result = await handleAsync(
-      async () => login(email, password),
+      async () => {
+        const user = await login(email, password);
+        if (user && user.role === 'ADMIN') {
+          onClose();
+          navigate('/admin'); // Navigate to admin dashboard
+        }
+        return user;
+      },
       {
-        
         loading: AUTH_NOTIFICATIONS.signIn.loading,
         success: AUTH_NOTIFICATIONS.signIn.success,
         error: AUTH_NOTIFICATIONS.signIn.error,

@@ -3,8 +3,8 @@ import { FaAddressCard, FaCar, FaHeart, FaLock, FaSignOutAlt, FaUser } from "rea
 import { useAuth } from "../../../hooks/useAuth";
 import "./Profile.css";
 import MyAccount from "./sections/account/Account";
-import ChangePassword from "./sections/change-password/ChangePassword";
 import Address from "./sections/address/Address";
+import ChangePassword from "./sections/change-password/ChangePassword";
 import Favourites from "./sections/favourites/Favourites";
 import MyRides from "./sections/rides/Rides";
 

@@ -201,7 +201,7 @@ const CarDetail: React.FC = () => {
 
       <div className="booking-card">
         <div className="price-info">
-          <span className="price">{car.dailyPrice?.toLocaleString()} USD</span>
+          <span className="price">{car.dailyPrice?.toLocaleString()} VND</span>
           <span className="per-day">/ngày</span>
         </div>
 
@@ -225,7 +225,7 @@ const CarDetail: React.FC = () => {
         {totalPrice > 0 && (
           <div className="total-price">
             <span>Tổng cộng:</span>
-            <span className="price">{totalPrice.toLocaleString()} USD</span>
+            <span className="price">{totalPrice.toLocaleString()} VND</span>
           </div>
         )}
 

@@ -28,8 +28,7 @@ interface BookingDetails {
 
 const CompletedBooking: React.FC = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const { fetchBookingById } = useBooking();
+  const navigate = useNavigate();  const { fetchBookingByCode } = useBooking();
   const [booking, setBooking] = useState<BookingDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -53,8 +52,18 @@ const CompletedBooking: React.FC = () => {
         const paymentStatus = params.get('status');
         const transactionId = params.get('transactionId');
         
+        // Log the URL and parameters for debugging
+        console.log('Current URL:', location.pathname + location.search);
+        console.log('Params:', { bookingCode, paymentStatus, transactionId });
+
         if (!bookingCode) {
-          throw new Error('No booking code provided');
+          console.error('Missing bookingCode parameter');
+          throw new Error('No booking code provided. Invalid access to this page.');
+        }
+
+        if (!paymentStatus) {
+          console.error('Missing status parameter');
+          throw new Error('No payment status provided. Invalid access to this page.');
         }
 
         if (paymentStatus !== 'success') {
@@ -64,10 +73,9 @@ const CompletedBooking: React.FC = () => {
         setPaymentInfo({ 
           status: paymentStatus, 
           transactionId
-        });
-
-        // Fetch booking details using the code
-        const bookingDetails = await fetchBookingById(bookingCode);
+        });        // Fetch booking details using the code
+        console.log('Fetching booking details for code:', bookingCode);
+        const bookingDetails = await fetchBookingByCode(bookingCode);
         
         if (!bookingDetails) {
           throw new Error('No booking data received from server');
@@ -76,29 +84,31 @@ const CompletedBooking: React.FC = () => {
         // Map the API response to our BookingDetails interface
         const mappedBooking: BookingDetails = {
           ...bookingDetails,
-          code: bookingCode, // Ensure we set the code from the URL parameter
+          code: bookingCode,
           startDate: bookingDetails.startDate.toString(),
           endDate: bookingDetails.endDate.toString(),
         };
         
         setBooking(mappedBooking);
       } catch (err) {
-        console.error('Error fetching booking details:', err);
+        console.error('Error in CompletedBooking:', err);
         setError(err instanceof Error ? err.message : 'Failed to load booking details');
         
-        // If payment failed, redirect to payment page after a delay
-        if (err instanceof Error && err.message.includes('Payment was not successful')) {
+        // If payment failed or we're missing parameters, redirect to payment page after a delay
+        if (err instanceof Error && 
+           (err.message.includes('Payment was not successful') || 
+            err.message.includes('Invalid access'))) {
+          console.log('Redirecting to payment page...');
           setTimeout(() => {
-            navigate('/booking/payment');
-          }, 5000);
+            navigate('/payment');
+          }, 3000);
         }
       } finally {
         setLoading(false);
       }
     };
 
-    fetchBookingDetails();
-  }, [location, fetchBookingById, navigate]);
+    fetchBookingDetails();  }, [location, fetchBookingByCode, navigate]);
 
   const handleViewBookings = () => {
     navigate('/profile/rides');

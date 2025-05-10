@@ -43,7 +43,7 @@ const Payment: React.FC = () => {
         pickupAddress: pickupLocation,
         returnAddress: pickupLocation,
         paymentProvider: PaymentProvider.ZALOPAY,
-        returnUrl: window.location.origin + '/completed-booking',
+        returnUrl: `${window.location.origin}/completed-booking`, // ZaloPay will append bookingCode and status
       };
 
       console.log('Creating booking with data:', bookingData);

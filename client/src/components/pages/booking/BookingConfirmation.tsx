@@ -63,24 +63,19 @@ const BookingConfirmation: React.FC = () => {
     // Proceed with confirmation logic
     console.log('Booking confirmed:', { pickupLocationInput });
     console.log('Booking confirmed:', { returnLocationInput });
-    console.log('Booking confirmed:', { phoneNumberInput });
+    console.log('Booking confirmed:', { phoneNumberInput });    setCurrentStep(2);
 
-    setCurrentStep(2);
-
-    const paymentUrl = "https://example.com/payment";  // Example payment URL
-    
-    // Navigate to Payment & Hold (Step 2)
-    navigate('/payment-hold', {
+    // Navigate to Payment (Step 2)
+    navigate('/payment', {
       state: {
         carId,
-        customerName: customerNameInput, // Pass the updated customer name
-        phoneNumber: phoneNumberInput, // Pass the updated phone number
+        customerName: customerNameInput,
+        phoneNumber: phoneNumberInput,
         startTime,
         endTime,
-        pickupLocation: pickupLocationInput,  // Pass the updated pickupLocation here
-        returnLocation: returnLocationInput, // Pass the updated return location
-        totalPrice,
-        paymentUrl,
+        pickupLocation: pickupLocationInput,
+        returnLocation: returnLocationInput,
+        totalPrice
       },
     });
   };
@@ -92,8 +87,7 @@ const BookingConfirmation: React.FC = () => {
         
         <h2 className="title">Contact Information</h2>
 
-        {/* Form for Customer Info and Pickup Location */}
-        <form className="booking-form">
+        {/* Form for Customer Info and Pickup Location */}        <form className="booking-form">
           <div className="user-info">
             <label>
               <strong>Full Name:</strong>
@@ -136,9 +130,7 @@ const BookingConfirmation: React.FC = () => {
                 placeholder="Enter return location"
               />
             </label>
-          </div>
-
-          <button className="confirm-button" onClick={handleConfirmBooking}>
+          </div>          <button type="button" className="confirm-button" onClick={handleConfirmBooking}>
             Confirm
           </button>
 

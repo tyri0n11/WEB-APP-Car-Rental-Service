@@ -80,7 +80,7 @@ function App() {
             
             <Route element={<ProtectedRoute />}>
               <Route path="/booking-confirmation" element={<BookingConfirmation />} />
-              <Route path="/payment-hold" element={<Payment />} />
+              <Route path="/payment" element={<Payment />} />
               <Route path="/completed-booking" element={<CompletedBooking />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/profile" element={<Profile />} />

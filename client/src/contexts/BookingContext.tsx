@@ -49,6 +49,7 @@ interface BookingContextType {
   createBooking: (bookingData: CreateBookingData) => Promise<{ bookingCode: string; paymentUrl: string }>;
   fetchBookings: () => Promise<void>;
   fetchBookingById: (id: string) => Promise<Booking>;
+  fetchBookingByCode: (code: string) => Promise<Booking>;
   returnCar: (id: string) => Promise<void>;
   cancelBooking: (id: string) => Promise<void>;
 }
@@ -173,6 +174,50 @@ export const BookingProvider: React.FC<{ children: ReactNode }> = ({ children })
       }
     } catch (err) {
       console.error('Error fetching booking:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch booking';
+      setError(errorMessage);
+      throw new Error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch a booking by its code
+  const fetchBookingByCode = async (code: string): Promise<Booking> => {
+    if (!accessToken) {
+      throw new Error('No authentication token available');
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await fetch(`${API_BASE_URL}/bookings/code/${code}`, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Authentication token expired. Please log in again.');
+        }
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to fetch booking');
+      }
+
+      const result = await response.json();
+      
+      if (result?.data) {
+        const booking = result.data;
+        setCurrentBooking(booking);
+        return booking;
+      } else {
+        throw new Error('Invalid response format');
+      }
+    } catch (err) {
+      console.error('Error fetching booking by code:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch booking';
       setError(errorMessage);
       throw new Error(errorMessage);
@@ -339,6 +384,7 @@ export const BookingProvider: React.FC<{ children: ReactNode }> = ({ children })
     createBooking,
     fetchBookings,
     fetchBookingById,
+    fetchBookingByCode,
     returnCar,
     cancelBooking,
   };
@@ -359,6 +405,7 @@ export const useBooking = (): BookingContextType => {
       createBooking: async () => { throw new Error('Booking context not available'); },
       fetchBookings: async () => { throw new Error('Booking context not available'); },
       fetchBookingById: async () => { throw new Error('Booking context not available'); },
+      fetchBookingByCode: async () => { throw new Error('Booking context not available'); },
       returnCar: async () => { throw new Error('Booking context not available'); },
       cancelBooking: async () => { throw new Error('Booking context not available'); },
     };

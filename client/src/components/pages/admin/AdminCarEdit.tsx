@@ -3,7 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Car, getCarById, updateCar } from '../../../apis/cars';
 import { CAR_NOTIFICATIONS } from '../../../constants/notificationMessages';
 import { useNotificationWithState } from '../../../contexts/NotificationContext';
-import { CarStatus, FuelType } from '../../../types/car';
+import { ROUTES } from '../../../routes/constants/ROUTES';
+import { FuelType } from '../../../types/car';
 import './AdminCarEdit.css';
 
 const AdminCarEdit: React.FC = () => {
@@ -27,7 +28,6 @@ const AdminCarEdit: React.FC = () => {
     autoGearbox: true,
     fuelType: FuelType.PETROL,
     address: '',
-    status: CarStatus.AVAILABLE
   });
 
   useEffect(() => {
@@ -49,7 +49,6 @@ const AdminCarEdit: React.FC = () => {
           autoGearbox: carData.autoGearbox,
           fuelType: carData.fuelType,
           address: carData.address,
-          status: carData.status
         });
       } catch (err) {
         console.error('Error fetching car:', err);
@@ -88,7 +87,7 @@ const AdminCarEdit: React.FC = () => {
     );
 
     if (result) {
-      navigate('/admin/cars');
+      navigate(ROUTES.ADMIN.DASHBOARD);
     }
   };
 
@@ -104,7 +103,7 @@ const AdminCarEdit: React.FC = () => {
     return (
       <div className="error-container">
         <p>{error || 'Car not found'}</p>
-        <button onClick={() => navigate('/admin/cars')}>Back to Cars</button>
+        <button onClick={() => navigate(ROUTES.ADMIN.DASHBOARD)}>Back to Cars</button>
       </div>
     );
   }
@@ -113,7 +112,7 @@ const AdminCarEdit: React.FC = () => {
     <div className="admin-car-edit">
       <div className="edit-header">
         <h1>Edit Car Details</h1>
-        <button className="back-button" onClick={() => navigate('/admin/cars')}>
+        <button className="back-button" onClick={() => navigate(ROUTES.ADMIN.DASHBOARD)}>
           Back to Cars
         </button>
       </div>
@@ -226,20 +225,6 @@ const AdminCarEdit: React.FC = () => {
             </select>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="status">Status</label>
-            <select
-              id="status"
-              name="status"
-              value={formData.status}
-              onChange={handleInputChange}
-              required
-            >
-              <option value={CarStatus.AVAILABLE}>Available</option>
-              <option value={CarStatus.RENTED}>Rented</option>
-            </select>
-          </div>
-
           <div className="form-group checkbox-group">
             <label>
               <input
@@ -284,7 +269,7 @@ const AdminCarEdit: React.FC = () => {
           <button
             type="button"
             className="cancel-button"
-            onClick={() => navigate('/admin/cars')}
+            onClick={() => navigate(ROUTES.ADMIN.DASHBOARD)}
           >
             Cancel
           </button>

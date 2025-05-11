@@ -10,7 +10,15 @@ import styles from './Dashboard.module.css';
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState(() => {
+    const savedTab = localStorage.getItem('adminActiveTab');
+    return savedTab || 'dashboard';
+  });
+
+  // Save activeTab to localStorage whenever it changes
+  React.useEffect(() => {
+    localStorage.setItem('adminActiveTab', activeTab);
+  }, [activeTab]);
 
   // Redirect if not admin
   React.useEffect(() => {

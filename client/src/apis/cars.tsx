@@ -3,6 +3,23 @@ import { CarStatus, FuelType } from '../types/car';
 
 const API_URL = 'http://localhost:3000/cars';
 
+// Create axios instance with default config
+const axiosInstance = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Add request interceptor to add auth token
+axiosInstance.interceptors.request.use((config) => {
+  const token = localStorage.getItem('access_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export enum CarSortBy {
   PRICE_ASC = 'price_asc',
   PRICE_DESC = 'price_desc',
@@ -108,32 +125,32 @@ export interface UpdateCarData {
 }
 
 export const getCars = async (params?: CarQueryParams): Promise<CarsResponse> => {
-  const response = await axios.get(API_URL, { params });
+  const response = await axiosInstance.get('', { params });
   return response.data;
 };
 
 export const getCarById = async (id: string): Promise<Car> => {
-  const response = await axios.get(`${API_URL}/${id}`);
+  const response = await axiosInstance.get(`/${id}`);
   return response.data.data;
 };
 
 export const createCar = async (carData: CreateCarData): Promise<Car> => {
-  const response = await axios.post(API_URL, carData);
+  const response = await axiosInstance.post('', carData);
   return response.data;
 };
 
 export const updateCar = async (id: string, carData: UpdateCarData): Promise<Car> => {
-  const response = await axios.patch(`${API_URL}/${id}`, carData);
+  const response = await axiosInstance.patch(`/${id}`, carData);
   return response.data;
 };
 
 export const updateCarStatus = async (id: string, status: CarStatus): Promise<Car> => {
-  const response = await axios.patch(`${API_URL}/${id}/status`, { status });
+  const response = await axiosInstance.patch(`/${id}/status`, { status });
   return response.data;
 };
 
 export const deleteCar = async (id: string): Promise<boolean> => {
-  const response = await axios.delete(`${API_URL}/${id}`);
+  const response = await axiosInstance.delete(`/${id}`);
   return response.data;
 };
 

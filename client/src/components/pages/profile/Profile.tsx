@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import { FaAddressCard, FaCar, FaHeart, FaLock, FaSignOutAlt, FaUser } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { FaAddressCard, FaCar, FaHeart, FaLock, FaSignOutAlt } from "react-icons/fa";
 import { useAuth } from "../../../hooks/useAuth";
 import "./Profile.css";
-import MyAccount from "./sections/account/Account";
 import Address from "./sections/address/Address";
 import ChangePassword from "./sections/change-password/ChangePassword";
 import Favourites from "./sections/favourites/Favourites";
@@ -10,8 +9,29 @@ import MyRides from "./sections/rides/Rides";
 
 const Profile: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
+  const { user, logout } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (user) {
+      setIsLoading(false);
+    }
+  }, [user]);
+
+  if (isLoading || !user) {
+    return (
+      <div className="profilePage">
+        <div className="profileLayout">
+          <div className="profileContainer">
+            <div className="loading">Loading user information...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const menuItems = [
-    { label: "My Account", icon: <FaUser />, content: <MyAccount /> },
+    // { label: "My Account", icon: <FaUser />, content: <MyAccount /> },
     { label: "Favourites", icon: <FaHeart />, content: <Favourites /> },
     { label: "My Ride", icon: <FaCar />, content: <MyRides /> },
     {
@@ -31,7 +51,6 @@ const Profile: React.FC = () => {
       isLogout: true
     },
   ];
-  const { user, logout } = useAuth();
 
   const handleTabClick = (index: number) => {
     if (menuItems[index].isLogout) {
@@ -47,7 +66,7 @@ const Profile: React.FC = () => {
         <div className="profileContainer">
           <div className="profileSidebar">
             <div className="profileTitle">
-              Hi, {user?.lastName || "there"} {user?.firstName}
+              Hi, {user.lastName || "there"} {user.firstName}
             </div>
             <hr className="profileHr" />
             {menuItems.map((item, index) => (

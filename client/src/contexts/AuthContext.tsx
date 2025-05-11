@@ -10,9 +10,11 @@ export interface User {
   lastName: string;
   phoneNumber: string;
   isVerified: boolean;
-  drivingLicenceId: DrivingLicence;
+  drivingLicence: DrivingLicence;
 }
+
 interface DrivingLicence {
+  id: string;
   licenceNumber: string;
   drivingLicenseImages: string[];
   expiryDate: string;
@@ -86,7 +88,7 @@ const fetchUser = async (accessToken: string): Promise<User | null> => {
         lastName: result.data.lastName,
         phoneNumber: result.data.phoneNumber,
         isVerified: result.data.isVerified,
-        drivingLicenceId: result.data.drivingLicenceId ?? "Not validate yet",
+        drivingLicence: result.data.drivingLicence ?? null,
       };
       return user;
     } else {

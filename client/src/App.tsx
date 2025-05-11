@@ -11,9 +11,9 @@ import { AdminRoutes } from "./routes/AdminRoutes";
 
 import "./App.css";
 import NotFound from "./components/pages/NotFound";
-import Profile from "./components/pages/profile/Profile";
 import { NotificationProvider } from './contexts/NotificationContext';
 import { AuthRoutes } from "./routes/AuthRoutes";
+import { ProtectedRoutes } from "./routes/ProtectedRoutes";
 import { PublicRoutes } from "./routes/PublicRoutes";
 
 function App() {
@@ -79,7 +79,7 @@ function App() {
             {/* Auth Routes */}
             <Route path="/auth/*" element={<AuthRoutes />} />
             
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/user/*" element={<ProtectedRoutes />} />
 
 
             {/* Admin Routes */}

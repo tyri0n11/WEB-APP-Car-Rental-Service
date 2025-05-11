@@ -93,7 +93,7 @@ const Navbar: React.FC<{
                   <div className={styles.dropdown}>
                     <button
                       className={styles.dropdownButton}
-                      onClick={() => handleNavigation(ROUTES.PROTECTED.PROFILE)}
+                      onClick={() => handleNavigation(`/user${ROUTES.PROTECTED.PROFILE}`)}
                     >
                       <img
                         className={styles.userAvatar}

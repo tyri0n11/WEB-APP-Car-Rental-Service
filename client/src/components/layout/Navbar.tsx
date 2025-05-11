@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import { ROUTES } from "../../routes/constants/ROUTES";
 import styles from "./Navbar.module.css";
 
 const Navbar: React.FC<{
@@ -10,21 +11,14 @@ const Navbar: React.FC<{
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
-  // Ẩn navbar nếu là admin và đang ở /admin
-  if (user && user.role === 'ADMIN' && location.pathname.startsWith('/admin')) {
+  if (user && user.role === "ADMIN" && location.pathname.startsWith("/admin")) {
     return null;
   }
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
-  };
-
-  const handleLogout = () => {
-    logout();
-    setIsMenuOpen(false);
-    navigate('/'); // Chuyển về trang chủ sau khi logout
   };
 
   const handleNavigation = (path: string) => {
@@ -88,9 +82,9 @@ const Navbar: React.FC<{
 
       {user ? (
         <div className={styles.privateContainer}>
-          {user.role === 'ADMIN' ? (
+          {user.role === "ADMIN" ? (
             <div className={styles.adminControls}>
-              <button 
+              <button
                 className={styles.adminDashboardBtn}
                 onClick={() => handleNavigation("/admin")}
               >
@@ -99,16 +93,18 @@ const Navbar: React.FC<{
             </div>
           ) : (
             <div className={styles.dropdown}>
-              <button 
+              <button
                 className={styles.dropdownButton}
-                onClick={() => handleNavigation("/profile")}
+                onClick={() => handleNavigation(ROUTES.PROTECTED.PROFILE)}
               >
                 <img
                   className={styles.userAvatar}
-                  src={"https://cdn-icons-png.flaticon.com/128/1077/1077012.png"}
+                  src={
+                    "https://cdn-icons-png.flaticon.com/128/1077/1077012.png"
+                  }
                   alt="User Avatar"
                 />
-                <p className={styles.userGreet}>Welcome, {user.lastName}</p>
+                <p className={styles.userGreet}>Welcome {user.lastName}</p>
               </button>
             </div>
           )}

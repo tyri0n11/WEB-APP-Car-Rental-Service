@@ -17,8 +17,7 @@ export const ROUTES = {
     
     // Protected routes
     PROTECTED: {
-      DASHBOARD: '/dashboard',
-      PROFILE: '/profile',
+      PROFILE: '/user/profile',
     },
 
     // Admin routes

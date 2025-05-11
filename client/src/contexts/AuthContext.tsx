@@ -77,7 +77,7 @@ const fetchUser = async (accessToken: string): Promise<User | null> => {
     if (!response.ok) throw new Error("Failed to fetch user");
 
     const result = await response.json();
-    if (result?.statusCode === 200 && result?.data) {
+    if ((result?.statusCode === 200 || result?.statusCode === 304) && result?.data) {
       const user: User = {
         role: result.data.role,
         id: result.data.id,

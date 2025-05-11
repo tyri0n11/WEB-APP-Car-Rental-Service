@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
+import AdminBookings from './AdminBookings';
+import AdminCars from './AdminCars';
+import AdminRevenue from './AdminRevenue';
 import AdminSidebar from './AdminSidebar';
 import styles from './Dashboard.module.css';
 
@@ -59,21 +62,21 @@ const Dashboard: React.FC = () => {
         return (
           <div className={styles.mainContent}>
             <h2>Quản lý xe</h2>
-            {/* Add car management content here */}
+            <AdminCars />
           </div>
         );
       case 'bookings':
         return (
           <div className={styles.mainContent}>
             <h2>Quản lý đơn hàng</h2>
-            {/* Add booking management content here */}
+            <AdminBookings />
           </div>
         );
       case 'revenue':
         return (
           <div className={styles.mainContent}>
             <h2>Quản lý doanh thu</h2>
-            {/* Add revenue management content here */}
+            <AdminRevenue />
           </div>
         );
       default:

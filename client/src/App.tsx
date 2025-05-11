@@ -8,7 +8,6 @@ import SignIn from "./components/pages/auth/signin/SignIn";
 import SignUp from "./components/pages/auth/signup/SignUp";
 import { useAuth } from "./hooks/useAuth";
 import { AdminRoutes } from "./routes/AdminRoutes";
-import { ProtectedRoutes } from "./routes/ProtectedRoutes";
 
 import "./App.css";
 import NotFound from "./components/pages/NotFound";
@@ -80,7 +79,7 @@ function App() {
             <Route path="/auth/*" element={<AuthRoutes />} />
             
             {/* Protected Routes */}
-            <Route path="/protected/*" element={<ProtectedRoutes />} />
+            {/* <Route path="/user/*" element={<ProtectedRoutes />} /> */}
 
             {/* Admin Routes */}
             <Route path="/admin/*" element={<AdminRoutes />} />

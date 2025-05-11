@@ -10,7 +10,39 @@
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 100;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.overlayVisible {
+  display: block;
+  opacity: 1;
+}
+
+.closeButton {
+  display: none;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
 }
 
 .logo {
@@ -105,20 +137,31 @@
   background: #b52a37;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 768px) {
   .sidebar {
-    width: 60px;
-    padding: 1rem 0.5rem;
+    transform: translateX(-100%);
+    width: 280px;
   }
-  .logo img {
-    width: 40px;
+
+  .sidebarOpen {
+    transform: translateX(0);
   }
-  .tab, .activeTab, .logoutBtn, .previewBtn {
-    font-size: 0.9rem;
-    padding: 0.5rem 0.5rem;
-    justify-content: center;
+
+  .closeButton {
+    display: block;
   }
-  .tab span, .activeTab span, .logoutBtn span, .previewBtn span {
-    display: none;
+
+  .tab, .activeTab, .previewBtn, .logoutBtn {
+    padding: 1rem;
+  }
+
+  .tab span, .activeTab span, .previewBtn span, .logoutBtn span {
+    display: inline;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 100%;
   }
 } 

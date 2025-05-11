@@ -77,56 +77,57 @@ const Navbar: React.FC<{
               </button>
             </li>
           </ul>
+          <div className={styles.authButtons} style={{ display: isMenuOpen ? 'flex' : undefined }}>
+            {user ? (
+              <div className={styles.privateContainer}>
+                {user.role === "ADMIN" ? (
+                  <div className={styles.adminControls}>
+                    <button
+                      className={styles.adminDashboardBtn}
+                      onClick={() => handleNavigation("/admin")}
+                    >
+                      Admin Dashboard
+                    </button>
+                  </div>
+                ) : (
+                  <div className={styles.dropdown}>
+                    <button
+                      className={styles.dropdownButton}
+                      onClick={() => handleNavigation(ROUTES.PROTECTED.PROFILE)}
+                    >
+                      <img
+                        className={styles.userAvatar}
+                        src={
+                          "https://cdn-icons-png.flaticon.com/128/1077/1077012.png"
+                        }
+                        alt="User Avatar"
+                      />
+                      <p className={styles.userGreet}>Welcome {user.lastName}</p>
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={onSignInClick}
+                  className={styles.loginButton}
+                >
+                  Sign In
+                </button>
+                <button
+                  type="button"
+                  onClick={onSignUpClick}
+                  className={styles.signupButton}
+                >
+                  Sign Up
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
-
-      {user ? (
-        <div className={styles.privateContainer}>
-          {user.role === "ADMIN" ? (
-            <div className={styles.adminControls}>
-              <button
-                className={styles.adminDashboardBtn}
-                onClick={() => handleNavigation("/admin")}
-              >
-                Admin Dashboard
-              </button>
-            </div>
-          ) : (
-            <div className={styles.dropdown}>
-              <button
-                className={styles.dropdownButton}
-                onClick={() => handleNavigation(ROUTES.PROTECTED.PROFILE)}
-              >
-                <img
-                  className={styles.userAvatar}
-                  src={
-                    "https://cdn-icons-png.flaticon.com/128/1077/1077012.png"
-                  }
-                  alt="User Avatar"
-                />
-                <p className={styles.userGreet}>Welcome {user.lastName}</p>
-              </button>
-            </div>
-          )}
-        </div>
-      ) : (
-        <div className={styles.authButtons}>
-          <button
-            type="button"
-            onClick={onSignInClick}
-            className={styles.loginButton}
-          >
-            Sign In
-          </button>
-          <button
-            type="button"
-            onClick={onSignUpClick}
-            className={styles.signupButton}
-          >
-            Sign Up
-          </button>
-        </div>
-      )}
     </div>
   );
 };

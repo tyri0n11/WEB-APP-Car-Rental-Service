@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FaBars } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
 import AdminBookings from './AdminBookings';
@@ -14,6 +15,7 @@ const Dashboard: React.FC = () => {
     const savedTab = localStorage.getItem('adminActiveTab');
     return savedTab || 'dashboard';
   });
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Save activeTab to localStorage whenever it changes
   React.useEffect(() => {
@@ -27,14 +29,23 @@ const Dashboard: React.FC = () => {
     }
   }, [user, navigate]);
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
         return (
           <>
             <div className={styles.header}>
-              <h1>Admin Dashboard</h1>
-              <p>Welcome back, {user?.firstName} {user?.lastName}</p>
+              <button className={styles.menuToggle} onClick={toggleSidebar}>
+                <FaBars />
+              </button>
+              <div className={styles.headerContent}>
+                <h1>Admin Dashboard</h1>
+                <p>Welcome back, {user?.firstName} {user?.lastName}</p>
+              </div>
             </div>
             
             <div className={styles.statsGrid}>
@@ -69,21 +80,36 @@ const Dashboard: React.FC = () => {
       case 'cars':
         return (
           <div className={styles.mainContent}>
-            <h2>Quản lý xe</h2>
+            <div className={styles.header}>
+              <button className={styles.menuToggle} onClick={toggleSidebar}>
+                <FaBars />
+              </button>
+              <h2>Quản lý xe</h2>
+            </div>
             <AdminCars />
           </div>
         );
       case 'bookings':
         return (
           <div className={styles.mainContent}>
-            <h2>Quản lý đơn hàng</h2>
+            <div className={styles.header}>
+              <button className={styles.menuToggle} onClick={toggleSidebar}>
+                <FaBars />
+              </button>
+              <h2>Quản lý đơn hàng</h2>
+            </div>
             <AdminBookings />
           </div>
         );
       case 'revenue':
         return (
           <div className={styles.mainContent}>
-            <h2>Quản lý doanh thu</h2>
+            <div className={styles.header}>
+              <button className={styles.menuToggle} onClick={toggleSidebar}>
+                <FaBars />
+              </button>
+              <h2>Quản lý doanh thu</h2>
+            </div>
             <AdminRevenue />
           </div>
         );
@@ -93,9 +119,14 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div style={{ display: 'flex' }}>
-      <AdminSidebar activeTab={activeTab} onTabChange={setActiveTab} />
-      <div className={styles.dashboard} style={{ marginLeft: 220, width: '100%' }}>
+    <div className={styles.container}>
+      <AdminSidebar 
+        activeTab={activeTab} 
+        onTabChange={setActiveTab} 
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
+      <div className={`${styles.dashboard} ${isSidebarOpen ? styles.sidebarOpen : ''}`}>
         {renderContent()}
       </div>
     </div>

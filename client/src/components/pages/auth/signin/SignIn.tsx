@@ -18,20 +18,18 @@ const SignIn: React.FC<{
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
 
     const result = await handleAsync(
-      async () => login(email, password),
+      async () => login({ email, password }),
       {
-        
         loading: AUTH_NOTIFICATIONS.signIn.loading,
         success: AUTH_NOTIFICATIONS.signIn.success,
         error: AUTH_NOTIFICATIONS.signIn.error,
       }
     );
 
-    if (!result) {
-      console.error("Login failed");
+    if (result) {
+      onClose();
     }
   };
 

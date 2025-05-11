@@ -1,85 +1,47 @@
 .favourites-root {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    width: 100%;
-    box-sizing: border-box;
+    padding: 1.5rem;
 }
 
 .favourites-section {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 1.25rem;
-    width: 100%;
-    box-sizing: border-box;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .favourites-header {
-    margin-bottom: 1.25rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 2px solid #e1e4e8;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    margin-bottom: 2rem;
 }
 
 .favourites-header h4 {
-    font-size: 1.1rem;
+    font-size: 1.5rem;
     font-weight: 600;
-    color: #2d3748;
-    margin: 0;
-}
-
-.data-source-toggle {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.data-source-toggle button {
-    padding: 0.4rem 0.75rem;
-    border: 1px solid #e1e4e8;
-    border-radius: 6px;
-    background-color: #fff;
-    color: #4a5568;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 0.9rem;
-}
-
-.data-source-toggle button.active {
-    background-color: #4299e1;
-    border-color: #4299e1;
-    color: #fff;
+    color: #1a202c;
 }
 
 .favourites-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1rem;
-    width: 100%;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
 }
 
 .favourite-card {
-    border: 1px solid #e1e4e8;
-    border-radius: 8px;
-    overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    background-color: #fff;
     display: flex;
     flex-direction: column;
+    background: #fff;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
 }
 
 .favourite-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .car-image-container {
     position: relative;
     width: 100%;
-    height: 140px;
+    height: 200px;
     overflow: hidden;
 }
 
@@ -87,85 +49,42 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s ease;
 }
 
-.favourite-card:hover .car-image {
-    transform: scale(1.05);
+.price-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    font-weight: 600;
 }
 
 .car-info {
-    padding: 0.75rem;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
-    flex: 1;
+    gap: 1rem;
 }
 
 .car-name {
-    font-size: 1rem;
+    font-size: 1.25rem;
     font-weight: 600;
-    color: #2d3748;
-    margin: 0 0 0.5rem 0;
+    color: #1a202c;
+    margin: 0;
 }
 
 .car-details {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
-    margin-bottom: 0.75rem;
 }
 
 .car-detail {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    font-size: 0.875rem;
     color: #4a5568;
-    font-size: 0.9rem;
-}
-
-.car-detail svg {
-    color: #718096;
-    font-size: 0.9rem;
-}
-
-.car-price {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #4299e1;
-    margin: 0.5rem 0;
-}
-
-.car-rating {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    margin-bottom: 0.75rem;
-}
-
-.car-rating svg {
-    color: #f6ad55;
-    font-size: 0.9rem;
-}
-
-.car-rating span {
-    color: #4a5568;
-    font-size: 0.9rem;
-}
-
-.car-categories {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
-}
-
-.car-category {
-    background-color: #edf2f7;
-    color: #4a5568;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    font-weight: 500;
 }
 
 .car-actions {
@@ -174,47 +93,105 @@
     margin-top: auto;
 }
 
-.book-car {
-    flex: 1;
+.booking-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.date-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.date-inputs input {
     padding: 0.5rem;
-    background-color: #4299e1;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+}
+
+.booking-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.cancel-button,
+.confirm-button {
+    flex: 1;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
+}
+
+.cancel-button {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    color: #4a5568;
+}
+
+.cancel-button:hover {
+    background: #f7fafc;
+    border-color: #cbd5e0;
+}
+
+.confirm-button {
+    background: #4299e1;
+    border: none;
+    color: #fff;
+}
+
+.confirm-button:hover {
+    background: #3182ce;
+}
+
+.confirm-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.book-car,
+.remove-favourite {
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.book-car {
+    background: #4299e1;
+    border: none;
+    color: #fff;
 }
 
 .book-car:hover {
-    background-color: #3182ce;
+    background: #3182ce;
 }
 
 .remove-favourite {
-    flex: 1;
-    padding: 0.5rem;
-    background-color: #fff;
+    background: #fff;
     border: 1px solid #e53e3e;
     color: #e53e3e;
-    border-radius: 6px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
 }
 
 .remove-favourite:hover {
-    background-color: #e53e3e;
+    background: #e53e3e;
     color: #fff;
+}
+
+.icon {
+    font-size: 1rem;
 }
 
 .favourites-loading,
@@ -224,13 +201,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 2rem 1rem;
+    min-height: 300px;
     text-align: center;
     color: #4a5568;
-}
-
-.favourites-loading {
-    gap: 0.75rem;
 }
 
 .spinner {
@@ -239,65 +212,58 @@
     color: #4299e1;
 }
 
+.empty-icon {
+    font-size: 3rem;
+    color: #cbd5e0;
+    margin-bottom: 1rem;
+}
+
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
 
-.favourites-error {
-    gap: 0.75rem;
-}
-
-.favourites-error button {
-    background-color: #4299e1;
-    color: #fff;
-    border: none;
-    padding: 0.6rem 1.25rem;
-    border-radius: 6px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 0.9rem;
-}
-
-.favourites-error button:hover {
-    background-color: #3182ce;
-}
-
-.favourites-empty {
-    gap: 0.75rem;
+@media (max-width: 1200px) {
+    .favourites-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
 }
 
 @media (max-width: 992px) {
     .favourites-section {
-        padding: 1rem;
+        padding: 1.5rem;
     }
     
     .favourites-header {
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
     }
     
     .favourites-grid {
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.25rem;
     }
     
     .car-image-container {
-        height: 120px;
+        height: 180px;
     }
 }
 
 @media (max-width: 768px) {
+    .favourites-root {
+        padding: 1.5rem;
+    }
+    
     .favourites-grid {
         grid-template-columns: 1fr;
     }
     
     .car-image-container {
-        height: 100px;
+        height: 160px;
     }
     
     .favourites-header {
         flex-direction: column;
-        gap: 0.75rem;
+        gap: 1rem;
         align-items: flex-start;
     }
     
@@ -311,41 +277,53 @@
     }
     
     .car-name {
-        font-size: 0.95rem;
+        font-size: 1.1rem;
     }
     
     .car-detail {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
     }
     
     .car-price {
-        font-size: 1rem;
+        font-size: 1.1rem;
+    }
+
+    .car-actions {
+        flex-direction: column;
+    }
+
+    .booking-actions {
+        flex-direction: column;
     }
 }
-
 @media (max-width: 576px) {
+    .favourites-root {
+        padding: 1rem;
+    }
+    
     .favourites-section {
-        padding: 0.75rem;
+        padding: 1rem;
     }
     
     .favourites-header h4 {
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
     
     .car-image-container {
-        height: 80px;
+        height: 140px;
     }
     
     .car-info {
-        padding: 0.6rem;
+        padding: 1rem;
     }
     
     .car-actions {
         flex-direction: column;
     }
     
-    .book-car, .remove-favourite {
-        padding: 0.4rem;
-        font-size: 0.85rem;
+    .book-car,
+    .remove-favourite {
+        padding: 0.625rem;
+        font-size: 0.9rem;
     }
 }

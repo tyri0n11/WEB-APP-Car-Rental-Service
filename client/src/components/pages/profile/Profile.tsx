@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { FaAddressCard, FaCar, FaHeart, FaLock, FaSignOutAlt } from "react-icons/fa";
+import { FaAddressCard, FaCar, FaHeart, FaLock, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { useAuth } from "../../../hooks/useAuth";
 import "./Profile.css";
+import Account from "./sections/account/Account";
 import Address from "./sections/address/Address";
 import ChangePassword from "./sections/change-password/ChangePassword";
 import Favourites from "./sections/favourites/Favourites";
@@ -31,7 +32,7 @@ const Profile: React.FC = () => {
   }
 
   const menuItems = [
-    // { label: "My Account", icon: <FaUser />, content: <MyAccount /> },
+    { label: "My Account", icon: <FaUser />, content: <Account /> },
     { label: "Favourites", icon: <FaHeart />, content: <Favourites /> },
     { label: "My Ride", icon: <FaCar />, content: <MyRides /> },
     {

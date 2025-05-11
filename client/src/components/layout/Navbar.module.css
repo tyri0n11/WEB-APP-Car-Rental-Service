@@ -233,3 +233,18 @@
 .logoutButton:active {
   background-color: #bd2130;
 }
+
+.adminDashboardBtn {
+  padding: 0.5rem 1rem;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.adminDashboardBtn:hover {
+  background-color: #174ea6;
+}

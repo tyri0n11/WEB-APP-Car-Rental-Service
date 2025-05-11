@@ -91,10 +91,10 @@ const Navbar: React.FC<{
           {user.role === 'ADMIN' ? (
             <div className={styles.adminControls}>
               <button 
-                className={styles.logoutButton}
-                onClick={handleLogout}
+                className={styles.adminDashboardBtn}
+                onClick={() => handleNavigation("/admin")}
               >
-                Logout
+                Admin Dashboard
               </button>
             </div>
           ) : (

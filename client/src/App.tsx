@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import Banner from "./components/layout/Banner";
 import Footer from "./components/layout/Footer";
 import NavBar from "./components/layout/Navbar";
 import SignIn from "./components/pages/auth/signin/SignIn";
 import SignUp from "./components/pages/auth/signup/SignUp";
+import { useAuth } from "./hooks/useAuth";
 import { AdminRoutes } from "./routes/AdminRoutes";
 import { ProtectedRoutes } from "./routes/ProtectedRoutes";
 
@@ -18,6 +19,11 @@ import { PublicRoutes } from "./routes/PublicRoutes";
 function App() {
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
+  const location = useLocation();
+  const { user } = useAuth();
+
+  // Check if current route is admin route
+  const isAdminRoute = location.pathname.startsWith('/admin');
 
   useEffect(() => {
     if (showSignIn || showSignUp) {
@@ -43,25 +49,30 @@ function App() {
     };
   }, []);
 
+  // Only show banner and footer if not on admin route
+  const showBannerAndFooter = !(user?.role === 'ADMIN' && isAdminRoute);
+
   return (
     <NotificationProvider>
       <div className="App">
-        <header className="navbar">
-          <Banner />
-          <NavBar
-            onSignInClick={() => {
-              setShowSignIn(true);
-              setShowSignUp(false);
-            }}
-            onSignUpClick={() => {
-              setShowSignUp(true);
-              setShowSignIn(false);
-            }}
-          />
-        </header>
+        {showBannerAndFooter && (
+          <header className="navbar">
+            <Banner />
+            <NavBar
+              onSignInClick={() => {
+                setShowSignIn(true);
+                setShowSignUp(false);
+              }}
+              onSignUpClick={() => {
+                setShowSignUp(true);
+                setShowSignIn(false);
+              }}
+            />
+          </header>
+        )}
 
         <section className="main-content">
-        <Routes>
+          <Routes>
             {/* Public Routes */}
             <Route path="/*" element={<PublicRoutes />} />
             
@@ -98,7 +109,7 @@ function App() {
           />
         )}
 
-        <Footer />
+        {showBannerAndFooter && <Footer />}
       </div>
     </NotificationProvider>
   );

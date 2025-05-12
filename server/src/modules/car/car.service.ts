@@ -130,7 +130,7 @@ export class CarService extends BaseService<Car> {
     if (!car) {
       throw new BadRequestException(`Car with ID ${id} not found`);
     }
-
+    
     return this.processCarResponse(car);
   }
 

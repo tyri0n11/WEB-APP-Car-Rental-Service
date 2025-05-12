@@ -18,7 +18,6 @@ import { ConfigService } from '@nestjs/config';
 import { ApiBookingQueries } from './decorators/findManyQuery.decorator';
 import { ApiPagination } from '@/decorators/apiPagination.decorator';
 import { FindManyBookingsQueryDTO } from './dtos/findMany.request.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { JwtAccessGuard } from '../auth/guards/jwt/jwtAccess.guard';
 @UseGuards(JwtAccessGuard)
 @Controller('bookings')
@@ -56,5 +55,10 @@ export class BookingController {
   @Patch(':id/return')
   returnCar(@Param('id') id: string) {
     return this.bookingService.handleReturnCar(id);
+  }
+
+  @Get('code/:code')
+  findByCode(@Param('code') code: string) {
+    return this.bookingService.findByCode(code);
   }
 }

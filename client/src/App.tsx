@@ -17,8 +17,8 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import ForgotPassword from "./components/pages/auth/forgot-password";
 import ResetPassword from "./components/pages/auth/reset-password";
 import NotFound from "./components/pages/NotFound";
-import { NotificationProvider } from './contexts/NotificationContext';
-import { BookingProvider } from './contexts/BookingContext';
+import { NotificationProvider } from "./contexts/NotificationContext";
+import { BookingProvider } from "./contexts/BookingContext";
 import BookingConfirmation from "./components/pages/booking/BookingConfirmation";
 import Payment from "./components/pages/booking/Payment";
 import CompletedBooking from "./components/pages/booking/CompletedBooking";
@@ -37,17 +37,17 @@ function App() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const navbar = document.querySelector('.navbar');
+      const navbar = document.querySelector(".navbar");
       if (window.scrollY > 50) {
-        navbar?.classList.add('scrolled');
+        navbar?.classList.add("scrolled");
       } else {
-        navbar?.classList.remove('scrolled');
+        navbar?.classList.remove("scrolled");
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
   return (
@@ -57,67 +57,67 @@ function App() {
           <header className="navbar">
             <Banner />
             <NavBar
-            onSignInClick={() => {
-              setShowSignIn(true);
-              setShowSignUp(false);
-            }}
-            onSignUpClick={() => {
-              setShowSignUp(true);
-              setShowSignIn(false);
-            }}
-          />
-        </header>
+              onSignInClick={() => {
+                setShowSignIn(true);
+                setShowSignUp(false);
+              }}
+              onSignUpClick={() => {
+                setShowSignUp(true);
+                setShowSignIn(false);
+              }}
+            />
+          </header>
 
-        <section className="main-content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/auth/forgot-password" element={<ForgotPassword />} />
-            <Route path="/auth/reset-password" element={<ResetPassword />} />
-            <Route path="services" element={<Services />} />            
-            <Route path="/cars/:id" element={<CarDetail />} />
-            
-            <Route element={<ProtectedRoute />}>
-              <Route path="/booking-confirmation" element={<BookingConfirmation />} />
-              <Route path="/payment" element={<Payment />} />
+          <section className="main-content">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route
+                path="/auth/forgot-password"
+                element={<ForgotPassword />}
+              />
+              <Route path="/auth/reset-password" element={<ResetPassword />} />
+              <Route path="services" element={<Services />} />
+              <Route path="/cars/:id" element={<CarDetail />} />
               <Route path="/completed-booking" element={<CompletedBooking />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/profile" element={<Profile />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </section>
-        {showSignIn && (
-          <SignIn
-            onClose={() => {
-              setShowSignIn(false);
-              document.body.classList.remove("modal-open");
-            }}
-            onSwitchToSignUp={() => {
-              setShowSignIn(false);
-              setShowSignUp(true);
-            }}
-          />
-        )}
 
-        {showSignUp && (
-          <SignUp
-            onClose={() => {
-              setShowSignUp(false);
-              document.body.classList.remove("modal-open");
-            }}
-            onSwitchToSignIn={() => {
-              setShowSignUp(false);
-              setShowSignIn(true);
-            }}
-          />
-        )}
+              <Route element={<ProtectedRoute />}>
+                <Route
+                  path="/booking-confirmation"
+                  element={<BookingConfirmation />}
+                />
+                <Route path="/payment" element={<Payment />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/profile" element={<Profile />} />
+              </Route>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </section>
+          {showSignIn && (
+            <SignIn
+              onClose={() => setShowSignIn(false)}
+              onSwitchToSignUp={() => {
+                setShowSignIn(false);
+                setShowSignUp(true);
+              }}
+            />
+          )}
 
-        <Footer />
-      </div>
-    </BookingProvider>
-  </NotificationProvider>
+          {showSignUp && (
+            <SignUp
+              onClose={() => setShowSignUp(false)}
+              onSwitchToSignIn={() => {
+                setShowSignUp(false);
+                setShowSignIn(true);
+              }}
+            />
+          )}
+
+          <Footer />
+        </div>
+      </BookingProvider>
+    </NotificationProvider>
   );
 }
 

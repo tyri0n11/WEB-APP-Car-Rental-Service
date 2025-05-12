@@ -24,6 +24,16 @@ const SignUp: React.FC<{
     type: 'success',
     message: '',
   });
+  const [isAgreed, setIsAgreed] = useState(false);
+  const [errors, setErrors] = useState<{
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    phoneNumber?: string;
+    password?: string;
+    repassword?: string;
+    agree?: string;
+  }>({});
 
   const { signup } = useAuth();
 
@@ -35,33 +45,47 @@ const SignUp: React.FC<{
     });
   };
 
+  function prettifyErrorMessage(msg: string): string {
+    if (!msg) return ''
+    return msg
+      .replace(/phoneNumber/gi, 'Phone number')
+      .replace(/firstName/gi, 'First name')
+      .replace(/lastName/gi, 'Last name')
+      .replace(/repassword/gi, 'Retyped password')
+      .replace(/password/gi, 'Password')
+      .replace(/email/gi, 'Email')
+      .replace(/is required/gi, 'is required')
+      .replace(/is not valid/gi, 'is not valid')
+      .replace(/must be at least/gi, 'must be at least')
+      .replace(/must contain at least/gi, 'must contain at least')
+  }
+
   const validateForm = () => {
-    if (!firstName || !lastName || !email || !phoneNumber || !password || !repassword) {
-      showNotification('error', 'Please fill in all fields');
-      return false;
-    }
-
-    if (!email.includes('@')) {
-      showNotification('error', 'Please enter a valid email address');
-      return false;
-    }
-
-    if (password.length < 6) {
-      showNotification('error', 'Password must be at least 6 characters');
-      return false;
-    }
-
-    if (password !== repassword) {
-      showNotification('error', 'Passwords do not match');
-      return false;
-    }
-
-    if (!/^\d{10}$/.test(phoneNumber)) {
-      showNotification('error', 'Please enter a valid 10-digit phone number');
-      return false;
-    }
-
-    return true;
+    const newErrors: {
+      firstName?: string;
+      lastName?: string;
+      email?: string;
+      phoneNumber?: string;
+      password?: string;
+      repassword?: string;
+      agree?: string;
+    } = {};
+    if (!firstName) newErrors.firstName = 'First name is required';
+    if (!lastName) newErrors.lastName = 'Last name is required';
+    if (!email) newErrors.email = 'Email is required';
+    else if (!email.includes('@')) newErrors.email = 'Please enter a valid email address';
+    if (!phoneNumber) newErrors.phoneNumber = 'Phone number is required';
+    else if (!/^\d{10}$/.test(phoneNumber)) newErrors.phoneNumber = 'Please enter a valid 10-digit phone number';
+    if (!password) newErrors.password = 'Password is required';
+    else if (password.length < 6) newErrors.password = 'Password must be at least 6 characters';
+    else if (!/[A-Z]/.test(password)) newErrors.password = 'Password must contain at least one uppercase letter';
+    else if (!/[a-z]/.test(password)) newErrors.password = 'Password must contain at least one lowercase letter';
+    else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) newErrors.password = 'Password must contain at least one special character';
+    if (!repassword) newErrors.repassword = 'Please retype your password';
+    else if (password !== repassword) newErrors.repassword = 'Passwords do not match';
+    if (!isAgreed) newErrors.agree = 'You must agree to the terms and policies';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -69,6 +93,7 @@ const SignUp: React.FC<{
     if (!validateForm()) return;
 
     setIsLoading(true);
+    let signupSuccess = false;
     try {
       await signup({
         email,
@@ -77,14 +102,24 @@ const SignUp: React.FC<{
         lastName,
         phoneNumber,
       });
-      showNotification('success', 'Account created successfully!');
-      setTimeout(() => {
-        onClose();
-      }, 1500);
-    } catch (error) {
-      showNotification('error', 'Failed to create account. Please try again.');
+      signupSuccess = true;
+      showNotification('success', 'Account created!');
+      setFirstName('');
+      setLastName('');
+      setEmail('');
+      setPhoneNumber('');
+      setPassword('');
+      setRepassword('');
+    } catch (error: any) {
+      const backendMsg = error?.response?.data?.message || error?.message;
+      showNotification('error', backendMsg ? prettifyErrorMessage(backendMsg) : 'Failed to create account. Please try again.');
     } finally {
       setIsLoading(false);
+      if (signupSuccess) {
+        setTimeout(() => {
+          onClose();
+        }, 1000);
+      }
     }
   };
 
@@ -101,7 +136,7 @@ const SignUp: React.FC<{
         <div className="signup-wrapper">
           <FaTimes className="close-btn" onClick={onClose} />
           <div className="form-box signup">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} noValidate>
               <h1>Sign Up</h1>
               <div className="name-box">
                 <div className="input-box">
@@ -111,9 +146,9 @@ const SignUp: React.FC<{
                     placeholder="First name"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    required
                     disabled={isLoading}
                   />
+                  {errors.firstName && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.firstName}</div>}
                 </div>
 
                 <div className="input-box">
@@ -123,9 +158,9 @@ const SignUp: React.FC<{
                     placeholder="Last name"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    required
                     disabled={isLoading}
                   />
+                  {errors.lastName && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.lastName}</div>}
                 </div>
               </div>
 
@@ -136,9 +171,9 @@ const SignUp: React.FC<{
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  required
                   disabled={isLoading}
                 />
+                {errors.email && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.email}</div>}
               </div>
 
               <div className="input-box">
@@ -148,9 +183,9 @@ const SignUp: React.FC<{
                   placeholder="Enter your phone number"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
-                  required
                   disabled={isLoading}
                 />
+                {errors.phoneNumber && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.phoneNumber}</div>}
               </div>
 
               <div className="input-box">
@@ -160,9 +195,9 @@ const SignUp: React.FC<{
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  required
                   disabled={isLoading}
                 />
+                {errors.password && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.password}</div>}
               </div>
 
               <div className="input-box">
@@ -172,15 +207,24 @@ const SignUp: React.FC<{
                   placeholder="Retype your password"
                   value={repassword}
                   onChange={(e) => setRepassword(e.target.value)}
-                  required
                   disabled={isLoading}
                 />
+                {errors.repassword && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.repassword}</div>}
               </div>
 
               <div className="remember-forgot">
                 <label>
-                  <input type="checkbox" disabled={isLoading} /> I agree to the terms and policies
+                  <input
+                    type="checkbox"
+                    checked={isAgreed}
+                    onChange={e => setIsAgreed(e.target.checked)}
+                    disabled={isLoading}
+                  />
+                  I agree to the terms and policies
                 </label>
+              {errors.agree && (
+                <div style={{ color: 'red', fontSize: 12, marginTop: 6 }}>{errors.agree}</div>
+              )}
               </div>
 
               <button type="submit" disabled={isLoading}>

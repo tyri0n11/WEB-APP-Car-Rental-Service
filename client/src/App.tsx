@@ -85,7 +85,10 @@ function App() {
         </section>
         {showSignIn && (
           <SignIn
-            onClose={() => setShowSignIn(false)}
+            onClose={() => {
+              setShowSignIn(false);
+              document.body.classList.remove("modal-open");
+            }}
             onSwitchToSignUp={() => {
               setShowSignIn(false);
               setShowSignUp(true);
@@ -95,7 +98,10 @@ function App() {
 
         {showSignUp && (
           <SignUp
-            onClose={() => setShowSignUp(false)}
+            onClose={() => {
+              setShowSignUp(false);
+              document.body.classList.remove("modal-open");
+            }}
             onSwitchToSignIn={() => {
               setShowSignUp(false);
               setShowSignIn(true);

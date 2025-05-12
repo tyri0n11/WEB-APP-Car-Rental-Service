@@ -49,6 +49,14 @@ export class ZalopayGateWay implements PaymentGatewayInterface {
     const now = dayjs();
     const transID = now.format('YYMMDD');
 
+    // Append bookingCode to returnUrl if it's not already there
+    let returnUrl = data.returnUrl;
+    if (returnUrl.includes('?')) {
+      returnUrl += `&bookingCode=${data.orderCode}`;
+    } else {
+      returnUrl += `?bookingCode=${data.orderCode}`;
+    }
+
     const config = {
       app_id: this.appID * 1,
       app_user: 'user123',
@@ -56,7 +64,7 @@ export class ZalopayGateWay implements PaymentGatewayInterface {
       amount: data.amount,
       app_trans_id: transID + '_' + data.orderCode,
       embed_data: JSON.stringify({
-        redirecturl: data.returnUrl,
+        redirecturl: returnUrl,
       }),
       expire_duration_seconds: this.ORDER_TIMEOUT_SECONDS,
       description: data.description,

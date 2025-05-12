@@ -3,31 +3,20 @@ enum Role {
     CUSTOMER
 }
 
-enum ActionType {
-    VIEW_CAR
-    SEARCH
-    ADD_TO_FAVORITES
-    BOOK_CAR
-    CANCEL_BOOKING
-    FILTER_APPLY
-}
-
 model User {
-    id              String           @id @default(uuid())
-    email           String           @unique
-    password        String
-    firstName       String
-    lastName        String
-    phoneNumber     String?
-    isVerified      Boolean          @default(false)
-    role            Role             @default(CUSTOMER)
-    drivingLicence  DrivingLicence?
-    bookings        Booking[]
-    userActions     UserAction[]
-    userPreferences UserPreference[]
-    favoriteCars    FavoriteCar[]
-    createdAt       DateTime         @default(now())
-    updatedAt       DateTime         @updatedAt
+    id             String          @id @default(uuid())
+    email          String          @unique
+    password       String
+    firstName      String
+    lastName       String
+    phoneNumber    String?
+    isVerified     Boolean         @default(false)
+    role           Role            @default(CUSTOMER)
+    drivingLicence DrivingLicence?
+    bookings       Booking[]
+    favoriteCars   FavoriteCar[]
+    createdAt      DateTime        @default(now())
+    updatedAt      DateTime        @updatedAt
 
     @@map("users")
 }
@@ -56,32 +45,4 @@ model FavoriteCar {
 
     @@unique([userId, carId])
     @@map("favorite_cars")
-}
-
-// users' action for recommendation system
-model UserAction {
-    id         String     @id @default(uuid())
-    user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId     String
-    car        Car        @relation(fields: [carId], references: [id], onDelete: Cascade)
-    carId      String
-    actionType ActionType
-    metadata   Json?
-    createdAt  DateTime   @default(now())
-    updatedAt  DateTime   @updatedAt
-
-    @@map("user_actions")
-}
-
-model UserPreference {
-    id         String   @id @default(uuid())
-    userId     String
-    user       User     @relation(fields: [userId], references: [id])
-    preference String // e.g., "fuelType:ELECTRIC", "make:Toyota"
-    weight     Float // Strength of preference (0-1)
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
-
-    @@unique([userId, preference])
-    @@map("user_preferences")
 }

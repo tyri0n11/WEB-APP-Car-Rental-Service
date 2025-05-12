@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { PaymentProvider, useBooking } from '../../../contexts/BookingContext';
-import StepNavigation from './StepNavigation';
-import './Payment.css';
+import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { PaymentProvider, useBooking } from "../../../contexts/BookingContext";
+import StepNavigation from "./StepNavigation";
+import "./Payment.css";
 
 const Payment: React.FC = () => {
   const { state } = useLocation();
@@ -25,12 +25,12 @@ const Payment: React.FC = () => {
       // Validate required data
       if (!carId || !startTime || !endTime || !pickupLocation) {
         const missingFields = [];
-        if (!carId) missingFields.push('Car ID');
-        if (!startTime) missingFields.push('Start Time');
-        if (!endTime) missingFields.push('End Time');
-        if (!pickupLocation) missingFields.push('Pickup Location');
-        
-        const error = `Missing required fields: ${missingFields.join(', ')}`;
+        if (!carId) missingFields.push("Car ID");
+        if (!startTime) missingFields.push("Start Time");
+        if (!endTime) missingFields.push("End Time");
+        if (!pickupLocation) missingFields.push("Pickup Location");
+
+        const error = `Missing required fields: ${missingFields.join(", ")}`;
         console.error(error);
         setErrorMessage(error);
         return;
@@ -46,19 +46,34 @@ const Payment: React.FC = () => {
         returnUrl: `${window.location.origin}/completed-booking`, // ZaloPay will append bookingCode and status
       };
 
-      console.log('Creating booking with data:', bookingData);
+      console.log("Creating booking with data:", bookingData);
+
+      // Store booking data in localStorage before redirecting
+      localStorage.setItem(
+        "pendingBookingData",
+        JSON.stringify({
+          ...bookingData,
+          totalPrice,
+          customerName,
+          phoneNumber,
+          timestamp: new Date().toISOString(),
+        })
+      );
 
       const { paymentUrl } = await createBooking(bookingData);
-      console.log('Received payment URL:', paymentUrl);
+      console.log("Received payment URL:", paymentUrl);
 
       if (paymentUrl) {
+        // Redirect to payment gateway
         window.location.href = paymentUrl;
       } else {
-        throw new Error('No payment URL provided in response');
+        throw new Error("No payment URL provided in response");
       }
     } catch (error) {
-      console.error('Error creating booking:', error);
-      setErrorMessage(error instanceof Error ? error.message : 'Failed to create booking');
+      console.error("Error creating booking:", error);
+      setErrorMessage(
+        error instanceof Error ? error.message : "Failed to create booking"
+      );
     }
   };
 
@@ -68,7 +83,10 @@ const Payment: React.FC = () => {
 
       <h2 className="title">Payment Information</h2>
       {errorMessage && (
-        <div className="error-message" style={{ color: 'red', margin: '10px 0' }}>
+        <div
+          className="error-message"
+          style={{ color: "red", margin: "10px 0" }}
+        >
           {errorMessage}
         </div>
       )}
@@ -76,27 +94,49 @@ const Payment: React.FC = () => {
         <table className="payment-details">
           <tbody>
             <tr>
-              <td><strong>Full Name:</strong></td>
-              <td><strong>{customerName}</strong></td>
+              <td>
+                <strong>Full Name:</strong>
+              </td>
+              <td>
+                <strong>{customerName}</strong>
+              </td>
             </tr>
             <tr>
-              <td><strong>Phone Number:</strong></td>
-              <td><strong>{phoneNumber}</strong></td>
+              <td>
+                <strong>Phone Number:</strong>
+              </td>
+              <td>
+                <strong>{phoneNumber}</strong>
+              </td>
             </tr>
             <tr>
-              <td><strong>Pickup Date:</strong></td>
-              <td><strong>{new Date(startTime).toLocaleString()}</strong></td>
+              <td>
+                <strong>Pickup Date:</strong>
+              </td>
+              <td>
+                <strong>{new Date(startTime).toLocaleString()}</strong>
+              </td>
             </tr>
             <tr>
-              <td><strong>Return Date:</strong></td>
-              <td><strong>{new Date(endTime).toLocaleString()}</strong></td>
+              <td>
+                <strong>Return Date:</strong>
+              </td>
+              <td>
+                <strong>{new Date(endTime).toLocaleString()}</strong>
+              </td>
             </tr>
             <tr>
-              <td><strong>Pickup Location:</strong></td>
-              <td><strong>{pickupLocation}</strong></td>
+              <td>
+                <strong>Pickup Location:</strong>
+              </td>
+              <td>
+                <strong>{pickupLocation}</strong>
+              </td>
             </tr>
             <tr className="total-price">
-              <td><strong>Total Price:</strong></td>
+              <td>
+                <strong>Total Price:</strong>
+              </td>
               <td>{totalPrice?.toLocaleString()}₫</td>
             </tr>
           </tbody>
@@ -105,8 +145,8 @@ const Payment: React.FC = () => {
 
       <hr />
 
-      <button 
-        className="confirm-button" 
+      <button
+        className="confirm-button"
         onClick={handleConfirmPayment}
         disabled={!carId || !startTime || !endTime || !pickupLocation}
       >
@@ -114,7 +154,8 @@ const Payment: React.FC = () => {
       </button>
 
       <p className="terms">
-        By proceeding with the payment, you agree to the <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.
+        By proceeding with the payment, you agree to the{" "}
+        <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.
       </p>
     </div>
   );

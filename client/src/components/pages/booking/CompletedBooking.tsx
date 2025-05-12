@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useBooking } from "../../../contexts/BookingContext";
 import StepNavigation from "./StepNavigation";
@@ -26,6 +26,19 @@ interface BookingDetails {
   };
 }
 
+// Interface for ZaloPay payment return parameters
+interface ZaloPayReturnParams {
+  amount?: string;
+  appid?: string;
+  apptransid?: string;
+  bankcode?: string;
+  checksum?: string;
+  discountamount?: string;
+  pmcid?: string;
+  status?: string;
+  bookingCode?: string;
+}
+
 const CompletedBooking: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -41,48 +54,78 @@ const CompletedBooking: React.FC = () => {
     transactionId: null,
   });
 
+  // Memoize the parsing function to avoid unnecessary recalculations
+  const parseZaloPayReturnParams = useCallback((): ZaloPayReturnParams => {
+    const params = new URLSearchParams(location.search);
+    const returnParams: ZaloPayReturnParams = {};
+
+    // Extract all possible ZaloPay parameters
+    returnParams.amount = params.get("amount") || undefined;
+    returnParams.appid = params.get("appid") || undefined;
+    returnParams.apptransid = params.get("apptransid") || undefined;
+    returnParams.bankcode = params.get("bankcode") || undefined;
+    returnParams.checksum = params.get("checksum") || undefined;
+    returnParams.discountamount = params.get("discountamount") || undefined;
+    returnParams.pmcid = params.get("pmcid") || undefined;
+    returnParams.status = params.get("status") || undefined;
+
+    // Get direct booking code if available
+    returnParams.bookingCode = params.get("bookingCode") || undefined;
+
+    // If no direct bookingCode but we have apptransid, extract from it
+    if (!returnParams.bookingCode && returnParams.apptransid) {
+      const parts = returnParams.apptransid.split("_");
+      if (parts.length === 2) {
+        returnParams.bookingCode = parts[1];
+      }
+    }
+
+    return returnParams;
+  }, [location.search]);
+
+  // Fetch booking details only once
   useEffect(() => {
-    const fetchBookingDetails = async () => {
+    // Don't make API calls if already loaded or errored
+    if (booking || error) return;
+
+    const fetchData = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        // Get URL parameters
-        const params = new URLSearchParams(location.search);
-        const bookingCode = params.get("bookingCode");
-        const paymentStatus = params.get("status");
-        const transactionId = params.get("transactionId");
+        // Parse ZaloPay return parameters
+        const zaloParams = parseZaloPayReturnParams();
 
         // Log the URL and parameters for debugging
         console.log("Current URL:", location.pathname + location.search);
-        console.log("Params:", { bookingCode, paymentStatus, transactionId });
+        console.log("ZaloPay return params:", zaloParams);
 
-        if (!bookingCode) {
-          console.error("Missing bookingCode parameter");
+        if (!zaloParams.bookingCode) {
           throw new Error(
-            "No booking code provided. Invalid access to this page."
+            "No booking code found. Invalid access to this page."
           );
         }
 
-        if (!paymentStatus) {
-          console.error("Missing status parameter");
+        if (!zaloParams.status) {
           throw new Error(
             "No payment status provided. Invalid access to this page."
           );
         }
 
-        if (paymentStatus != "1") {
+        if (zaloParams.status !== "1") {
           throw new Error(
-            `Payment was not successful. Status: ${paymentStatus}`
+            `Payment was not successful. Status: ${zaloParams.status}`
           );
         }
 
+        // Set payment info
         setPaymentInfo({
-          status: paymentStatus,
-          transactionId,
-        }); // Fetch booking details using the code
-        console.log("Fetching booking details for code:", bookingCode);
-        const bookingDetails = await fetchBookingByCode(bookingCode);
+          status: zaloParams.status,
+          transactionId: zaloParams.apptransid || null,
+        });
+
+        // Only fetch if we have a booking code
+        const bookingDetails = await fetchBookingByCode(zaloParams.bookingCode);
 
         if (!bookingDetails) {
           throw new Error("No booking data received from server");
@@ -91,12 +134,26 @@ const CompletedBooking: React.FC = () => {
         // Map the API response to our BookingDetails interface
         const mappedBooking: BookingDetails = {
           ...bookingDetails,
-          code: bookingCode,
+          code: zaloParams.bookingCode,
           startDate: bookingDetails.startDate.toString(),
           endDate: bookingDetails.endDate.toString(),
         };
 
         setBooking(mappedBooking);
+
+        // Store successful payment in localStorage for reference
+        localStorage.setItem(
+          "lastSuccessfulPayment",
+          JSON.stringify({
+            bookingCode: zaloParams.bookingCode,
+            status: zaloParams.status,
+            amount: zaloParams.amount,
+            timestamp: new Date().toISOString(),
+          })
+        );
+
+        // Clean up pending booking data
+        localStorage.removeItem("pendingBookingData");
       } catch (err) {
         console.error("Error in CompletedBooking:", err);
         setError(
@@ -119,8 +176,17 @@ const CompletedBooking: React.FC = () => {
       }
     };
 
-    fetchBookingDetails();
-  }, [location, fetchBookingByCode, navigate]);
+    // Execute only once and when dependencies are ready
+    fetchData();
+
+    // Return empty cleanup function to avoid memory leaks
+    return () => {};
+  }, [
+    location.pathname,
+    parseZaloPayReturnParams,
+    fetchBookingByCode,
+    navigate,
+  ]);
 
   const handleViewBookings = () => {
     navigate("/profile/rides");

@@ -47,7 +47,7 @@ class AuthApi extends BaseApi {
 
     async resetPassword(token: string, password: string): Promise<void> {
         try {
-            await this.post('/auth/reset-password', { token, password })
+            await this.post('/auth/reset-password', { token, newPassword: password })
         } catch (error) {
             throw handleApiError(error)
         }

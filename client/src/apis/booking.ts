@@ -27,7 +27,7 @@ class BookingApi extends BaseApi {
         if (query.startDate) params.startDate = query.startDate
         if (query.endDate) params.endDate = query.endDate
       }
-      const result = await this.get<{ data: { data: Booking[], meta: { total: number, page: number, perPage: number, totalPages: number } } }>('/bookings', params)
+      const result = await this.get<{ data: PaginatedResponse<Booking> }>('/bookings', params)
       return result.data
     } catch (error) {
       throw handleApiError(error)
@@ -37,6 +37,15 @@ class BookingApi extends BaseApi {
   async findOne(id: string): Promise<Booking> {
     try {
       const result = await this.get<{ data: Booking }>(`/bookings/${id}`, {})
+      return result.data
+    } catch (error) {
+      throw handleApiError(error)
+    }
+  }
+
+  async findByCode(code: string): Promise<Booking> {
+    try {
+      const result = await this.get<{ data: Booking }>(`/bookings/code/${code}`, {})
       return result.data
     } catch (error) {
       throw handleApiError(error)

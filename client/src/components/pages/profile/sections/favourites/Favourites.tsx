@@ -1,67 +1,86 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../../../../hooks/useAuth";
-import { useCar } from "../../../../../contexts/CarContext";
-import { useBooking } from "../../../../../contexts/BookingContext";
 import { useNotification } from "../../../../../contexts/NotificationContext";
-import { PaymentProvider } from "../../../../../types/booking";
+import { useNavigate } from "react-router-dom";
 import { FaHeart, FaCalendarAlt, FaSpinner } from "react-icons/fa";
+import { carApi } from "../../../../../apis/car";
+import { Car } from "../../../../../types/car";
 import './Favourites.css';
 
 const Favourites: React.FC = () => {
     const { isAuthenticated } = useAuth();
-    const { favorites, removeFavorite, isLoading: isFavoritesLoading, error: favoritesError, fetchFavorites } = useCar();
-    const { createBooking, isLoading: isBookingLoading } = useBooking();
     const { showNotification } = useNotification();
+    const navigate = useNavigate();
+    const [favorites, setFavorites] = useState<Car[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const [selectedDates, setSelectedDates] = useState<{ startDate: string; endDate: string }>({
         startDate: '',
         endDate: ''
     });
     const [bookingCarId, setBookingCarId] = useState<string | null>(null);
+    const [isBookingLoading, setIsBookingLoading] = useState(false);
+
+    const fetchFavorites = async () => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            const favoriteCars = await carApi.findFavorites();
+            setFavorites(favoriteCars);
+        } catch (err) {
+            setError('Failed to load favorites');
+            showNotification('error', 'Failed to load favorites');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     useEffect(() => {
         if (isAuthenticated) {
-            fetchFavorites().catch(err => {
-                showNotification('error', 'Failed to load favorites');
-            });
+            fetchFavorites();
         }
-    }, [isAuthenticated, fetchFavorites, showNotification]);
+    }, [isAuthenticated]);
 
     const handleRemoveFavorite = async (carId: string) => {
         try {
-            await removeFavorite(carId);
+            await carApi.removeFavorite(carId);
+            setFavorites(prev => prev.filter(car => car.id !== carId));
             showNotification('success', 'Car removed from favorites');
         } catch (err) {
             showNotification('error', 'Failed to remove car from favorites');
         }
     };
 
-    const handleBookCar = async (carId: string) => {
+    const handleBookCar = (car: Car) => {
         if (!selectedDates.startDate || !selectedDates.endDate) {
             showNotification('error', 'Please select both start and end dates');
             return;
         }
 
-        try {
-            const bookingData = {
-                carId,
-                startDate: new Date(selectedDates.startDate).toISOString(),
-                endDate: new Date(selectedDates.endDate).toISOString(),
-                pickupAddress: "Default Pickup Location", // This should be configurable
-                returnAddress: "Default Return Location", // This should be configurable
-                paymentProvider: PaymentProvider.STRIPE,
-                returnUrl: window.location.origin + '/bookings'
-            };
+        // Calculate total price based on number of days
+        const startDate = new Date(selectedDates.startDate);
+        const endDate = new Date(selectedDates.endDate);
+        const days = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+        const totalPrice = days * car.pricePerDay;
 
-            await createBooking(bookingData);
-            showNotification('success', 'Booking created successfully');
-            setBookingCarId(null);
-            setSelectedDates({ startDate: '', endDate: '' });
-        } catch (err) {
-            showNotification('error', 'Failed to create booking');
-        }
+        // Navigate to booking confirmation with all necessary data
+        navigate('/booking-confirmation', {
+            state: {
+                carId: car.id,
+                carDetails: car,
+                startTime: startDate.toISOString(),
+                endTime: endDate.toISOString(),
+                totalPrice,
+                // These will be filled in the booking confirmation step
+                customerName: '',
+                phoneNumber: '',
+                pickupLocation: '',
+                returnLocation: ''
+            }
+        });
     };
 
-    if (isFavoritesLoading) {
+    if (isLoading) {
         return (
             <div className="favourites-loading">
                 <FaSpinner className="spinner" />
@@ -70,11 +89,11 @@ const Favourites: React.FC = () => {
         );
     }
 
-    if (favoritesError) {
+    if (error) {
         return (
             <div className="favourites-error">
-                <p>{favoritesError}</p>
-                <button onClick={() => window.location.reload()}>Try Again</button>
+                <p>{error}</p>
+                <button onClick={() => fetchFavorites()}>Try Again</button>
             </div>
         );
     }
@@ -144,13 +163,13 @@ const Favourites: React.FC = () => {
                                             </button>
                                             <button
                                                 className="confirm-button"
-                                                onClick={() => handleBookCar(car.id)}
+                                                onClick={() => handleBookCar(car)}
                                                 disabled={isBookingLoading}
                                             >
                                                 {isBookingLoading ? (
                                                     <FaSpinner className="spinner" />
                                                 ) : (
-                                                    'Confirm Booking'
+                                                    'Continue to Booking'
                                                 )}
                                             </button>
                                         </div>

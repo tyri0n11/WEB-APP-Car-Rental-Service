@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { PaymentProvider, useBooking } from "../../../contexts/BookingContext";
+import { PaymentProvider } from "../../../types/booking";
+import { bookingApi } from "../../../apis/booking";
 import StepNavigation from "./StepNavigation";
 import "./Payment.css";
 
 const Payment: React.FC = () => {
   const { state } = useLocation();
-  const { createBooking } = useBooking();
+  const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const {
@@ -15,11 +16,14 @@ const Payment: React.FC = () => {
     startTime,
     endTime,
     pickupLocation,
+    returnLocation,
     totalPrice,
     carId,
   } = state || {};
+  
   const handleConfirmPayment = async () => {
     try {
+      setIsLoading(true);
       setErrorMessage(null);
 
       // Validate required data
@@ -33,15 +37,16 @@ const Payment: React.FC = () => {
         const error = `Missing required fields: ${missingFields.join(", ")}`;
         console.error(error);
         setErrorMessage(error);
+        setIsLoading(false);
         return;
       }
 
       const bookingData = {
         carId,
-        startDate: new Date(startTime),
-        endDate: new Date(endTime),
+        startDate: new Date(startTime).toISOString(),
+        endDate: new Date(endTime).toISOString(),
         pickupAddress: pickupLocation,
-        returnAddress: pickupLocation,
+        returnAddress: returnLocation || pickupLocation,
         paymentProvider: PaymentProvider.ZALOPAY,
         returnUrl: `${window.location.origin}/completed-booking`, // ZaloPay will append bookingCode and status
       };
@@ -60,12 +65,12 @@ const Payment: React.FC = () => {
         })
       );
 
-      const { paymentUrl } = await createBooking(bookingData);
-      console.log("Received payment URL:", paymentUrl);
+      const response = await bookingApi.create(bookingData);
+      console.log("Received payment URL:", response.paymentUrl);
 
-      if (paymentUrl) {
+      if (response.paymentUrl) {
         // Redirect to payment gateway
-        window.location.href = paymentUrl;
+        window.location.href = response.paymentUrl;
       } else {
         throw new Error("No payment URL provided in response");
       }
@@ -74,6 +79,8 @@ const Payment: React.FC = () => {
       setErrorMessage(
         error instanceof Error ? error.message : "Failed to create booking"
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -148,9 +155,9 @@ const Payment: React.FC = () => {
       <button
         className="confirm-button"
         onClick={handleConfirmPayment}
-        disabled={!carId || !startTime || !endTime || !pickupLocation}
+        disabled={isLoading || !carId || !startTime || !endTime || !pickupLocation}
       >
-        Confirm Payment
+        {isLoading ? "Processing..." : "Confirm Payment"}
       </button>
 
       <p className="terms">

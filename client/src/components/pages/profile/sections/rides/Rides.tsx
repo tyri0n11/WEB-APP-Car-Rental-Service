@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { useBooking } from '../../../../../contexts/BookingContext';
-import type { Booking, BookingStatus } from '../../../../../types/booking';
+import { bookingApi } from '../../../../../apis/booking';
+import type { Booking, BookingStatus, PaginatedResponse } from '../../../../../types/booking';
 import './Rides.css';
 
 interface GroupedBookings {
@@ -46,15 +46,30 @@ function RidesSkeleton() {
 
 export function MyRides() {
     const { user } = useAuth();
-    const { bookings, isLoading, error, getBookings } = useBooking();
-    const [selectedStatus, setSelectedStatus] = useState<BookingStatus | 'ALL'>('ALL');
     const navigate = useNavigate();
+    const [bookings, setBookings] = useState<PaginatedResponse<Booking> | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [selectedStatus, setSelectedStatus] = useState<BookingStatus | 'ALL'>('ALL');
+
+    const fetchBookings = async () => {
+        try {
+            setIsLoading(true);
+            const response = await bookingApi.findMany();
+            setBookings(response);
+            setError(null);
+        } catch (err) {
+            setError('Failed to load bookings');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     useEffect(() => {
         if (user) {
-            getBookings();
+            fetchBookings();
         }
-    }, [user, getBookings]);
+    }, [user]);
 
     const handleRebook = (booking: Booking) => {
         if (booking.car?.id) {
@@ -86,6 +101,7 @@ export function MyRides() {
             <div className="my-rides-root">
                 <div className="my-rides-error">
                     <p>Error loading rides: {error}</p>
+                    <button onClick={fetchBookings}>Try Again</button>
                 </div>
             </div>
         );

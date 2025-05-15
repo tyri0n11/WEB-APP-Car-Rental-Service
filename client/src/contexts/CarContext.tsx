@@ -1,260 +1,194 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useAuth } from './AuthContext';
+'use client'
 
-// Define the API base URL
-const API_BASE_URL = 'http://localhost:3000/';
+import { createContext, useContext, useState, useCallback, ReactNode } from 'react'
+import type { Car, CarCategory, FindManyCarsQuery } from '../types/car'
+import { carApi } from '../apis/car'
 
-// Define the car image interface
-export interface CarImage {
-  id: string;
-  url: string;
-  isMain: boolean;
+interface CarState {
+    cars: Car[]
+    categories: CarCategory[]
+    selectedCar: Car | null
+    isLoading: boolean
+    error: string | null
+    pagination: {
+        total: number
+        page: number
+        perPage: number
+        totalPages: number
+    }
+    favorites: Car[]
 }
 
-// Define the car category interface
-export interface CarCategory {
-  category: {
-    id: string;
-    name: string;
-  };
+interface CarContextType extends CarState {
+    fetchCars: (query?: FindManyCarsQuery) => Promise<void>
+    fetchCategories: () => Promise<void>
+    getCar: (id: string) => Promise<void>
+    fetchFavorites: () => Promise<void>
+    addFavorite: (carId: string) => Promise<void>
+    removeFavorite: (carId: string) => Promise<void>
+    isFavorite: (carId: string) => boolean
 }
 
-// Define the car review interface
-export interface CarReview {
-  id: string;
-  rating: number;
-  comment: string;
-  userName: string;
+const initialState: CarState = {
+    cars: [],
+    categories: [],
+    selectedCar: null,
+    isLoading: false,
+    error: null,
+    pagination: {
+        total: 0,
+        page: 1,
+        perPage: 10,
+        totalPages: 0
+    },
+    favorites: []
 }
 
-// Define the car interface
-export interface Car {
-  id: string;
-  make: string;
-  model: string;
-  year: number;
-  kilometers: number;
-  description: string;
-  dailyPrice: number;
-  licensePlate: string;
-  numSeats: number;
-  address: string;
-  autoGearbox: boolean;
-  rating: number;
-  fuelType: string;
-  status: string;
-  categories: CarCategory[];
-  images: CarImage[];
-  reviews: CarReview[];
+const CarContext = createContext<CarContextType | undefined>(undefined)
+
+export function CarProvider({ children }: { children: ReactNode }) {
+    const [state, setState] = useState<CarState>(initialState)
+
+    const fetchCars = useCallback(async (query?: FindManyCarsQuery) => {
+        try {
+            setState(prev => ({ ...prev, isLoading: true, error: null }))
+            const response = await carApi.findMany(query)
+            setState(prev => ({ 
+                ...prev, 
+                cars: response.data.map(car => ({
+                    ...car,
+                    isFavorite: prev.favorites.some(fav => fav.id === car.id)
+                })),
+                pagination: response.meta,
+                isLoading: false
+            }))
+        } catch (error) {
+            setState(prev => ({ 
+                ...prev, 
+                error: error instanceof Error ? error.message : 'An unknown error occurred',
+                isLoading: false
+            }))
+        }
+    }, [])
+
+    const fetchCategories = useCallback(async () => {
+        try {
+            setState(prev => ({ ...prev, isLoading: true, error: null }))
+            const categories = await carApi.findCategories()
+            setState(prev => ({ ...prev, categories, isLoading: false }))
+        } catch (error) {
+            setState(prev => ({ 
+                ...prev, 
+                error: error instanceof Error ? error.message : 'An unknown error occurred',
+                isLoading: false
+            }))
+        }
+    }, [])
+
+    const getCar = useCallback(async (id: string) => {
+        try {
+            setState(prev => ({ ...prev, isLoading: true, error: null }))
+            const car = await carApi.findOne(id)
+            setState(prev => ({ ...prev, selectedCar: car, isLoading: false }))
+        } catch (error) {
+            setState(prev => ({ 
+                ...prev, 
+                error: error instanceof Error ? error.message : 'An unknown error occurred',
+                isLoading: false
+            }))
+        }
+    }, [])
+
+    const fetchFavorites = useCallback(async () => {
+        try {
+            setState(prev => ({ ...prev, isLoading: true, error: null }))
+            const favorites = await carApi.findFavorites()
+            setState(prev => ({ 
+                ...prev, 
+                favorites,
+                cars: prev.cars.map(car => ({
+                    ...car,
+                    isFavorite: favorites.some(fav => fav.id === car.id)
+                })),
+                isLoading: false
+            }))
+        } catch (error) {
+            setState(prev => ({ 
+                ...prev, 
+                error: error instanceof Error ? error.message : 'An unknown error occurred',
+                isLoading: false
+            }))
+        }
+    }, [])
+
+    const addFavorite = useCallback(async (carId: string) => {
+        try {
+            setState(prev => ({ ...prev, isLoading: true, error: null }))
+            const favorite = await carApi.addFavorite(carId)
+            setState(prev => ({
+                ...prev,
+                favorites: [...prev.favorites, favorite],
+                cars: prev.cars.map(car => 
+                    car.id === carId ? { ...car, isFavorite: true } : car
+                ),
+                isLoading: false
+            }))
+        } catch (error) {
+            setState(prev => ({ 
+                ...prev, 
+                error: error instanceof Error ? error.message : 'An unknown error occurred',
+                isLoading: false
+            }))
+            throw error
+        }
+    }, [])
+
+    const removeFavorite = useCallback(async (carId: string) => {
+        try {
+            setState(prev => ({ ...prev, isLoading: true, error: null }))
+            await carApi.removeFavorite(carId)
+            setState(prev => ({
+                ...prev,
+                favorites: prev.favorites.filter(fav => fav.id !== carId),
+                cars: prev.cars.map(car => 
+                    car.id === carId ? { ...car, isFavorite: false } : car
+                ),
+                isLoading: false
+            }))
+        } catch (error) {
+            setState(prev => ({ 
+                ...prev, 
+                error: error instanceof Error ? error.message : 'An unknown error occurred',
+                isLoading: false
+            }))
+            throw error
+        }
+    }, [])
+
+    const isFavorite = useCallback((carId: string) => {
+        return state.favorites.some(fav => fav.id === carId)
+    }, [state.favorites])
+
+    const value = {
+        ...state,
+        fetchCars,
+        fetchCategories,
+        getCar,
+        fetchFavorites,
+        addFavorite,
+        removeFavorite,
+        isFavorite
+    }
+
+    return <CarContext.Provider value={value}>{children}</CarContext.Provider>
 }
 
-// Define the car context interface
-interface CarContextType {
-  cars: Car[];
-  favoriteCars: Car[];
-  loading: boolean;
-  error: string | null;
-  fetchCars: () => Promise<void>;
-  fetchCarById: (id: string) => Promise<Car | null>;
-  fetchFavoriteCars: () => Promise<void>;
-  addToFavorites: (carId: string) => Promise<void>;
-  removeFromFavorites: (carId: string) => Promise<void>;
-  isFavorite: (carId: string) => boolean;
+export function useCar() {
+    const context = useContext(CarContext)
+    if (context === undefined) {
+        throw new Error('useCar must be used within a CarProvider')
+    }
+    return context
 }
 
-// Create the context with a default value
-const CarContext = createContext<CarContextType | undefined>(undefined);
-
-// Define the provider props
-interface CarProviderProps {
-  children: ReactNode;
-}
-
-// Create the provider component
-export const CarProvider: React.FC<CarProviderProps> = ({ children }) => {
-  const { accessToken } = useAuth();
-  const [cars, setCars] = useState<Car[]>([]);
-  const [favoriteCars, setFavoriteCars] = useState<Car[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
-  // Fetch all cars
-  const fetchCars = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const response = await fetch(`${API_BASE_URL}car`, {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch cars');
-      }
-
-      const data = await response.json();
-      setCars(data.data || []);
-    } catch (err) {
-      setError('Failed to load cars');
-      console.error('Error fetching cars:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Fetch a car by ID
-  const fetchCarById = async (id: string): Promise<Car | null> => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const response = await fetch(`${API_BASE_URL}car/${id}`, {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch car');
-      }
-
-      const data = await response.json();
-      return data.data || null;
-    } catch (err) {
-      setError('Failed to load car');
-      console.error('Error fetching car:', err);
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Fetch favorite cars
-  const fetchFavoriteCars = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const response = await fetch(`${API_BASE_URL}user/favorites`, {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch favorite cars');
-      }
-
-      const data = await response.json();
-      setFavoriteCars(data.data || []);
-    } catch (err) {
-      setError('Failed to load favorite cars');
-      console.error('Error fetching favorite cars:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Add a car to favorites
-  const addToFavorites = async (carId: string) => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const response = await fetch(`${API_BASE_URL}user/favorites`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ carId }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to add car to favorites');
-      }
-
-      // Refresh favorite cars
-      await fetchFavoriteCars();
-    } catch (err) {
-      setError('Failed to add car to favorites');
-      console.error('Error adding car to favorites:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Remove a car from favorites
-  const removeFromFavorites = async (carId: string) => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const response = await fetch(`${API_BASE_URL}user/favorites/${carId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to remove car from favorites');
-      }
-
-      // Update the favorite cars state
-      setFavoriteCars(favoriteCars.filter(car => car.id !== carId));
-    } catch (err) {
-      setError('Failed to remove car from favorites');
-      console.error('Error removing car from favorites:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Check if a car is in favorites
-  const isFavorite = (carId: string): boolean => {
-    return favoriteCars.some(car => car.id === carId);
-  };
-
-  // Fetch favorite cars when the component mounts
-  useEffect(() => {
-    if (accessToken) {
-      fetchFavoriteCars();
-    }
-  }, [accessToken]);
-
-  // Create the context value
-  const contextValue: CarContextType = {
-    cars,
-    favoriteCars,
-    loading,
-    error,
-    fetchCars,
-    fetchCarById,
-    fetchFavoriteCars,
-    addToFavorites,
-    removeFromFavorites,
-    isFavorite,
-  };
-
-  return (
-    <CarContext.Provider value={contextValue}>
-      {children}
-    </CarContext.Provider>
-  );
-};
-
-// Create a custom hook to use the car context
-export const useCar = (): CarContextType => {
-  const context = useContext(CarContext);
-  if (context === undefined) {
-    throw new Error('useCar must be used within a CarProvider');
-  }
-  return context;
-}; 
+export default CarContext 

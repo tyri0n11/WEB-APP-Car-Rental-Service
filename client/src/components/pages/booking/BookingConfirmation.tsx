@@ -14,15 +14,16 @@ const BookingConfirmation: React.FC = () => {
     pickupLocation,
     returnLocation,
     totalPrice,
-    carId
+    carId,
+    carDetails
   } = state || {};
 
   // Editable states for customer details
-  const [pickupLocationInput, setPickupLocationInput] = useState<string>(pickupLocation || ''); // Use initial pickupLocation from state
-  const [returnLocationInput, setReturnLocationInput] = useState<string>(returnLocation || '');
+  const [pickupLocationInput, setPickupLocationInput] = useState<string>(pickupLocation || '');
+  const [returnLocationInput, setReturnLocationInput] = useState<string>(returnLocation || pickupLocation || '');
   const [customerNameInput, setCustomerNameInput] = useState<string>(customerName || '');
-  const [phoneNumberInput, setPhoneNumberInput] = useState<string>(phoneNumber || ''); // Editable phone number state
-  const [currentStep, setCurrentStep] = useState<number>(1); // Set current step to 'Booking Confirm' (step 1)
+  const [phoneNumberInput, setPhoneNumberInput] = useState<string>(phoneNumber || '');
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   // Handle Input Changes
   const handlePickupLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +39,7 @@ const BookingConfirmation: React.FC = () => {
   };
 
   const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhoneNumberInput(e.target.value); // Update phone number state
+    setPhoneNumberInput(e.target.value);
   };
 
   // Handle Booking Confirmation
@@ -60,15 +61,13 @@ const BookingConfirmation: React.FC = () => {
       return;
     }
 
-    // Proceed with confirmation logic
-    console.log('Booking confirmed:', { pickupLocationInput });
-    console.log('Booking confirmed:', { returnLocationInput });
-    console.log('Booking confirmed:', { phoneNumberInput });    setCurrentStep(2);
+    setIsSubmitting(true);
 
     // Navigate to Payment (Step 2)
     navigate('/payment', {
       state: {
         carId,
+        carDetails,
         customerName: customerNameInput,
         phoneNumber: phoneNumberInput,
         startTime,
@@ -83,19 +82,20 @@ const BookingConfirmation: React.FC = () => {
   return (
     <div className="confirmation-container">
       <div className="confirmation-info">
-        <StepNavigation currentStep={currentStep} /> {/* Dynamically set currentStep */}
+        <StepNavigation currentStep={1} />
         
         <h2 className="title">Contact Information</h2>
 
-        {/* Form for Customer Info and Pickup Location */}        <form className="booking-form">
+        <form className="booking-form">
           <div className="user-info">
             <label>
               <strong>Full Name:</strong>
               <input 
                 type="text" 
                 value={customerNameInput} 
-                onChange={handleCustomerNameChange} // Update customer name
+                onChange={handleCustomerNameChange}
                 placeholder="Enter your name"
+                required
               />
             </label>
 
@@ -103,9 +103,10 @@ const BookingConfirmation: React.FC = () => {
               <strong>Phone Number:</strong>
               <input 
                 type="text" 
-                value={phoneNumberInput} // Use phoneNumberInput state here
-                onChange={handlePhoneNumberChange} // Update phone number
+                value={phoneNumberInput}
+                onChange={handlePhoneNumberChange}
                 placeholder="Enter your phone number"
+                required
               />
             </label>
           </div>
@@ -116,8 +117,9 @@ const BookingConfirmation: React.FC = () => {
               <input
                 type="text"
                 value={pickupLocationInput}
-                onChange={handlePickupLocationChange} // Update pickup location
+                onChange={handlePickupLocationChange}
                 placeholder="Enter pickup location"
+                required
               />
             </label>
 
@@ -126,12 +128,20 @@ const BookingConfirmation: React.FC = () => {
               <input
                 type="text"
                 value={returnLocationInput}
-                onChange={handleReturnLocationChange} // Update return location
+                onChange={handleReturnLocationChange}
                 placeholder="Enter return location"
+                required
               />
             </label>
-          </div>          <button type="button" className="confirm-button" onClick={handleConfirmBooking}>
-            Confirm
+          </div>
+          
+          <button 
+            type="button" 
+            className="confirm-button" 
+            onClick={handleConfirmBooking}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Processing...' : 'Continue to Payment'}
           </button>
 
           <p className="terms">
@@ -143,26 +153,36 @@ const BookingConfirmation: React.FC = () => {
       <div className="confirmation-summary">
         <h2 className="title">Booking Information</h2>
 
-        {/* Booking Details in Table */}
         <table className="booking-details-table">
           <tbody>
-            <tr><strong>Full Name:</strong></tr>
-            <tr><td>{customerNameInput}</td></tr>
-
-            <tr><strong>Phone Number:</strong></tr>
-            <tr><td>{phoneNumberInput}</td></tr>
-
-            <tr><strong>Pickup Date:</strong></tr>
-            <tr><td>{new Date(startTime).toLocaleString()}</td></tr>
-
-            <tr><strong>Return Date:</strong></tr>
-            <tr><td>{new Date(endTime).toLocaleString()}</td></tr>
-
-            <tr><strong>Pickup Location:</strong></tr>
-            <tr><td>{pickupLocationInput}</td></tr>
-
-            <tr><strong>Return Location:</strong></tr>
-            <tr><td>{returnLocationInput}</td></tr>
+            <tr>
+              <td><strong>Full Name:</strong></td>
+              <td>{customerNameInput}</td>
+            </tr>
+            <tr>
+              <td><strong>Phone Number:</strong></td>
+              <td>{phoneNumberInput}</td>
+            </tr>
+            <tr>
+              <td><strong>Pickup Date:</strong></td>
+              <td>{new Date(startTime).toLocaleString()}</td>
+            </tr>
+            <tr>
+              <td><strong>Return Date:</strong></td>
+              <td>{new Date(endTime).toLocaleString()}</td>
+            </tr>
+            <tr>
+              <td><strong>Pickup Location:</strong></td>
+              <td>{pickupLocationInput}</td>
+            </tr>
+            <tr>
+              <td><strong>Return Location:</strong></td>
+              <td>{returnLocationInput}</td>
+            </tr>
+            <tr>
+              <td><strong>Total Price:</strong></td>
+              <td>${totalPrice?.toLocaleString()}</td>
+            </tr>
           </tbody>
         </table>
       </div>

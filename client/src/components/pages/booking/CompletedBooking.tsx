@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useBooking } from "../../../contexts/BookingContext";
+import { bookingApi } from "../../../apis/booking";
 import StepNavigation from "./StepNavigation";
 import "./CompletedBooking.css";
 
@@ -42,7 +42,6 @@ interface ZaloPayReturnParams {
 const CompletedBooking: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { fetchBookingByCode } = useBooking();
   const [booking, setBooking] = useState<BookingDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -125,7 +124,7 @@ const CompletedBooking: React.FC = () => {
         });
 
         // Only fetch if we have a booking code
-        const bookingDetails = await fetchBookingByCode(zaloParams.bookingCode);
+        const bookingDetails = await bookingApi.findByCode(zaloParams.bookingCode);
 
         if (!bookingDetails) {
           throw new Error("No booking data received from server");
@@ -181,12 +180,7 @@ const CompletedBooking: React.FC = () => {
 
     // Return empty cleanup function to avoid memory leaks
     return () => {};
-  }, [
-    location.pathname,
-    parseZaloPayReturnParams,
-    fetchBookingByCode,
-    navigate,
-  ]);
+  }, [location.pathname, parseZaloPayReturnParams, navigate]);
 
   const handleViewBookings = () => {
     navigate("/profile/rides");
@@ -250,10 +244,17 @@ const CompletedBooking: React.FC = () => {
             <div className="detail-item">
               <label>Car:</label>
               <span>
-                {booking.car.year} {booking.car.make} {booking.car.model}
+                {booking.car.make} {booking.car.model} ({booking.car.year})
               </span>
             </div>
           )}
+
+          <div className="detail-item">
+            <label>Status:</label>
+            <span className={`status-${booking.status.toLowerCase()}`}>
+              {booking.status}
+            </span>
+          </div>
 
           <div className="detail-item">
             <label>Pickup Date:</label>
@@ -266,33 +267,26 @@ const CompletedBooking: React.FC = () => {
           </div>
 
           <div className="detail-item">
-            <label>Pickup Location:</label>
+            <label>Pickup Address:</label>
             <span>{booking.pickupAddress}</span>
           </div>
 
           <div className="detail-item">
-            <label>Return Location:</label>
+            <label>Return Address:</label>
             <span>{booking.returnAddress}</span>
           </div>
 
           <div className="detail-item">
             <label>Total Price:</label>
-            <span>{booking.totalPrice.toLocaleString()}₫</span>
-          </div>
-
-          <div className="detail-item">
-            <label>Status:</label>
-            <span className={`status status-${booking.status.toLowerCase()}`}>
-              {booking.status}
-            </span>
+            <span className="total-price">${booking.totalPrice.toLocaleString()}</span>
           </div>
         </div>
+      </div>
 
-        <div className="booking-actions">
-          <button className="primary-button" onClick={handleViewBookings}>
-            View My Bookings
-          </button>
-        </div>
+      <div className="confirmation-actions">
+        <button onClick={handleViewBookings} className="view-bookings-button">
+          View All Bookings
+        </button>
       </div>
     </div>
   );

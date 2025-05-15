@@ -1,50 +1,20 @@
 [
   {
-    "id": "1",
-    "street": "123 Main Street",
-    "city": "New York",
-    "state": "NY",
-    "postalCode": "10001",
-    "country": "United States",
+    "id": "hanoi-1",
+    "street": "12 Ly Thai To Street",
+    "city": "Ha Noi",
+    "state": "Ha Noi",
+    "postalCode": "100000",
+    "country": "Vietnam",
     "isDefault": true
   },
   {
-    "id": "2",
-    "street": "456 Park Avenue",
-    "city": "Los Angeles",
-    "state": "CA",
-    "postalCode": "90001",
-    "country": "United States",
-    "isDefault": false
-  },
-  {
-    "id": "addr3",
-    "userId": "user2",
-    "street": "789 Pine Street",
-    "city": "Chicago",
-    "state": "IL",
-    "postalCode": "60601",
-    "country": "United States",
-    "isDefault": false
-  },
-  {
-    "id": "addr4",
-    "userId": "user3",
-    "street": "321 Oak Avenue",
-    "city": "Houston",
-    "state": "TX",
-    "postalCode": "77001",
-    "country": "United States",
-    "isDefault": false
-  },
-  {
-    "id": "addr5",
-    "userId": "user4",
-    "street": "555 Maple Drive",
-    "city": "Miami",
-    "state": "FL",
-    "postalCode": "33101",
-    "country": "United States",
+    "id": "thuduc-1",
+    "street": "88 Vo Van Ngan Street",
+    "city": "Thu Duc",
+    "state": "Ho Chi Minh City",
+    "postalCode": "700000",
+    "country": "Vietnam",
     "isDefault": false
   }
 ] 

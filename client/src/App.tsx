@@ -6,21 +6,20 @@ import Footer from "./components/layout/Footer";
 import NavBar from "./components/layout/Navbar";
 import SignIn from "./components/pages/auth/signin/SignIn";
 import SignUp from "./components/pages/auth/signup/SignUp";
-import { useAuth } from "./hooks/useAuth";
 import { AdminRoutes } from "./routes/AdminRoutes";
-
-import "./App.css";
-import NotFound from "./components/pages/NotFound";
-import { NotificationProvider } from './contexts/NotificationContext';
 import { AuthRoutes } from "./routes/AuthRoutes";
 import { ProtectedRoutes } from "./routes/ProtectedRoutes";
 import { PublicRoutes } from "./routes/PublicRoutes";
+import { BookingProvider } from "./contexts/BookingContext";
+import { NotificationProvider } from './contexts/NotificationContext';
+import NotFound from "./components/pages/NotFound";
+import { useUser } from "./contexts/UserContext";
 
 function App() {
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
   const location = useLocation();
-  const { user } = useAuth();
+  const { user } = useUser();
 
   // Check if current route is admin route
   const isAdminRoute = location.pathname.startsWith('/admin');
@@ -35,17 +34,17 @@ function App() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const navbar = document.querySelector('.navbar');
+      const navbar = document.querySelector(".navbar");
       if (window.scrollY > 50) {
-        navbar?.classList.add('scrolled');
+        navbar?.classList.add("scrolled");
       } else {
-        navbar?.classList.remove('scrolled');
+        navbar?.classList.remove("scrolled");
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -54,63 +53,63 @@ function App() {
 
   return (
     <NotificationProvider>
-      <div className="App">
-        {showBannerAndFooter && (
-          <header className="navbar">
-            <Banner />
-            <NavBar
-              onSignInClick={() => {
-                setShowSignIn(true);
-                setShowSignUp(false);
-              }}
-              onSignUpClick={() => {
-                setShowSignUp(true);
+      <BookingProvider>
+        <div className="App">
+          {showBannerAndFooter && (
+            <header className="navbar">
+              <Banner />
+              <NavBar
+                onSignInClick={() => {
+                  setShowSignIn(true);
+                  setShowSignUp(false);
+                }}
+                onSignUpClick={() => {
+                  setShowSignUp(true);
+                  setShowSignIn(false);
+                }}
+              />
+            </header>
+          )}
+
+          <section className="main-content">
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/*" element={<PublicRoutes />} />
+              
+              {/* Auth Routes */}
+              <Route path="/auth/*" element={<AuthRoutes />} />
+              
+              <Route path="/user/*" element={<ProtectedRoutes />} />
+
+
+              {/* Admin Routes */}
+              <Route path="/admin/*" element={<AdminRoutes />} />
+              
+              {/* 404 Route */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </section>
+          {showSignIn && (
+            <SignIn
+              onClose={() => setShowSignIn(false)}
+              onSwitchToSignUp={() => {
                 setShowSignIn(false);
+                setShowSignUp(true);
               }}
             />
-          </header>
-        )}
-
-        <section className="main-content">
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/*" element={<PublicRoutes />} />
-            
-            {/* Auth Routes */}
-            <Route path="/auth/*" element={<AuthRoutes />} />
-            
-            <Route path="/user/*" element={<ProtectedRoutes />} />
-
-
-            {/* Admin Routes */}
-            <Route path="/admin/*" element={<AdminRoutes />} />
-            
-            {/* 404 Route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </section>
-        {showSignIn && (
-          <SignIn
-            onClose={() => setShowSignIn(false)}
-            onSwitchToSignUp={() => {
-              setShowSignIn(false);
-              setShowSignUp(true);
-            }}
-          />
-        )}
-
-        {showSignUp && (
-          <SignUp
-            onClose={() => setShowSignUp(false)}
-            onSwitchToSignIn={() => {
-              setShowSignUp(false);
-              setShowSignIn(true);
-            }}
-          />
-        )}
-
-        {showBannerAndFooter && <Footer />}
-      </div>
+          )}
+          {showSignUp && (
+            <SignUp
+              onClose={() => setShowSignUp(false)}
+              onSwitchToSignIn={() => {
+                setShowSignUp(false);
+                setShowSignIn(true);
+              }}
+            />
+          )}
+          {showBannerAndFooter && <Footer />}
+        </div>
+      </BookingProvider>
     </NotificationProvider>
   );
 }

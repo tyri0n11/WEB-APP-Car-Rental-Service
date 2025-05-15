@@ -1,38 +1,67 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../../../../../hooks/useAuth';
+import { useNotificationWithState } from '../../../../../contexts/NotificationContext';
+import { AUTH_NOTIFICATIONS } from '../../../../../constants/notificationMessages';
+import Notification from '../../../../common/Notification';
 import './ChangePassword.css';
 
-const API_AUTHEN_URL = "http://localhost:3000/auth";
-
 const ChangePassword: React.FC = () => {
-    const { user, accessToken } = useAuth();
-    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-    const [errors, setErrors] = useState<Record<string, string>>({});
-    const [success, setSuccess] = useState<string | null>(null);
+    const { user, changePassword } = useAuth();
+    const { isLoading, handleAsync } = useNotificationWithState();
     const [passwordInfo, setPasswordInfo] = useState({
-        currentPassword: '',
+        oldPassword: '',
         newPassword: '',
         confirmPassword: '',
     });
 
-    // Check if user is authenticated
-    useEffect(() => {
-        if (!user || !accessToken) {
-            setErrors({ submit: 'You must be logged in to change your password.' });
-        }
-    }, [user, accessToken]);
+    const [notification, setNotification] = useState<{
+        show: boolean;
+        type: 'success' | 'error';
+        message: string;
+    }>({
+        show: false,
+        type: 'success',
+        message: '',
+    });
+
+    const [errors, setErrors] = useState<{
+        oldPassword?: string;
+        newPassword?: string;
+        confirmPassword?: string;
+    }>({});
+
+    const [isSubmitted, setIsSubmitted] = useState(false);
+
+    const showNotification = (type: 'success' | 'error', message: string) => {
+        setNotification({
+            show: true,
+            type,
+            message,
+        });
+    };
+
+    const validatePassword = (password: string): string => {
+        if (password.length < 8) return 'Password must be at least 8 characters';
+        if (!/[a-z]/.test(password)) return 'Password must contain at least one lowercase letter';
+        if (!/[0-9]/.test(password)) return 'Password must contain at least one number';
+        if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) return 'Password must contain at least one special character';
+        return '';
+    };
 
     const validateForm = () => {
-        const newErrors: Record<string, string> = {};
-
-        if (!passwordInfo.currentPassword) {
-            newErrors.currentPassword = 'Current password is required';
+        const newErrors: typeof errors = {};
+        
+        if (!passwordInfo.oldPassword) {
+            newErrors.oldPassword = 'Current password is required';
         }
 
         if (!passwordInfo.newPassword) {
             newErrors.newPassword = 'New password is required';
-        } else if (passwordInfo.newPassword.length < 8) {
-            newErrors.newPassword = 'Password must be at least 8 characters long';
+        } else {
+            const passwordError = validatePassword(passwordInfo.newPassword);
+            if (passwordError) {
+                newErrors.newPassword = passwordError;
+            }
         }
 
         if (!passwordInfo.confirmPassword) {
@@ -47,136 +76,113 @@ const ChangePassword: React.FC = () => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setPasswordInfo((prev) => ({ ...prev, [name]: value }));
-        if (errors[name]) {
-            setErrors((prev) => ({ ...prev, [name]: '' }));
+        setPasswordInfo(prev => ({ ...prev, [name]: value }));
+        if (isSubmitted) {
+            setErrors(prev => ({ ...prev, [name]: '' }));
         }
-        setSuccess(null);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setIsSubmitted(true);
         if (!validateForm()) return;
 
         try {
-            setIsSubmitting(true);
-            setErrors({});
-            setSuccess(null);
-
-            if (!user || !accessToken) {
+            if (!user) {
                 throw new Error('You must be logged in to change your password.');
             }
 
-            const requestBody = {
-                oldPassword: passwordInfo.currentPassword,
-                newPassword: passwordInfo.newPassword,
-            };
+            await handleAsync(
+                async () => changePassword(passwordInfo.oldPassword, passwordInfo.newPassword),
+                {
+                    loading: AUTH_NOTIFICATIONS.changePassword.loading,
+                    success: AUTH_NOTIFICATIONS.changePassword.success,
+                    error: AUTH_NOTIFICATIONS.changePassword.error
+                }
+            );
 
-            const response = await fetch(`${API_AUTHEN_URL}/change-password`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`,
-                    'Accept': 'application/json',
-                },
-                body: JSON.stringify(requestBody),
-            });
-
-            if (!response.ok) {
-                const data = await response.json();
-                throw new Error(data.message || `Failed to change password: ${response.status} ${response.statusText}`);
-            }
-
-            setSuccess('Password changed successfully!');
             setPasswordInfo({
-                currentPassword: '',
+                oldPassword: '',
                 newPassword: '',
                 confirmPassword: '',
             });
-        } catch (error) {
-            if (error instanceof Error) {
-                setErrors({ submit: error.message });
-            } else {
-                setErrors({ submit: 'Failed to change password. Please try again.' });
-            }
-        } finally {
-            setIsSubmitting(false);
+            setErrors({});
+            setIsSubmitted(false);
+            showNotification('success', 'Password changed successfully!');
+        } catch (error: any) {
+            showNotification('error', error?.message || 'Failed to change password.');
         }
     };
 
     return (
-        <div className="change-password-root">
-            <div className="change-password-section">
-                <div className="change-password-header">
-                    <h4>Change Password</h4>
+        <div className="change-password-section">
+            <Notification
+                show={notification.show}
+                type={notification.type}
+                message={notification.message}
+                onClose={() => setNotification(prev => ({ ...prev, show: false }))}
+            />
+
+            <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                    <label htmlFor="oldPassword">Current Password</label>
+                    <input
+                        type="password"
+                        id="oldPassword"
+                        name="oldPassword"
+                        value={passwordInfo.oldPassword}
+                        onChange={handleInputChange}
+                        disabled={isLoading}
+                        placeholder="Enter your current password"
+                        className="input-field"
+                    />
+                    {isSubmitted && errors.oldPassword && (
+                        <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.oldPassword}</div>
+                    )}
                 </div>
 
-                <form onSubmit={handleSubmit} className="password-form">
-                    <div className="form-field">
-                        <label htmlFor="currentPassword">Current Password</label>
-                        <input
-                            type="password"
-                            id="currentPassword"
-                            name="currentPassword"
-                            value={passwordInfo.currentPassword}
-                            onChange={handleInputChange}
-                            placeholder="Enter your current password"
-                            className={errors.currentPassword ? 'error' : ''}
-                        />
-                        {errors.currentPassword && (
-                            <span className="error-message">{errors.currentPassword}</span>
-                        )}
-                    </div>
-
-                    <div className="form-field">
-                        <label htmlFor="newPassword">New Password</label>
-                        <input
-                            type="password"
-                            id="newPassword"
-                            name="newPassword"
-                            value={passwordInfo.newPassword}
-                            onChange={handleInputChange}
-                            placeholder="Enter your new password"
-                            className={errors.newPassword ? 'error' : ''}
-                        />
-                        {errors.newPassword && (
-                            <span className="error-message">{errors.newPassword}</span>
-                        )}
-                    </div>
-
-                    <div className="form-field">
-                        <label htmlFor="confirmPassword">Confirm New Password</label>
-                        <input
-                            type="password"
-                            id="confirmPassword"
-                            name="confirmPassword"
-                            value={passwordInfo.confirmPassword}
-                            onChange={handleInputChange}
-                            placeholder="Confirm your new password"
-                            className={errors.confirmPassword ? 'error' : ''}
-                        />
-                        {errors.confirmPassword && (
-                            <span className="error-message">{errors.confirmPassword}</span>
-                        )}
-                    </div>
-
-                    {errors.submit && (
-                        <div className="error-message">{errors.submit}</div>
+                <div className="form-group">
+                    <label htmlFor="newPassword">New Password</label>
+                    <input
+                        type="password"
+                        id="newPassword"
+                        name="newPassword"
+                        value={passwordInfo.newPassword}
+                        onChange={handleInputChange}
+                        disabled={isLoading}
+                        placeholder="Enter your new password"
+                        className="input-field"
+                    />
+                    {isSubmitted && errors.newPassword && (
+                        <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.newPassword}</div>
                     )}
+                </div>
 
-                    {success && (
-                        <div className="success-message">{success}</div>
+                <div className="form-group">
+                    <label htmlFor="confirmPassword">Confirm New Password</label>
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        value={passwordInfo.confirmPassword}
+                        onChange={handleInputChange}
+                        disabled={isLoading}
+                        placeholder="Confirm your new password"
+                        className="input-field"
+                    />
+                    {isSubmitted && errors.confirmPassword && (
+                        <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.confirmPassword}</div>
                     )}
+                </div>
 
-                    <button
-                        type="submit"
-                        className="submit-button"
-                        disabled={isSubmitting}
-                    >
-                        {isSubmitting ? 'Changing Password...' : 'Change Password'}
-                    </button>
-                </form>
-            </div>
+                <button 
+                    type="submit" 
+                    disabled={isLoading}
+                    className="change-password-button"
+                >
+                    {isLoading ? 'Changing Password...' : 'Change Password'}
+                </button>
+            </form>
         </div>
     );
 };

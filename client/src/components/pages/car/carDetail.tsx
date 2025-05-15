@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { FaBluetooth, FaCamera, FaDesktop, FaMoneyBillWave, FaRoad, FaShieldAlt, FaUsb } from 'react-icons/fa';
 import { MdAirlineSeatReclineNormal } from 'react-icons/md';
-import { useParams } from 'react-router-dom';
 import { Car, computeTotalPrice, getCarById } from '../../../apis/cars';
+import { useAuth } from '../../../contexts/AuthContext';
 import { FuelType } from '../../../types/car';
-import './carDetail.css'; // Import the CSS file
+import { User } from '../../../types/auth';
+import './carDetail.css';
 
 const DEFAULT_CAR_IMAGE = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&auto=format&fit=crop&q=60";
 
 const CarDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [car, setCar] = useState<Car | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -86,7 +90,7 @@ const CarDetail: React.FC = () => {
     }
   }, [car, startDate, endDate]);
 
-  const getFuelTypeLabel = (fuelType: FuelType) => {
+  const getFuelTypeLabel = (fuelType: typeof FuelType[keyof typeof FuelType]) => {
     switch (fuelType) {
       case FuelType.PETROL:
         return 'Gasoline';
@@ -99,6 +103,46 @@ const CarDetail: React.FC = () => {
       default:
         return 'Unknown';
     }
+  };
+
+  // Handle Booking
+  const handleBooking = () => {
+    if (!user) {
+      alert('User is not logged in!');
+      return;
+    }
+
+    if (!startDate || !endDate) {
+      alert('Please select start and end dates for your booking');
+      return;
+    }
+    
+    if (!car?.id) {
+      alert('Car information is missing');
+      return;
+    }
+
+    const userWithPhone = user as User & { phoneNumber: string };
+
+    navigate('/booking-confirmation', {
+      state: {
+        customerName: user.firstName + ' ' + user.lastName,
+        phoneNumber: userWithPhone.phoneNumber,
+        startTime: startDate,
+        endTime: endDate,
+        totalPrice: totalPrice,
+        carId: car.id,
+        pickupLocation: car.address || 'Default pickup location',
+        returnLocation: car.address || 'Default pickup location',
+        car: {
+          make: car.make,
+          model: car.model,
+          year: car.year,
+          images: car.images,
+          dailyPrice: car.dailyPrice,
+        }
+      },
+    });
   };
 
   if (loading) {
@@ -202,43 +246,37 @@ const CarDetail: React.FC = () => {
       <div className="booking-card">
         <div className="price-info">
           <span className="price">{car.dailyPrice?.toLocaleString()} VND</span>
-          <span className="per-day">/ngày</span>
+          <span className="per-day">/day</span>
         </div>
 
-        <div className="date-range">
-          <input
-            type="datetime-local"
-            value={startDate}
-            onChange={(e) => handleDateChange('start', e.target.value)}
-            min={formatDate(new Date())}
-            className="date-input"
-          />
-          <input
-            type="datetime-local"
-            value={endDate}
-            onChange={(e) => handleDateChange('end', e.target.value)}
-            min={startDate}
-            className="date-input"
-          />
-        </div>
-
-        {totalPrice > 0 && (
-          <div className="total-price">
-            <span>Tổng cộng:</span>
-            <span className="price">{totalPrice.toLocaleString()} VND</span>
+        <div className="date-picker">
+          <div className="date-input">
+            <label>Pick-up Date</label>
+            <input
+              type="datetime-local"
+              value={startDate}
+              onChange={(e) => handleDateChange('start', e.target.value)}
+              min={formatDate(new Date())}
+            />
           </div>
-        )}
-
-        <div className="insurance-info">
-          <div className="insurance-title">
-            <FaShieldAlt />
-            <span>Bảo hiểm xe</span>
+          <div className="date-input">
+            <label>Return Date</label>
+            <input
+              type="datetime-local"
+              value={endDate}
+              onChange={(e) => handleDateChange('end', e.target.value)}
+              min={startDate}
+            />
           </div>
-          <p>Bảo hiểm xe và bảo hiểm tai nạn hành khách</p>
         </div>
 
-        <button className="book-button">
-          Đặt xe ngay
+        <div className="total-price">
+          <span>Total Price:</span>
+          <span>{totalPrice.toLocaleString()} VND</span>
+        </div>
+
+        <button className="book-button" onClick={handleBooking}>
+          Book Now
         </button>
       </div>
     </div>

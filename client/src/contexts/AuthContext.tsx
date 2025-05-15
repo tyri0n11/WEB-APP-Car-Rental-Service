@@ -1,219 +1,201 @@
-import React, { createContext, useEffect, useReducer } from "react";
+import React, { createContext, useState, useCallback, useEffect, ReactNode } from 'react'
+import type { AuthContextValue, LoginInput, SignupInput, User } from '../types/auth'
+import { authApi } from '../apis/auth'
 
-const API_AUTHEN_URL = "http://localhost:3000/auth";
-
-export interface User {
-  role: string;
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  isVerified: boolean;
-  drivingLicence: DrivingLicence;
-}
-
-interface DrivingLicence {
-  id: string;
-  licenceNumber: string;
-  drivingLicenseImages: string[];
-  expiryDate: string;
-}
-
-interface AuthState {
-  user: User | null;
-  accessToken: string | null;
-}
-
-interface AuthContextType extends AuthState {
-  login: (email: string, password: string) => Promise<User | null>;
-  signup: (data: {
-    email: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-    phoneNumber: string;
-  }) => Promise<void>;
-  logout: () => void;
-}
-
-interface AuthProviderProps {
-  children: React.ReactNode;
-}
-
-export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined
-);
-
-const authReducer = (
-  state: AuthState,
-  action: { type: string; payload?: any }
-): AuthState => {
-  switch (action.type) {
-    case "LOGIN":
-      return {
-        user: action.payload.user,
-        accessToken: action.payload.accessToken,
-      };
-    case "LOGOUT":
-      return { user: null, accessToken: null };
-    case "SET_USER":
-      return { ...state, user: action.payload };
-    case "SET_TOKEN":
-      return { ...state, accessToken: action.payload };
-    default:
-      return state;
-  }
-};
-
-const fetchUser = async (accessToken: string): Promise<User | null> => {
-  try {
-    const response = await fetch(`${API_AUTHEN_URL}/me`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) throw new Error("Failed to fetch user");
-
-    const result = await response.json();
-    if ((result?.statusCode === 200 || result?.statusCode === 304) && result?.data) {
-      const user: User = {
-        role: result.data.role,
-        id: result.data.id,
-        email: result.data.email,
-        firstName: result.data.firstName,
-        lastName: result.data.lastName,
-        phoneNumber: result.data.phoneNumber,
-        isVerified: result.data.isVerified,
-        drivingLicence: result.data.drivingLicence ?? null,
-      };
-      return user;
-    } else {
-      throw new Error("Invalid user data structure");
-    }
-  } catch (error) {
-    console.error("Fetch user error:", error);
-    return null;
-  }
-};
-
-const refreshToken = async (): Promise<{ accessToken: string } | null> => {
-  try {
-    const refreshToken = localStorage.getItem("refresh_token");
-    if (!refreshToken) return null;
-
-    const response = await fetch(`${API_AUTHEN_URL}/refresh-token`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refreshToken }),
-    });
-
-    if (!response.ok) return null;
-    return await response.json();
-  } catch (error) {
-    console.error("Error refreshing token:", error);
-    return null;
-  }
-};
-
-export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [state, dispatch] = useReducer(authReducer, {
+const initialState: Omit<AuthContextValue, 'login' | 'signup' | 'logout' | 'refreshToken' | 'forgotPassword' | 'resetPassword' | 'verifyEmail' | 'resendVerificationEmail' | 'changePassword'> = {
     user: null,
-    accessToken: localStorage.getItem("access_token") || null,
-  });
-  const initializeAuth = async () => {
-    if (state.accessToken) {
-      const user = await fetchUser(state.accessToken);
-      if (user) {
-        console.log("User fetched:", user);
-        dispatch({ type: "SET_USER", payload: user });
-      } else {
-        const newTokens = await refreshToken();
-        if (newTokens) {
-          localStorage.setItem("access_token", newTokens.accessToken);
-          dispatch({ type: "SET_TOKEN", payload: newTokens.accessToken });
-          const newUser = await fetchUser(newTokens.accessToken);
-          dispatch({ type: "SET_USER", payload: newUser });
-        } else {
-          handleLogout();
+    loading: true,
+    error: null,
+    isAuthenticated: false
+}
+
+const AuthContext = createContext<AuthContextValue | undefined>(undefined)
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+    const [state, setState] = useState(initialState)
+
+    const checkAuth = useCallback(async () => {
+        try {
+            const token = localStorage.getItem('accessToken')
+            if (!token) {
+                setState(prev => ({ ...prev, loading: false, isAuthenticated: false }))
+                return
+            }
+
+            const user = await authApi.getMe()
+            setState(prev => ({
+                ...prev,
+                user,
+                loading: false,
+                isAuthenticated: true
+            }))
+        } catch (error) {
+            localStorage.removeItem('accessToken')
+            setState(prev => ({
+                ...prev,
+                user: null,
+                loading: false,
+                isAuthenticated: false,
+                error: error instanceof Error ? error.message.toString() : 'An error occurred'
+            }))
         }
-      }
+    }, [])
+
+    useEffect(() => {
+        checkAuth()
+    }, [checkAuth])
+
+    const login = useCallback(async (input: LoginInput) => {
+        try {
+            setState(prev => ({ ...prev, loading: true, error: null }))
+            const { accessToken, user } = await authApi.login(input)
+            localStorage.setItem('accessToken', accessToken)
+            setState(prev => ({
+                ...prev,
+                user,
+                loading: false,
+                isAuthenticated: true
+            }))
+            await checkAuth()
+        } catch (error) {
+            setState(prev => ({
+                ...prev,
+                error: error instanceof Error ? error.message : 'An error occurred',
+                loading: false
+            }))
+            throw error
+        }
+    }, [checkAuth])
+
+    const signup = useCallback(async (input: SignupInput) => {
+        try {
+            setState(prev => ({ ...prev, loading: true, error: null }))
+            await authApi.signup(input)
+            setState(prev => ({ ...prev, loading: false }))
+        } catch (error) {
+            setState(prev => ({
+                ...prev,
+                error: error instanceof Error ? error.message : 'An error occurred',
+                loading: false
+            }))
+            throw error
+        }
+    }, [])
+
+    const logout = useCallback(async () => {
+        localStorage.removeItem('accessToken')
+        setState(prev => ({
+            ...prev,
+            user: null,
+            isAuthenticated: false
+        }))
+    }, [])
+
+    const refreshToken = useCallback(async () => {
+        try {
+            const { accessToken } = await authApi.refreshToken()
+            localStorage.setItem('accessToken', accessToken)
+        } catch (error) {
+            localStorage.removeItem('accessToken')
+            setState(prev => ({
+                ...prev,
+                user: null,
+                isAuthenticated: false
+            }))
+            throw error
+        }
+    }, [])
+
+    const forgotPassword = useCallback(async (email: string) => {
+        try {
+            setState(prev => ({ ...prev, loading: true, error: null }))
+            await authApi.forgotPassword(email)
+            setState(prev => ({ ...prev, loading: false }))
+        } catch (error) {
+            setState(prev => ({
+                ...prev,
+                error: error instanceof Error ? error.message : 'An error occurred',
+                loading: false
+            }))
+            throw error
+        }
+    }, [])
+
+    const resetPassword = useCallback(async (token: string, password: string) => {
+        try {
+            setState(prev => ({ ...prev, loading: true, error: null }))
+            await authApi.resetPassword(token, password)
+            setState(prev => ({ ...prev, loading: false }))
+        } catch (error) {
+            setState(prev => ({
+                ...prev,
+                error: error instanceof Error ? error.message : 'An error occurred',
+                loading: false
+            }))
+            throw error
+        }
+    }, [])
+
+    const verifyEmail = useCallback(async (token: string) => {
+        try {
+            setState(prev => ({ ...prev, loading: true, error: null }))
+            await authApi.verifyEmail(token)
+            setState(prev => ({ ...prev, loading: false }))
+        } catch (error) {
+            setState(prev => ({
+                ...prev,
+                error: error instanceof Error ? error.message : 'An error occurred',
+                loading: false
+            }))
+            throw error
+        }
+    }, [])
+
+    const resendVerificationEmail = useCallback(async (email: string) => {
+        try {
+            setState(prev => ({ ...prev, loading: true, error: null }))
+            await authApi.resendVerificationEmail(email)
+            setState(prev => ({ ...prev, loading: false }))
+        } catch (error) {
+            setState(prev => ({
+                ...prev,
+                error: error instanceof Error ? error.message : 'An error occurred',
+                loading: false
+            }))
+            throw error
+        }
+    }, [])
+
+    const changePassword = useCallback(async (currentPassword: string, newPassword: string) => {
+        try {
+            setState(prev => ({ ...prev, loading: true, error: null }))
+            await authApi.changePassword(currentPassword, newPassword)
+            setState(prev => ({ ...prev, loading: false }))
+        } catch (error) {
+            setState(prev => ({
+                ...prev,
+                error: error instanceof Error ? error.message : 'An error occurred',
+                loading: false
+            }))
+            throw error
+        }
+    }, [])
+
+    const value = {
+        ...state,
+        login,
+        signup,
+        logout,
+        refreshToken,
+        forgotPassword,
+        resetPassword,
+        verifyEmail,
+        resendVerificationEmail,
+        changePassword
     }
-  };
 
-  useEffect(() => {
-    initializeAuth();
-  }, []);
-
-  const signup = async (data: {
-    email: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-    phoneNumber: string;
-  }): Promise<void> => {
-    try {
-      const response = await fetch(`${API_AUTHEN_URL}/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      if (!response.ok) {
-        throw new Error("Signup failed");
-      }
-    } catch (error) {
-      throw new Error("Signup error");
-    }
-  };
-
-  const login = async (email: string, password: string): Promise<User | null> => {
-    try {
-      const response = await fetch(`${API_AUTHEN_URL}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Login failed");
-      }
-
-      const data = await response.json();
-      const access = data?.data?.accessToken;
-      const refresh = data?.data?.refreshToken;
-      localStorage.setItem("access_token", access);
-      localStorage.setItem("refresh_token", refresh);
-      const user = await fetchUser(access);
-      if (!user) {
-        throw new Error("Failed to fetch user");
-      }
-      dispatch({
-        type: "LOGIN",
-        payload: { user, accessToken: access },
-      });
-      return user;
-    } catch (error) {
-      throw new Error("Login error");
-    }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    dispatch({ type: "LOGOUT" });
-  };
-
-  return (
-    <AuthContext.Provider
-      value={{ ...state, login, signup, logout: handleLogout }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
-};
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+}
 
 export const useAuth = () => {
   const context = React.useContext(AuthContext);

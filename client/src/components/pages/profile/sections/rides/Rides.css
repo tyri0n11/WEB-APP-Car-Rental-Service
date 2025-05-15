@@ -1,271 +1,303 @@
 .my-rides-root {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.my-rides-section {
-    background-color: #fff;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 1.25rem;
-    width: 100%;
-    box-sizing: border-box;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .my-rides-header {
-    margin-bottom: 1.25rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 2px solid #e1e4e8;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 2rem;
     flex-wrap: wrap;
     gap: 1rem;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
 }
 
-.my-rides-header h4 {
-    font-size: 1.1rem;
+.my-rides-header h2 {
+    font-size: 1.5rem;
     font-weight: 600;
     color: #2d3748;
     margin: 0;
 }
 
-.filter-buttons {
+.rides-filters {
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
 }
 
-.filter-btn {
-    padding: 0.5rem 0.75rem;
-    border: 1px solid #e1e4e8;
-    border-radius: 6px;
-    background-color: #fff;
+.filter-button {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    background: white;
     color: #4a5568;
-    font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 0.9rem;
+    transition: all 0.2s;
 }
 
-.filter-btn:hover {
-    background-color: #f7fafc;
-    border-color: #cbd5e0;
+.filter-button:hover {
+    background: #f7fafc;
 }
 
-.filter-btn.active {
-    background-color: #4299e1;
+.filter-button.active {
+    background: #4299e1;
+    color: white;
     border-color: #4299e1;
-    color: #fff;
+}
+
+.rides-group {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.rides-group:last-child {
+    border-bottom: none;
+}
+
+.group-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid currentColor;
+}
+
+.group-title.confirmed {
+    color: #4299e1;
+}
+
+.group-title.ongoing {
+    color: #48bb78;
+}
+
+.group-title.completed {
+    color: #38b2ac;
+}
+
+.group-title.cancelled {
+    color: #f56565;
 }
 
 .rides-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
 }
 
 .ride-card {
-    display: flex;
-    gap: 1rem;
-    padding: 1rem;
-    border: 1px solid #e1e4e8;
+    background: white;
     border-radius: 8px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    background-color: #fff;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid #e2e8f0;
 }
 
 .ride-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.ride-car-image {
-    width: 120px;
-    height: 80px;
+.ride-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+.ride-image img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    border-radius: 6px;
 }
 
-.ride-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+.ride-content {
+    padding: 1rem;
 }
 
-.ride-info h5 {
-    font-size: 1rem;
-    font-weight: 600;
+.ride-content h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.1rem;
     color: #2d3748;
-    margin: 0;
 }
 
 .ride-dates {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-}
-
-.ride-dates p {
-    margin: 0;
+    margin-bottom: 0.5rem;
     color: #4a5568;
     font-size: 0.9rem;
-}
-
-.ride-price {
-    margin: 0;
-    color: #2d3748;
-    font-size: 0.95rem;
-    font-weight: 500;
 }
 
 .ride-status {
-    display: inline-block;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    color: #fff;
-    font-size: 0.8rem;
-    font-weight: 500;
-    align-self: flex-start;
+    margin-bottom: 0.5rem;
+    color: #4a5568;
+    font-size: 0.9rem;
 }
 
-.ride-actions {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
+.ride-status span {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    color: white;
+    font-size: 0.875rem;
+    margin-left: 0.5rem;
+}
+
+.ride-status span.confirmed {
+    background: #4299e1;
+}
+
+.ride-status span.ongoing {
+    background: #48bb78;
+}
+
+.ride-status span.completed {
+    background: #38b2ac;
+}
+
+.ride-status span.cancelled {
+    background: #f56565;
+}
+
+.ride-price {
+    font-weight: 600;
+    color: #2d3748;
+    margin: 0.5rem 0;
 }
 
 .rebook-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    background-color: #4299e1;
+    width: 100%;
+    padding: 0.75rem;
+    background: #4299e1;
+    color: white;
     border: none;
-    border-radius: 6px;
-    color: #fff;
-    font-weight: 500;
+    border-radius: 4px;
     cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 0.9rem;
+    transition: background 0.2s;
+    font-weight: 500;
 }
 
 .rebook-button:hover {
-    background-color: #3182ce;
+    background: #3182ce;
 }
 
-.my-rides-loading,
-.my-rides-error,
 .my-rides-empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem 1rem;
     text-align: center;
-    color: #4a5568;
+    padding: 3rem 1rem;
 }
 
-.my-rides-loading {
-    gap: 0.75rem;
-}
-
-.spinner {
-    animation: spin 1s linear infinite;
+.my-rides-empty h2 {
     font-size: 1.5rem;
-    color: #4299e1;
+    color: #2d3748;
+    margin-bottom: 1rem;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.my-rides-empty p {
+    color: #4a5568;
+    margin-bottom: 2rem;
+}
+
+.explore-button {
+    background: #4299e1;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-weight: 500;
+}
+
+.explore-button:hover {
+    background: #3182ce;
 }
 
 .my-rides-error {
-    gap: 0.75rem;
+    text-align: center;
+    padding: 2rem;
+    color: #e53e3e;
 }
 
-.my-rides-error button {
-    background-color: #4299e1;
-    color: #fff;
-    border: none;
-    padding: 0.6rem 1.25rem;
-    border-radius: 6px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 0.9rem;
+/* Skeleton loading styles */
+.skeleton-filter {
+    width: 100px;
+    height: 36px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-.my-rides-error button:hover {
-    background-color: #3182ce;
+.ride-card.skeleton {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
 }
 
-.my-rides-empty {
-    gap: 0.75rem;
+.skeleton-image {
+    width: 100%;
+    height: 200px;
+    background: #e2e8f0;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+.skeleton-content {
+    padding: 1rem;
+}
+
+.skeleton-title {
+    height: 1.5rem;
+    background: #e2e8f0;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.skeleton-text {
+    height: 1rem;
+    background: #e2e8f0;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: .5;
+    }
+}
+
+/* Responsive styles */
 @media (max-width: 768px) {
-    .my-rides-section {
+    .my-rides-root {
         padding: 1rem;
     }
-    
+
     .my-rides-header {
         flex-direction: column;
         align-items: flex-start;
+        padding: 1rem;
     }
-    
-    .filter-buttons {
-        width: 100%;
-    }
-    
-    .filter-btn {
-        flex: 1;
-        text-align: center;
-    }
-    
-    .ride-card {
-        flex-direction: column;
-    }
-    
-    .ride-car-image {
-        width: 100%;
-        height: 120px;
-    }
-    
-    .ride-actions {
-        margin-top: 0.75rem;
-    }
-}
 
-@media (max-width: 576px) {
-    .my-rides-section {
-        padding: 0.75rem;
-    }
-    
-    .my-rides-header h4 {
-        font-size: 1rem;
-    }
-    
-    .ride-car-image {
-        height: 100px;
-    }
-    
-    .ride-info h5 {
-        font-size: 0.95rem;
-    }
-    
-    .ride-dates p,
-    .ride-price {
-        font-size: 0.85rem;
-    }
-    
-    .rebook-button {
+    .rides-filters {
         width: 100%;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+    }
+
+    .filter-button {
+        white-space: nowrap;
+    }
+
+    .rides-list {
+        grid-template-columns: 1fr;
     }
 }

@@ -15,7 +15,7 @@ interface Address {
 }
 
 const Address: React.FC = () => {
-    const { accessToken } = useAuth();
+    const { isAuthenticated } = useAuth();
     const [editMode, setEditMode] = useState<boolean>(false);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
@@ -34,6 +34,8 @@ const Address: React.FC = () => {
     // Fetch addresses from database
     useEffect(() => {
         const fetchAddresses = async () => {
+            if (!isAuthenticated) return;
+            
             try {
                 // Use dummy data from separate JSON file
                 const dummyAddresses: Address[] = addressesDummyData;
@@ -49,7 +51,7 @@ const Address: React.FC = () => {
         };
 
         fetchAddresses();
-    }, [accessToken]);
+    }, [isAuthenticated]);
 
     const validateForm = () => {
         const newErrors: Record<string, string> = {};
@@ -216,7 +218,6 @@ const Address: React.FC = () => {
         <div className="address-root">
             <div className="address-section">
                 <div className="address-header">
-                    <h4>My Addresses</h4>
                     {!editMode && (
                         <button className="add-button" onClick={handleAddNew}>
                             <FaPlus /> Add New Address

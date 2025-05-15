@@ -33,6 +33,13 @@ export const AUTH_NOTIFICATIONS = {
     error: "Failed to change password. Please try again.",
     loading: "Changing password...",
   },
+
+  // Reset mật khẩu
+  resetPassword: {
+    success: "Password reset successfully!",
+    error: "Failed to reset password. Please try again.",
+    loading: "Resetting password...",
+  },
 };
 
 export const BOOKING_NOTIFICATIONS = {

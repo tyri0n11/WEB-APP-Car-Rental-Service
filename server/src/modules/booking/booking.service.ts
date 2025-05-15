@@ -348,4 +348,8 @@ export class BookingService extends BaseService<Booking> {
     }
     await this.redisService.del(bookingKey);
   }
+
+  async findByCode(bookingCode: string): Promise<BookingResponseDTO> {
+    return await super.findOne({ code: bookingCode });
+  }
 }

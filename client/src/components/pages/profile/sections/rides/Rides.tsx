@@ -1,197 +1,206 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import bookingsDummyData from '../../../../../utils/dummy/bookings.json';
-import carsDummyData from '../../../../../utils/dummy/cars.json';
-import { Car } from '../../../../../contexts/CarContext';
+import { bookingApi } from '../../../../../apis/booking';
+import type { Booking, BookingStatus, PaginatedResponse } from '../../../../../types/booking';
 import './Rides.css';
 
-interface Booking {
-    id: string;
-    userId: string;
-    carId: string;
-    startDate: string;
-    endDate: string;
-    totalPrice: number;
-    status: 'COMPLETED' | 'CANCELLED' | 'CONFIRMED' | 'ONGOING';
-    pickupAddress: string;
-    returnAddress: string;
-    transactionId: string;
-    createdAt: string;
-    updatedAt: string;
+interface GroupedBookings {
+    [key: string]: Booking[];
 }
 
-interface BookingWithCar extends Booking {
-    car?: Car;
+function formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
 }
 
-type BookingStatus = Booking['status'];
-
-const MyRides: React.FC = () => {
-    const { accessToken } = useAuth();
-    const navigate = useNavigate();
-    const [bookings, setBookings] = useState<BookingWithCar[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [activeFilter, setActiveFilter] = useState<'all' | BookingStatus>('all');
-
-    useEffect(() => {
-        const loadBookings = async () => {
-            try {
-                setLoading(true);
-                setError(null);
-                
-                // Using dummy data from JSON files
-                const dummyBookings = bookingsDummyData as Booking[];
-                
-                // Add car details to each booking
-                const bookingsWithCars = dummyBookings.map(booking => {
-                    // Find the corresponding car from carsDummyData
-                    const car = carsDummyData.find(c => c.id === booking.carId);
-                    
-                    return {
-                        ...booking,
-                        car
-                    };
-                });
-                
-                setBookings(bookingsWithCars);
-            } catch (err) {
-                setError('Failed to load bookings. Please try again later.');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        loadBookings();
-    }, [accessToken]);
-
-    const filteredBookings = bookings.filter(booking =>
-        activeFilter === 'all' ? true : booking.status === activeFilter
+function RidesSkeleton() {
+    return (
+        <div className="my-rides-root">
+            <div className="my-rides-header">
+                <h2>My Rides</h2>
+                <div className="rides-filters">
+                    <div className="skeleton-filter" />
+                    <div className="skeleton-filter" />
+                    <div className="skeleton-filter" />
+                </div>
+            </div>
+            <div className="rides-list">
+                {[1, 2, 3].map((i) => (
+                    <div key={i} className="ride-card skeleton">
+                        <div className="skeleton-image" />
+                        <div className="skeleton-content">
+                            <div className="skeleton-title" />
+                            <div className="skeleton-text" />
+                            <div className="skeleton-text" />
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
     );
+}
 
-    const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-        });
-    };
+export function MyRides() {
+    const { user } = useAuth();
+    const navigate = useNavigate();
+    const [bookings, setBookings] = useState<PaginatedResponse<Booking> | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [selectedStatus, setSelectedStatus] = useState<BookingStatus | 'ALL'>('ALL');
 
-    const getStatusColor = (status: BookingStatus) => {
-        switch (status) {
-            case 'COMPLETED':
-                return '#4299e1';
-            case 'CANCELLED':
-                return '#f56565';
-            case 'CONFIRMED':
-                return '#48bb78';
-            case 'ONGOING':
-                return '#ed8936';
-            default:
-                return '#718096';
+    const fetchBookings = async () => {
+        try {
+            setIsLoading(true);
+            const response = await bookingApi.findMany();
+            setBookings(response);
+            setError(null);
+        } catch (err) {
+            setError('Failed to load bookings');
+        } finally {
+            setIsLoading(false);
         }
     };
 
-    const handleRebook = (carId: string) => {
-        navigate(`/cars/${carId}`);
+    useEffect(() => {
+        if (user) {
+            fetchBookings();
+        }
+    }, [user]);
+
+    const handleRebook = (booking: Booking) => {
+        if (booking.car?.id) {
+            navigate(`/cars/${booking.car.id}?rebook=true`);
+        }
     };
 
-    if (loading) {
-        return <div className="my-rides-loading">Loading booking history...</div>;
-    }
+    // Get the bookings array from the paginated response
+    const bookingsArray = bookings?.data || [];
+    
+    const filteredBookings = bookingsArray.filter((booking: Booking) => {
+        if (selectedStatus === 'ALL') return true;
+        return booking.status === selectedStatus;
+    });
+
+    const groupedBookings = filteredBookings.reduce<GroupedBookings>((acc: GroupedBookings, booking: Booking) => {
+        const status = booking.status;
+        if (!acc[status]) {
+            acc[status] = [];
+        }
+        acc[status].push(booking);
+        return acc;
+    }, {});
+
+    if (isLoading) return <RidesSkeleton />;
 
     if (error) {
-        return <div className="my-rides-error">{error}</div>;
+        return (
+            <div className="my-rides-root">
+                <div className="my-rides-error">
+                    <p>Error loading rides: {error}</p>
+                    <button onClick={fetchBookings}>Try Again</button>
+                </div>
+            </div>
+        );
+    }
+
+    if (!bookingsArray || bookingsArray.length === 0) {
+        return (
+            <div className="my-rides-root">
+                <div className="my-rides-empty">
+                    <h2>No Rides Yet</h2>
+                    <p>You haven't booked any rides yet. Start exploring our cars!</p>
+                    <button 
+                        className="explore-button"
+                        onClick={() => navigate('/services')}
+                    >
+                        Explore Cars
+                    </button>
+                </div>
+            </div>
+        );
     }
 
     return (
         <div className="my-rides-root">
-            <div className="my-rides-section">
-                <div className="my-rides-header">
-                    <h4>My Booking History</h4>
-                    <div className="filter-buttons">
-                        <button
-                            className={`filter-btn ${activeFilter === 'all' ? 'active' : ''}`}
-                            onClick={() => setActiveFilter('all')}
-                        >
-                            All
-                        </button>
-                        <button
-                            className={`filter-btn ${activeFilter === 'COMPLETED' ? 'active' : ''}`}
-                            onClick={() => setActiveFilter('COMPLETED')}
-                        >
-                            Completed
-                        </button>
-                        <button
-                            className={`filter-btn ${activeFilter === 'CANCELLED' ? 'active' : ''}`}
-                            onClick={() => setActiveFilter('CANCELLED')}
-                        >
-                            Cancelled
-                        </button>
-                        <button
-                            className={`filter-btn ${activeFilter === 'CONFIRMED' ? 'active' : ''}`}
-                            onClick={() => setActiveFilter('CONFIRMED')}
-                        >
-                            Confirmed
-                        </button>
-                        <button
-                            className={`filter-btn ${activeFilter === 'ONGOING' ? 'active' : ''}`}
-                            onClick={() => setActiveFilter('ONGOING')}
-                        >
-                            Ongoing
-                        </button>
-                    </div>
+            <div className="my-rides-header">
+                <h2>My Rides</h2>
+                <div className="rides-filters">
+                    <button
+                        className={`filter-button ${selectedStatus === 'ALL' ? 'active' : ''}`}
+                        onClick={() => setSelectedStatus('ALL')}
+                    >
+                        All
+                    </button>
+                    <button
+                        className={`filter-button ${selectedStatus === 'CONFIRMED' ? 'active' : ''}`}
+                        onClick={() => setSelectedStatus('CONFIRMED' as BookingStatus)}
+                    >
+                        Confirmed
+                    </button>
+                    <button
+                        className={`filter-button ${selectedStatus === 'ONGOING' ? 'active' : ''}`}
+                        onClick={() => setSelectedStatus('ONGOING' as BookingStatus)}
+                    >
+                        Ongoing
+                    </button>
+                    <button
+                        className={`filter-button ${selectedStatus === 'COMPLETED' ? 'active' : ''}`}
+                        onClick={() => setSelectedStatus('COMPLETED' as BookingStatus)}
+                    >
+                        Completed
+                    </button>
+                    <button
+                        className={`filter-button ${selectedStatus === 'CANCELLED' ? 'active' : ''}`}
+                        onClick={() => setSelectedStatus('CANCELLED' as BookingStatus)}
+                    >
+                        Cancelled
+                    </button>
                 </div>
+            </div>
 
-                {filteredBookings.length === 0 ? (
-                    <div className="my-rides-empty">
-                        <p>No bookings found for the selected filter.</p>
-                    </div>
-                ) : (
+            {Object.entries(groupedBookings).map(([status, statusBookings]) => (
+                <div key={status} className="rides-group">
+                    <h3 className={`group-title ${status.toLowerCase()}`}>
+                        {status.charAt(0) + status.slice(1).toLowerCase()}
+                    </h3>
                     <div className="rides-list">
-                        {filteredBookings.map((booking) => (
+                        {(statusBookings as Booking[]).map((booking: Booking) => (
                             <div key={booking.id} className="ride-card">
-                                <img 
-                                    src={booking.car?.images?.[0]?.url || `https://via.placeholder.com/150x100/4299e1/ffffff?text=Car+${booking.carId}`}
-                                    alt={`${booking.car?.make || 'Car'} ${booking.car?.model || booking.carId}`} 
-                                    className="ride-car-image" 
-                                />
-                                <div className="ride-info">
-                                    <h5>{booking.car ? `${booking.car.make} ${booking.car.model}` : `Car ID: ${booking.carId}`}</h5>
-                                    <div className="ride-dates">
-                                        <p>
-                                            <strong>From:</strong> {formatDate(booking.startDate)}
-                                        </p>
-                                        <p>
-                                            <strong>To:</strong> {formatDate(booking.endDate)}
-                                        </p>
-                                    </div>
-                                    <p className="ride-price">Total: ${booking.totalPrice.toFixed(2)}</p>
-                                    <span
-                                        className="ride-status"
-                                        style={{ backgroundColor: getStatusColor(booking.status) }}
-                                    >
-                                        {booking.status.charAt(0) + booking.status.slice(1).toLowerCase()}
-                                    </span>
-                                    <div className="ride-actions">
-                                        {(booking.status === 'COMPLETED' || booking.status === 'CANCELLED') && (
-                                            <button
-                                                className="rebook-button"
-                                                onClick={() => handleRebook(booking.carId)}
-                                            >
-                                                Rebook
-                                            </button>
-                                        )}
-                                    </div>
+                                <div className="ride-image">
+                                    <img 
+                                        src={booking.car?.images?.[0]?.url || '/placeholder-car.jpg'} 
+                                        alt={`${booking.car?.make || 'Car'} ${booking.car?.model || ''}`} 
+                                    />
+                                </div>
+                                <div className="ride-content">
+                                    <h3>{booking.car ? `${booking.car.make} ${booking.car.model}` : 'Car'}</h3>
+                                    <p className="ride-dates">
+                                        {formatDate(booking.startDate)} - {formatDate(booking.endDate)}
+                                    </p>
+                                    <p className="ride-status">
+                                        Status: <span className={booking.status.toLowerCase()}>{booking.status}</span>
+                                    </p>
+                                    <p className="ride-price">Total: ${booking.totalPrice}</p>
+                                    {(booking.status === 'COMPLETED' || booking.status === 'CANCELLED') && (
+                                        <button
+                                            className="rebook-button"
+                                            onClick={() => handleRebook(booking)}
+                                        >
+                                            Rebook
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         ))}
                     </div>
-                )}
-            </div>
+                </div>
+            ))}
         </div>
     );
-};
+}
 
 export default MyRides;

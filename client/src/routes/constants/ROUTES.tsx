@@ -18,6 +18,8 @@ export const ROUTES = {
     // Protected routes
     PROTECTED: {
       PROFILE: '/profile',
+      BOOKING_CONFIRMATION: '/booking-confirmation',
+      PAYMENT: '/payment',
     },
 
     // Admin routes

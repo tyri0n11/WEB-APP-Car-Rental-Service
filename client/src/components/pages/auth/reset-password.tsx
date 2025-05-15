@@ -1,53 +1,38 @@
 import React, { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../hooks/useAuth";
+import { useNotificationWithState } from "../../../contexts/NotificationContext";
+import { AUTH_NOTIFICATIONS } from "../../../constants/notificationMessages";
 
 const ResetPassword: React.FC = () => {
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
     const [newPassword, setNewPassword] = useState("");
-    const [message, setMessage] = useState("");
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
+    const { resetPassword } = useAuth();
+    const { isLoading, handleAsync } = useNotificationWithState();
 
     const token = searchParams.get("token");
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError("");
-        setMessage("");
-        setLoading(true);
 
         if (!newPassword || !token) {
-            setError("Password and token are required");
-            setLoading(false);
             return;
         }
 
-        try {
-            const API_HOST = import.meta.env.VITE_HOST || "http://localhost:3000";
-            const RP_PATH = import.meta.env.VITE_RP_PATH || "/auth/reset-password";
-            const API_URL = `${API_HOST}${RP_PATH}`;
-
-            const response = await fetch(API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ token, newPassword }),
-            });
-
-            const data = await response.json();
-            if (!response.ok) {
-                throw new Error(data.message || "Failed to reset password.");
+        const result = await handleAsync(
+            async () => resetPassword(token, newPassword),
+            {
+                loading: AUTH_NOTIFICATIONS.resetPassword.loading,
+                success: AUTH_NOTIFICATIONS.resetPassword.success,
+                error: AUTH_NOTIFICATIONS.resetPassword.error
             }
+        );
 
-            setMessage("Password reset successfully!");
-
+        if (result) {
             setTimeout(() => {
-                window.history.replaceState({}, document.title, window.location.pathname);
-                setSearchParams({});
-            }, 500);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "An error occurred.");
-        } finally {
-            setLoading(false);
+                navigate('/auth/signin');
+            }, 1500);
         }
     };
 
@@ -56,8 +41,6 @@ const ResetPassword: React.FC = () => {
             <div style={styles.overlay}>
                 <div style={styles.box}>
                     <h1 style={styles.title}>Reset Password</h1>
-                    {error && <p style={styles.error}>{error}</p>}
-                    {message && <p style={styles.message}>{message}</p>}
                     <form onSubmit={handleSubmit}>
                         <input
                             type="password"
@@ -66,9 +49,10 @@ const ResetPassword: React.FC = () => {
                             placeholder="Enter your new password"
                             style={styles.input}
                             required
+                            disabled={isLoading}
                         />
-                        <button type="submit" style={styles.button(loading)} disabled={loading}>
-                            {loading ? "Resetting..." : "Reset Password"}
+                        <button type="submit" style={styles.button(isLoading)} disabled={isLoading}>
+                            {isLoading ? "Resetting..." : "Reset Password"}
                         </button>
                     </form>
                 </div>
@@ -105,18 +89,12 @@ const styles = {
         background: "white",
         borderRadius: "10px",
         boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
-        textAlign: "center",
+        textAlign: "center" as const,
     },
     title: {
         fontSize: "22px",
         color: "#333",
         marginBottom: "15px",
-    },
-    error: {
-        color: "red",
-    },
-    message: {
-        color: "green",
     },
     input: {
         width: "100%",

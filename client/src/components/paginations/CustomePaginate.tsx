@@ -52,7 +52,7 @@ const CustomePaginate: React.FC<CustomePaginateProps> = ({
 
   const addDefaultImage = (car: any): Car => ({
     ...car,
-    fuelType: car.fuelType as FuelType,
+    fuelType: FuelType[car.fuelType.toUpperCase() as keyof typeof FuelType],
     status: car.status as CarStatus,
     images: car.images?.length ? car.images : [{
       id: 'default',

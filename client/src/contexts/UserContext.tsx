@@ -1,9 +1,7 @@
 'use client'
 
 import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react'
-import type { User } from '../types/user'
 import type { UpdateProfileInput, UpdateDrivingLicenseInput, UserContextValue } from '../types/user'
-import { Role } from '../types/user'
 import { userApi } from '../apis/user'
 import { useAuth } from './AuthContext'
 

@@ -6,14 +6,14 @@ export interface Car {
   year: number
   color: string
   licensePlate: string
-  fuelType: keyof typeof FuelType
+  fuelType: FuelType[keyof FuelType]
   transmission: 'automatic' | 'manual'
   seats: number
   pricePerDay: number
-  status: keyof typeof CarStatus
+  status: CarStatus[keyof CarStatus]
   location: string
   images: CarImage[]
-  category: keyof typeof CarCategory
+  category: CarCategory[keyof CarCategory]
   features: string[]
   description: string
   isFavorite?: boolean
@@ -25,28 +25,28 @@ export interface CarImage {
   isPrimary: boolean
 }
 
-export const FuelType = {
-  PETROL: 'petrol',
-  DIESEL: 'diesel',
-  ELECTRIC: 'electric',
-  HYBRID: 'hybrid'
-} as const
+export enum FuelType {
+  PETROL = 'petrol',
+  DIESEL = 'diesel',
+  ELECTRIC = 'electric',
+  HYBRID = 'hybrid'
+}
 
-export const CarStatus = {
+export interface CarStatus {
   AVAILABLE: 'available',
   RENTED: 'rented',
   MAINTENANCE: 'maintenance',
   UNAVAILABLE: 'unavailable'
-} as const
+}
 
-export const CarCategory = {
+export interface CarCategory {
   ECONOMY: 'economy',
   COMPACT: 'compact',
   MIDSIZE: 'midsize',
   LUXURY: 'luxury',
   SUV: 'suv',
   VAN: 'van'
-} as const
+}
 
 export interface CarCategory {
   id: string
@@ -65,7 +65,7 @@ export interface CarCategory {
 export interface FindManyCarsQuery {
   page?: number
   perPage?: number
-  status?: keyof typeof CarStatus
+  status?: CarStatus[keyof CarStatus]
   categoryId?: string
   minPrice?: number
   maxPrice?: number

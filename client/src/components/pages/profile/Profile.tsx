@@ -1,10 +1,12 @@
-import React, { useState, Component, ErrorInfo, ReactNode } from "react";
+
+import React, { useState, Component, ErrorInfo, ReactNode, useEffect } from "react";
 import { FaAddressCard, FaCar, FaHeart, FaLock, FaSignOutAlt, FaUser } from "react-icons/fa";
-import { useAuth } from "../../../hooks/useAuth";
+import { useAuth } from "../../../contexts/AuthContext";
+import { useUser } from "../../../contexts/UserContext";
 import "./Profile.css";
-import MyAccount from "./sections/account/Account";
-import ChangePassword from "./sections/change-password/ChangePassword";
+import Account from "./sections/account/Account";
 import Address from "./sections/address/Address";
+import ChangePassword from "./sections/change-password/ChangePassword";
 import Favourites from "./sections/favourites/Favourites";
 import MyRides from "./sections/rides/Rides";
 
@@ -70,10 +72,31 @@ function LoadingFallback() {
 
 const Profile: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
+  const { user } = useUser();
+  const [isLoading, setIsLoading] = useState(true);
 
-  const menuItems: MenuItem[] = [
-    { label: "My Account", icon: <FaUser />, content: <MyAccount /> },
+  useEffect(() => {
+    if (user) {
+      setIsLoading(false);
+    }
+  }, [user]);
+
+  if (isLoading || !user) {
+    return (
+      <div className="profilePage">
+        <div className="profileLayout">
+          <div className="profileContainer">
+            <div className="loading">Loading user information...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const menuItems = [
+    { label: "My Account", icon: <FaUser />, content: <Account /> },
+
     { label: "Favourites", icon: <FaHeart />, content: <Favourites /> },
     { label: "My Ride", icon: <FaCar />, content: <MyRides /> },
     {

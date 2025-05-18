@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AUTH_NOTIFICATIONS } from "../../../../constants/notificationMessages";
 import { useNotificationWithState } from "../../../../contexts/NotificationContext";
-import { useAuth } from "../../../../hooks/useAuth";
+import { useAuth } from "../../../../contexts/AuthContext";
 import Notification from "../../../common/Notification";
 
 import "../AuthStyles.css";
@@ -30,6 +30,7 @@ const SignIn: React.FC<{
   onSwitchToSignUp: () => void;
 }> = ({ onClose, onSwitchToSignUp }) => {
   const { login } = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { isLoading, handleAsync } = useNotificationWithState();
@@ -65,7 +66,6 @@ const SignIn: React.FC<{
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-
     try {
       await handleAsync(
         async () => login({ email, password }),

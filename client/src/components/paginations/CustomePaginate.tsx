@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Car, CarQueryParams, getCars } from '../../apis/cars';
+import { useAuth } from '../../hooks/useAuth';
+import { ROUTES } from '../../routes/constants/ROUTES';
 import { CarStatus, FuelType } from '../../types/car';
 import CarCard from '../cards/car/CarCard';
 import CarSearchFilter from '../filters/CarSearchFilter';
@@ -29,6 +32,8 @@ const CustomePaginate: React.FC<CustomePaginateProps> = ({
   showPagination = true, // Default value
   limit // Optional limit for the number of cars
 }) => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -126,6 +131,16 @@ const CustomePaginate: React.FC<CustomePaginateProps> = ({
     }
   };
 
+  const handleCarClick = (carId: string) => {
+    if (user?.role === 'ADMIN') {
+      // Navigate to admin car edit page
+      navigate(`/admin/cars/${carId}/edit`);
+    } else {
+      // Navigate to car details page for regular customers
+      navigate(ROUTES.PUBLIC.CAR_DETAIL(carId));
+    }
+  };
+
   if (loading) {
     return (
       <div className="loading-container">
@@ -155,7 +170,12 @@ const CustomePaginate: React.FC<CustomePaginateProps> = ({
         <>
           <div className="cars-grid">
             {cars.map((car) => (
-              <div key={car.id} className="car-item">
+              <div 
+                key={car.id} 
+                className="car-item"
+                onClick={() => handleCarClick(car.id)}
+                style={{ cursor: 'pointer' }}
+              >
                 <CarCard car={car} />
               </div>
             ))}

@@ -92,7 +92,7 @@ const CarCard: React.FC<{ car: Car }> = ({ car }) => {
           </div>
      
           <div className="car-card-price-row">
-            <span className="car-card-price">{car.dailyPrice} USD/day</span>
+            <span className="car-card-price">{car.dailyPrice.toLocaleString()} VND / ngày</span>
           </div>
         </div>
       </div>

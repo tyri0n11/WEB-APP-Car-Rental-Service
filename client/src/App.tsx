@@ -1,31 +1,28 @@
 import { useEffect, useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import Banner from "./components/layout/Banner";
 import Footer from "./components/layout/Footer";
 import NavBar from "./components/layout/Navbar";
-import About from "./components/pages/about/About";
 import SignIn from "./components/pages/auth/signin/SignIn";
 import SignUp from "./components/pages/auth/signup/SignUp";
-import CarDetail from "./components/pages/car/carDetail";
-import Contact from "./components/pages/contact/Contact";
-import Dashboard from "./components/pages/dashboard/Dashboard";
-import Home from "./components/pages/home/Home";
-import Profile from "./components/pages/profile/Profile";
-import Services from "./components/pages/service/Service";
-import ProtectedRoute from "./routes/ProtectedRoute";
-import ForgotPassword from "./components/pages/auth/forgot-password";
-import ResetPassword from "./components/pages/auth/reset-password";
-import NotFound from "./components/pages/NotFound";
-import { NotificationProvider } from "./contexts/NotificationContext";
+import { AdminRoutes } from "./routes/AdminRoutes";
+import { AuthRoutes } from "./routes/AuthRoutes";
+import { ProtectedRoutes } from "./routes/ProtectedRoutes";
+import { PublicRoutes } from "./routes/PublicRoutes";
 import { BookingProvider } from "./contexts/BookingContext";
-import BookingConfirmation from "./components/pages/booking/BookingConfirmation";
-import Payment from "./components/pages/booking/Payment";
-import CompletedBooking from "./components/pages/booking/CompletedBooking";
+import { NotificationProvider } from './contexts/NotificationContext';
+import NotFound from "./components/pages/NotFound";
+import { useUser } from "./contexts/UserContext";
 
 function App() {
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
+  const location = useLocation();
+  const { user } = useUser();
+
+  // Check if current route is admin route
+  const isAdminRoute = location.pathname.startsWith('/admin');
 
   useEffect(() => {
     if (showSignIn || showSignUp) {
@@ -50,47 +47,45 @@ function App() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  // Only show banner and footer if not on admin route
+  const showBannerAndFooter = !(user?.role === 'ADMIN' && isAdminRoute);
+
   return (
     <NotificationProvider>
       <BookingProvider>
         <div className="App">
-          <header className="navbar">
-            <Banner />
-            <NavBar
-              onSignInClick={() => {
-                setShowSignIn(true);
-                setShowSignUp(false);
-              }}
-              onSignUpClick={() => {
-                setShowSignUp(true);
-                setShowSignIn(false);
-              }}
-            />
-          </header>
+          {showBannerAndFooter && (
+            <header className="navbar">
+              <Banner />
+              <NavBar
+                onSignInClick={() => {
+                  setShowSignIn(true);
+                  setShowSignUp(false);
+                }}
+                onSignUpClick={() => {
+                  setShowSignUp(true);
+                  setShowSignIn(false);
+                }}
+              />
+            </header>
+          )}
 
           <section className="main-content">
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route
-                path="/auth/forgot-password"
-                element={<ForgotPassword />}
-              />
-              <Route path="/auth/reset-password" element={<ResetPassword />} />
-              <Route path="services" element={<Services />} />
-              <Route path="/cars/:id" element={<CarDetail />} />
-              <Route path="/completed-booking" element={<CompletedBooking />} />
+              {/* Public Routes */}
+              <Route path="/*" element={<PublicRoutes />} />
+              
+              {/* Auth Routes */}
+              <Route path="/auth/*" element={<AuthRoutes />} />
+              
+              <Route path="/user/*" element={<ProtectedRoutes />} />
 
-              <Route element={<ProtectedRoute />}>
-                <Route
-                  path="/booking-confirmation"
-                  element={<BookingConfirmation />}
-                />
-                <Route path="/payment" element={<Payment />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/profile" element={<Profile />} />
-              </Route>
+
+              {/* Admin Routes */}
+              <Route path="/admin/*" element={<AdminRoutes />} />
+              
+              {/* 404 Route */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </section>
@@ -103,7 +98,6 @@ function App() {
               }}
             />
           )}
-
           {showSignUp && (
             <SignUp
               onClose={() => setShowSignUp(false)}
@@ -113,8 +107,7 @@ function App() {
               }}
             />
           )}
-
-          <Footer />
+          {showBannerAndFooter && <Footer />}
         </div>
       </BookingProvider>
     </NotificationProvider>

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react'
+import React, { createContext, useState, useCallback, useEffect, ReactNode } from 'react'
 import type { AuthContextValue, LoginInput, SignupInput, User } from '../types/auth'
 import { authApi } from '../apis/auth'
 
@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 user: null,
                 loading: false,
                 isAuthenticated: false,
-                error: error instanceof Error ? error.message : 'An error occurred'
+                error: error instanceof Error ? error.message.toString() : 'An error occurred'
             }))
         }
     }, [])
@@ -197,12 +197,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
-export function useAuth() {
-    const context = useContext(AuthContext)
-    if (context === undefined) {
-        throw new Error('useAuth must be used within an AuthProvider')
-    }
-    return context
-}
-
-export default AuthContext
+export const useAuth = () => {
+  const context = React.useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};

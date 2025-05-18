@@ -2,18 +2,22 @@
 .navbar {
   display: flex;
   flex-direction: row;
-  width: 100%;
+  width: 100vw;
+  min-width: 0;
   height: 60px;
   align-items: center;
   justify-content: space-around;
-  flex-direction: row;
   flex-wrap: nowrap;
+  box-sizing: border-box;
 }
 
 .navbarContainer {
   display: flex;
   align-items: center;
-  gap: 30px;
+  justify-content: space-between;
+  width: 100%;
+  position: relative;
+  padding: 0 1rem;
 }
 
 .logo {
@@ -215,30 +219,129 @@
 
 /* ✅ Mobile Navigation */
 @media (max-width: 768px) {
+  .navbar {
+    height: auto;
+    min-height: 60px;
+  }
+  .navbarContainer {
+    padding: 0 0.5rem;
+  }
   .menuToggle {
     display: flex;
     /* Hiển thị nút toggle trên mobile */
   }
 
-  .authButtons,
-  .navLinks {
-    display: none;
-    /* Ẩn menu mặc định */
-  }
-
-  .navLinks {
-    flex-direction: column;
+  .menuItems {
     position: absolute;
     top: 60px;
     left: 0;
     right: 0;
-    background-color: #ffffff;
-    padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease-in-out;
+    width: 100vw;
+    background: #fff;
+    flex-direction: column;
+    align-items: stretch;
+    z-index: 1000;
+    display: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 0;
+  }
+  .menuItems.open {
+    display: flex;
   }
 
+  .navLinks {
+    flex-direction: column;
+    width: 100%;
+    gap: 0;
+    padding: 0;
+    margin: 0;
+    background: none;
+    box-shadow: none;
+    display: none;
+  }
   .navLinks.open {
     display: flex;
   }
+  .navLinks li {
+    width: 100%;
+    border-bottom: 1px solid #eee;
+  }
+  .navLinks button {
+    width: 100%;
+    text-align: left;
+    padding: 1.2rem 2rem;
+    background: none;
+    border: none;
+    color: #007bff;
+    font-size: 1.1rem;
+  }
+  .authButtons {
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    padding: 1rem 2rem 1rem 2rem;
+    display: none;
+    border-top: 1px solid #eee;
+  }
+  .menuItems.open .authButtons {
+    display: flex;
+  }
+  .privateContainer, .dropdown {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .dropdownButton {
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .userGreet {
+    font-size: 1rem;
+    color: #333;
+    margin: 0;
+  }
+}
+
+.adminControls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logoutButton {
+  padding: 8px 16px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.logoutButton:hover {
+  background-color: #c82333;
+}
+
+.logoutButton:active {
+  background-color: #bd2130;
+}
+
+.adminDashboardBtn {
+  padding: 0.5rem 1rem;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.adminDashboardBtn:hover {
+  background-color: #174ea6;
 }

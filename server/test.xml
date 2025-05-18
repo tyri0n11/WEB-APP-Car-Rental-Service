@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<students>
+    <student>
+        <name>John Smith</name>
+        <id>ST001</id>
+        <age>20</age>
+        <major>Computer Science</major>
+        <gpa>3.8</gpa>
+    </student>
+    
+    <student>
+        <name>Emma Davis</name>
+        <id>ST002</id>
+        <age>19</age>
+        <major>Business</major>
+        <gpa>3.5</gpa>
+    </student>
+    
+    <student>
+        <name>Michael Chen</name>
+        <id>ST003</id>
+        <age>21</age>
+        <major>Engineering</major>
+        <gpa>3.9</gpa>
+    </student>
+    
+    <student>
+        <name>Sarah Kim</name>
+        <id>ST004</id>
+        <age>20</age>
+        <major>Psychology</major>
+        <gpa>3.7</gpa>
+    </student>
+    
+    <student>
+        <name>David Lee</name>
+        <id>ST005</id>
+        <age>22</age>
+        <major>Mathematics</major>
+        <gpa>4.0</gpa>
+    </student>
+</students>

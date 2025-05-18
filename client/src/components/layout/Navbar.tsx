@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import { ROUTES } from "../../routes/constants/ROUTES";
 import styles from "./Navbar.module.css";
 
 const Navbar: React.FC<{
@@ -9,15 +10,17 @@ const Navbar: React.FC<{
 }> = ({ onSignInClick, onSignUpClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const { user, logout } = useAuth(); // Get user and logout function
+  const location = useLocation();
+  const { user } = useAuth();
+
+  if (user && user.role === "ADMIN" && location.pathname.startsWith("/admin")) {
+    return null;
+  }
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-  const handleLogout = () => {
-    logout();
-    setIsMenuOpen(false);
-  };
+
   const handleNavigation = (path: string) => {
     navigate(path);
     setIsMenuOpen(false);
@@ -74,41 +77,57 @@ const Navbar: React.FC<{
               </button>
             </li>
           </ul>
-        </div>
-      </div>
-
-      {user ? (
-        <div className={styles.privateContainer}>
-          <div className={styles.dropdown}>
-            <button className={styles.dropdownButton}                 onClick={() => handleNavigation("/profile")}
-            >
-              <img
-                className={styles.userAvatar}
-                src={"https://cdn-icons-png.flaticon.com/128/1077/1077012.png"}
-                alt="User Avatar"
-              />
-              <p className={styles.userGreet}>Welcome, {user.lastName}</p>
-            </button>
+          <div className={styles.authButtons} style={{ display: isMenuOpen ? 'flex' : undefined }}>
+            {user ? (
+              <div className={styles.privateContainer}>
+                {user.role === "ADMIN" ? (
+                  <div className={styles.adminControls}>
+                    <button
+                      className={styles.adminDashboardBtn}
+                      onClick={() => handleNavigation("/admin")}
+                    >
+                      Admin Dashboard
+                    </button>
+                  </div>
+                ) : (
+                  <div className={styles.dropdown}>
+                    <button
+                      className={styles.dropdownButton}
+                      onClick={() => handleNavigation(`/user${ROUTES.PROTECTED.PROFILE}`)}
+                    >
+                      <img
+                        className={styles.userAvatar}
+                        src={
+                          "https://cdn-icons-png.flaticon.com/128/1077/1077012.png"
+                        }
+                        alt="User Avatar"
+                      />
+                      <p className={styles.userGreet}>Welcome {user.lastName}</p>
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={onSignInClick}
+                  className={styles.loginButton}
+                >
+                  Sign In
+                </button>
+                <button
+                  type="button"
+                  onClick={onSignUpClick}
+                  className={styles.signupButton}
+                >
+                  Sign Up
+                </button>
+              </>
+            )}
           </div>
         </div>
-      ) : (
-        <div className={styles.authButtons}>
-          <button
-            type="button"
-            onClick={onSignInClick}
-            className={styles.loginButton}
-          >
-            Sign In
-          </button>
-          <button
-            type="button"
-            onClick={onSignUpClick}
-            className={styles.signupButton}
-          >
-            Sign Up
-          </button>
-        </div>
-      )}
+      </div>
     </div>
   );
 };

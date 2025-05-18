@@ -64,7 +64,7 @@ const Favourites: React.FC = () => {
         const totalPrice = days * car.pricePerDay;
 
         // Navigate to booking confirmation with all necessary data
-        navigate('/booking-confirmation', {
+        navigate('/user/booking-confirmation', {
             state: {
                 carId: car.id,
                 carDetails: car,
@@ -130,7 +130,7 @@ const Favourites: React.FC = () => {
                                         <span>Year: {car.year}</span>
                                     </div>
                                     <div className="car-detail">
-                                        <span>Fuel: {car.fuelType}</span>
+                                        <span>Fuel: {typeof car.fuelType === 'string' || typeof car.fuelType === 'number' ? car.fuelType : 'N/A'}</span>
                                     </div>
                                     <div className="car-detail">
                                         <span>Seats: {car.seats}</span>

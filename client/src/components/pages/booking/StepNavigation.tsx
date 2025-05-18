@@ -22,9 +22,9 @@ const StepNavigation: React.FC<StepNavigationProps> = ({ currentStep }) => {
   const handleStepClick = (step: number) => {
     // Navigate to the specific step's page
     if (step === 1) {
-      navigate('/booking-confirmation'); // Navigate to Booking Confirm page (Step 1)
+      navigate('/user/booking-confirmation'); // Navigate to Booking Confirm page (Step 1)
     } else if (step === 2) {
-      navigate('/payment'); // Navigate to Payment & Hold page (Step 2)
+      navigate('/user/payment'); // Navigate to Payment & Hold page (Step 2)
     } 
   };
 

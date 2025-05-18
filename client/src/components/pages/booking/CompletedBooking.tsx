@@ -167,7 +167,7 @@ const CompletedBooking: React.FC = () => {
         ) {
           console.log("Redirecting to payment page...");
           setTimeout(() => {
-            navigate("/payment");
+            navigate("/user/payment");
           }, 3000);
         }
       } finally {

@@ -1,24 +1,26 @@
+import { ApiPagination } from '@/decorators/apiPagination.decorator';
+import { Roles } from '@/decorators/role.decorator';
+import { RolesGuard } from '@/guards/role.guard';
+import { RequestWithUser } from '@/types/request.type';
 import {
+  Body,
   Controller,
   Get,
-  Post,
-  Body,
-  Patch,
   Param,
-  Delete,
-  Req,
+  Patch,
+  Post,
   Query,
+  Req,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
-import { BookingService } from './booking.service';
-import { CreateBookingRequestDTO } from './dtos/create.request.dto';
-import { RequestWithUser } from '@/types/request.type';
 import { ConfigService } from '@nestjs/config';
-import { ApiBookingQueries } from './decorators/findManyQuery.decorator';
-import { ApiPagination } from '@/decorators/apiPagination.decorator';
-import { FindManyBookingsQueryDTO } from './dtos/findMany.request.dto';
+import { Role } from '@prisma/client';
 import { JwtAccessGuard } from '../auth/guards/jwt/jwtAccess.guard';
+import { BookingService } from './booking.service';
+import { ApiBookingQueries } from './decorators/findManyQuery.decorator';
+import { CreateBookingRequestDTO } from './dtos/create.request.dto';
+import { FindManyBookingsQueryDTO } from './dtos/findMany.request.dto';
+import { ResourceOwnerGuard } from '@/guards/base/resourceOwner.guard';
 @UseGuards(JwtAccessGuard)
 @Controller('bookings')
 export class BookingController {
@@ -43,21 +45,27 @@ export class BookingController {
   @Get()
   @ApiPagination()
   @ApiBookingQueries()
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
   findMany(@Query() query: FindManyBookingsQueryDTO) {
     return this.bookingService.findManyWithPagination(query);
   }
 
   @Get(':id')
+  @UseGuards(ResourceOwnerGuard)
   findOne(@Param('id') id: string) {
     return this.bookingService.findOne({ id });
   }
 
   @Patch(':id/return')
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
   returnCar(@Param('id') id: string) {
     return this.bookingService.handleReturnCar(id);
   }
 
   @Get('code/:code')
+  @UseGuards(ResourceOwnerGuard)
   findByCode(@Param('code') code: string) {
     return this.bookingService.findByCode(code);
   }

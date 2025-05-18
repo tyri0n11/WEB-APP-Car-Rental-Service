@@ -99,7 +99,6 @@ export class BookingService extends BaseService<Booking> {
   ): Promise<boolean> {
     const bookingKey = this.genRedisKey.booking(carId);
     const pendingBooking = await this.redisService.hget(bookingKey, 'data');
-    console.log('pendingBooking: ', pendingBooking);
     if (pendingBooking) {
       return false;
     }
@@ -118,7 +117,6 @@ export class BookingService extends BaseService<Booking> {
         ],
       },
     });
-    console.log('existingBookings: ', existingBookings);
     if (existingBookings.length > 0) return false;
     return true;
   }
@@ -230,7 +228,7 @@ export class BookingService extends BaseService<Booking> {
 
   async processTransaction(bookingCode: string) {
     const bookingKey = await this.genRedisKey.booking(bookingCode);
-    console.log(bookingKey);
+    bookingKey;
     const bookingDataJson = await this.redisService.hget(bookingKey, 'data');
 
     if (!bookingDataJson) {
@@ -245,7 +243,6 @@ export class BookingService extends BaseService<Booking> {
     };
     const createdTransation =
       await this.transactionService.create(transactionData);
-    console.log(createdTransation);
     await this.completeBooking(bookingCode, createdTransation.id);
   }
 

@@ -1,4 +1,3 @@
-import type { User as AuthUser } from './auth'
 
 export enum Role {
   ADMIN = 'ADMIN',

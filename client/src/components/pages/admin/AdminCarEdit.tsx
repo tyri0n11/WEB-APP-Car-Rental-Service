@@ -112,7 +112,7 @@ const AdminCarEdit: React.FC = () => {
     <div className="admin-car-edit">
       <div className="edit-header">
         <h1>Edit Car Details</h1>
-        <button className="back-button" onClick={() => navigate(ROUTES.ADMIN.DASHBOARD)}>
+        <button className="back-button-edit" onClick={() => navigate(ROUTES.ADMIN.DASHBOARD)}>
           Back to Cars
         </button>
       </div>

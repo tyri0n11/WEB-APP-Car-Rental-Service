@@ -7,9 +7,12 @@ import AdminCars from './AdminCars';
 import AdminRevenue from './AdminRevenue';
 import AdminSidebar from './AdminSidebar';
 import styles from './Dashboard.module.css';
+import { useCar } from '../../../contexts/CarContext';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
+  const { fetchCars, cars } = useCar();
+  const numberOfCars = cars.length;
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(() => {
     const savedTab = localStorage.getItem('adminActiveTab');
@@ -17,12 +20,10 @@ const Dashboard: React.FC = () => {
   });
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Save activeTab to localStorage whenever it changes
   React.useEffect(() => {
     localStorage.setItem('adminActiveTab', activeTab);
   }, [activeTab]);
 
-  // Redirect if not admin
   React.useEffect(() => {
     if (!user || user.role !== 'ADMIN') {
       navigate('/');
@@ -55,7 +56,7 @@ const Dashboard: React.FC = () => {
               </div>
               <div className={styles.statCard}>
                 <h3>Total Cars</h3>
-                <p className={styles.statNumber}>0</p>
+                <p className={styles.statNumber}>{numberOfCars}</p>
               </div>
               <div className={styles.statCard}>
                 <h3>Active Rentals</h3>

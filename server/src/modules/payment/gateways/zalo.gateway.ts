@@ -101,7 +101,6 @@ export class ZalopayGateWay implements PaymentGatewayInterface {
       description: 'Thanh toan dich vu CarRental',
       ...dto,
     });
-    console.log('zalo config req: ', data);
     const res: AxiosResponse = await this.httpService.axiosRef.post(
       this.CREATE_ZALOPAY_PAYMENT_LINK_URL,
       data,
@@ -111,7 +110,6 @@ export class ZalopayGateWay implements PaymentGatewayInterface {
         },
       },
     );
-    console.log(res.data);
     if (res.data.return_code !== 1) {
       throw new InternalServerErrorException('There was an error with Zalopay');
     }

@@ -18,7 +18,6 @@ export class TransactionService extends BaseService<Transaction> {
       ...dto,
       paidAt: new Date(),
     });
-    console.log('Created transaction data:', transaction); // Add this log
     return transaction;
   }
 }

@@ -12,7 +12,8 @@
   z-index: 1000;
 }
 
-.signup-wrapper, .signin-wrapper {
+.signup-wrapper,
+.signin-wrapper {
   position: fixed;
   min-width: 400px;
   height: auto;
@@ -57,21 +58,26 @@
 .form-box .input-box {
   width: 100%;
 }
+
 .form-box {
   width: 100%;
   padding: 16px;
   overflow: hidden;
 }
+
 .form-box .name-box {
   display: flex;
   gap: 10px;
 }
+
 .form-box .name-box .input-box {
   width: 50%;
 }
+
 .form-box .name-box .input-box input {
   width: 100%;
 }
+
 .input-box label {
   font-size: 12px;
   display: block;
@@ -114,9 +120,17 @@
 .form-box .remember-forgot {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   font-size: 12px;
   margin: 8px 0 12px;
+}
+
+.form-box .remember-forgot label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #333;
+  text-decoration: none;
 }
 
 .remember-forgot label input {
@@ -141,7 +155,8 @@
 }
 
 .form-box button {
-  width: 100%;
+  width: 180px;
+  /* Changed from 100% to fixed width */
   height: 36px;
   background: linear-gradient(135deg, #029cea, #629af5);
   border: none;
@@ -153,28 +168,56 @@
   font-weight: bold;
   transition: all 0.3s ease-in-out;
   color: white;
+  display: block;
+  margin: 0 auto;
+  /* Center the button */
 }
 
-.form-box .login-link, .form-box .register-link {
+.form-box button:hover {
+  background: linear-gradient(135deg, #0289d1, #4c84e5);
+  transform: scale(1.02);
+}
+
+.form-box button:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.button-box {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+}
+
+.form-box .login-link,
+.form-box .register-link {
   font-size: 12px;
   text-align: center;
   margin: 16px 0 12px;
 }
 
-.login-link p, .register-link p {
+.login-link p,
+.register-link p {
   color: #333;
   text-decoration: none;
 }
 
-.login-link p span, .register-link p span {
+.login-link p span,
+.register-link p span {
   color: #029cea;
   text-decoration: none;
   font-weight: 600;
 }
 
-.login-link p span:hover, .register-link p span:hover {
+.login-link p span:hover,
+.register-link p span:hover {
   text-decoration: underline;
   cursor: pointer;
 }
 
-
+.input-box input.input-error {
+  border: 1.5px solid #e74c3c !important;
+  background: #fff6f6;
+}

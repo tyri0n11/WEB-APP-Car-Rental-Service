@@ -113,6 +113,7 @@ const SignIn: React.FC<{
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={isLoading}
+                  className={errors.email ? "input-error" : ""}
                 />
                 {errors.email && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.email}</div>}
               </div>
@@ -125,6 +126,7 @@ const SignIn: React.FC<{
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isLoading}
+                  className={errors.password ? "input-error" : ""}
                 />
                 {errors.password && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.password}</div>}
               </div>

@@ -147,6 +147,7 @@ const SignUp: React.FC<{
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     disabled={isLoading}
+                    className={errors.firstName ? "input-error" : ""}
                   />
                   {errors.firstName && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.firstName}</div>}
                 </div>
@@ -159,6 +160,7 @@ const SignUp: React.FC<{
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     disabled={isLoading}
+                    className={errors.lastName ? "input-error" : ""}
                   />
                   {errors.lastName && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.lastName}</div>}
                 </div>
@@ -172,6 +174,7 @@ const SignUp: React.FC<{
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={isLoading}
+                  className={errors.email ? "input-error" : ""}
                 />
                 {errors.email && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.email}</div>}
               </div>
@@ -184,6 +187,7 @@ const SignUp: React.FC<{
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   disabled={isLoading}
+                  className={errors.phoneNumber ? "input-error" : ""}
                 />
                 {errors.phoneNumber && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.phoneNumber}</div>}
               </div>
@@ -196,6 +200,7 @@ const SignUp: React.FC<{
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isLoading}
+                  className={errors.password ? "input-error" : ""}
                 />
                 {errors.password && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.password}</div>}
               </div>
@@ -208,12 +213,13 @@ const SignUp: React.FC<{
                   value={repassword}
                   onChange={(e) => setRepassword(e.target.value)}
                   disabled={isLoading}
+                  className={errors.repassword ? "input-error" : ""}
                 />
                 {errors.repassword && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.repassword}</div>}
               </div>
 
-              <div className="remember-forgot">
-                <label>
+              <div className="remember-forgot" style={{ flexDirection: 'column', gap: '4px' }}>
+                <label style={{ marginBottom: '2px' }}>
                   <input
                     type="checkbox"
                     checked={isAgreed}
@@ -222,14 +228,23 @@ const SignUp: React.FC<{
                   />
                   I agree to the terms and policies
                 </label>
-              {errors.agree && (
-                <div style={{ color: 'red', fontSize: 12, marginTop: 6 }}>{errors.agree}</div>
-              )}
+                {errors.agree && (
+                  <div style={{
+                    color: 'red',
+                    fontSize: 12,
+                    display: 'block',
+                    marginTop: 0
+                  }}>
+                    {errors.agree}
+                  </div>
+                )}
               </div>
 
-              <button type="submit" disabled={isLoading}>
-                {isLoading ? 'Creating Account...' : 'Sign Up'}
-              </button>
+              <div className="button-box">
+                <button type="submit" disabled={isLoading}>
+                  {isLoading ? 'Creating Account...' : 'Sign Up'}
+                </button>
+              </div>
 
               <div className="login-link">
                 <p>

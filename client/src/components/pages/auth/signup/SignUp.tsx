@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { useAuth } from "../../../../hooks/useAuth";
-import Notification from "../../../common/Notification";
+import { useNotification } from "../../../../contexts/NotificationContext";
 import "../AuthStyles.css";
 
 const SignUp: React.FC<{
@@ -15,15 +15,6 @@ const SignUp: React.FC<{
   const [password, setPassword] = useState("");
   const [repassword, setRepassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [notification, setNotification] = useState<{
-    show: boolean;
-    type: 'success' | 'error';
-    message: string;
-  }>({
-    show: false,
-    type: 'success',
-    message: '',
-  });
   const [isAgreed, setIsAgreed] = useState(false);
   const [errors, setErrors] = useState<{
     firstName?: string;
@@ -36,14 +27,7 @@ const SignUp: React.FC<{
   }>({});
 
   const { signup } = useAuth();
-
-  const showNotification = (type: 'success' | 'error', message: string) => {
-    setNotification({
-      show: true,
-      type,
-      message,
-    });
-  };
+  const { showNotification } = useNotification();
 
   function prettifyErrorMessage(msg: string): string {
     if (!msg) return ''
@@ -57,19 +41,11 @@ const SignUp: React.FC<{
       .replace(/is required/gi, 'is required')
       .replace(/is not valid/gi, 'is not valid')
       .replace(/must be at least/gi, 'must be at least')
-      .replace(/must contain at least/gi, 'must contain at least')
+      .replace(/must contain at least/gi, 'must contain at least');
   }
 
   const validateForm = () => {
-    const newErrors: {
-      firstName?: string;
-      lastName?: string;
-      email?: string;
-      phoneNumber?: string;
-      password?: string;
-      repassword?: string;
-      agree?: string;
-    } = {};
+    const newErrors: typeof errors = {};
     if (!firstName) newErrors.firstName = 'First name is required';
     if (!lastName) newErrors.lastName = 'Last name is required';
     if (!email) newErrors.email = 'Email is required';
@@ -103,16 +79,16 @@ const SignUp: React.FC<{
         phoneNumber,
       });
       signupSuccess = true;
-      showNotification('success', 'Account created!');
       setFirstName('');
       setLastName('');
       setEmail('');
       setPhoneNumber('');
       setPassword('');
       setRepassword('');
+      showNotification('success', 'Account created successfully!');
     } catch (error: any) {
       const backendMsg = error?.response?.data?.message || error?.message;
-      showNotification('error', backendMsg ? prettifyErrorMessage(backendMsg) : 'Failed to create account. Please try again.');
+      showNotification('error', prettifyErrorMessage(backendMsg) || 'Failed to create account');
     } finally {
       setIsLoading(false);
       if (signupSuccess) {
@@ -125,13 +101,6 @@ const SignUp: React.FC<{
 
   return (
     <>
-      <Notification
-        show={notification.show}
-        type={notification.type}
-        message={notification.message}
-        onClose={() => setNotification(prev => ({ ...prev, show: false }))}
-      />
-
       <div className="modal">
         <div className="signup-wrapper">
           <FaTimes className="close-btn" onClick={onClose} />
@@ -151,7 +120,6 @@ const SignUp: React.FC<{
                   />
                   {errors.firstName && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.firstName}</div>}
                 </div>
-
                 <div className="input-box">
                   <label>Last Name</label>
                   <input

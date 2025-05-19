@@ -31,7 +31,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         setType(newType);
         setMessage(newMessage);
         setShow(true);
-      }, 500);
+      }, 200);
     } else {
       setType(newType);
       setMessage(newMessage);

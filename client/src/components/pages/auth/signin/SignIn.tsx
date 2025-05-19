@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { AUTH_NOTIFICATIONS } from "../../../../constants/notificationMessages";
-import { useNotificationWithState } from "../../../../contexts/NotificationContext";
+import { useNotification } from "../../../../contexts/NotificationContext";
 import { useAuth } from "../../../../contexts/AuthContext";
-import Notification from "../../../common/Notification";
 
 import "../AuthStyles.css";
 
@@ -33,25 +32,9 @@ const SignIn: React.FC<{
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { isLoading, handleAsync } = useNotificationWithState();
-  const [notification, setNotification] = useState<{
-    show: boolean;
-    type: 'success' | 'error';
-    message: string;
-  }>({
-    show: false,
-    type: 'success',
-    message: '',
-  });
+  const [isLoading, setIsLoading] = useState(false);
+  const { showNotification } = useNotification(); // Use direct notification context
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
-
-  const showNotification = (type: 'success' | 'error', message: string) => {
-    setNotification({
-      show: true,
-      type,
-      message,
-    });
-  };
 
   const validateForm = () => {
     const newErrors: { email?: string; password?: string } = {};
@@ -66,37 +49,28 @@ const SignIn: React.FC<{
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-    try {
-      await handleAsync(
-        async () => login({ email, password }),
-        {
-          loading: AUTH_NOTIFICATIONS.signIn.loading,
-          success: AUTH_NOTIFICATIONS.signIn.success,
-          error: AUTH_NOTIFICATIONS.signIn.error,
-        }
-      );
 
-      showNotification('success', 'Successfully signed in!');
+    setIsLoading(true);
+    try {
+      await login({ email, password });
+      showNotification('success', AUTH_NOTIFICATIONS.signIn.success);
       setEmail('');
       setPassword('');
+      // Auto close only on successful login
       setTimeout(() => {
         onClose();
       }, 1000);
     } catch (error: any) {
       const backendMsg = error?.response?.data?.message || error?.message;
-      showNotification('error', backendMsg ? prettifyErrorMessage(backendMsg) : 'Failed to sign in. Please check your credentials.');
+      showNotification('error', backendMsg || AUTH_NOTIFICATIONS.signIn.error);
+      // Don't auto close on error - let user close manually
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <>
-      <Notification
-        show={notification.show}
-        type={notification.type}
-        message={notification.message}
-        onClose={() => setNotification(prev => ({ ...prev, show: false }))}
-      />
-
       <div className="modal">
         <div className="signin-wrapper">
           <FaTimes className="close-btn" onClick={onClose} />

@@ -5,7 +5,6 @@ import { useAuth } from "../../../contexts/AuthContext";
 import { useUser } from "../../../contexts/UserContext";
 import "./Profile.css";
 import Account from "./sections/account/Account";
-import Address from "./sections/address/Address";
 import ChangePassword from "./sections/change-password/ChangePassword";
 import Favourites from "./sections/favourites/Favourites";
 import MyRides from "./sections/rides/Rides";
@@ -99,11 +98,6 @@ const Profile: React.FC = () => {
 
     { label: "Favourites", icon: <FaHeart />, content: <Favourites /> },
     { label: "My Ride", icon: <FaCar />, content: <MyRides /> },
-    {
-      label: "Address",
-      icon: <FaAddressCard />,
-      content: <Address />,
-    },
     {
       label: "Change Password",
       icon: <FaLock />,

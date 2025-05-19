@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AUTH_NOTIFICATIONS } from "../../../../constants/notificationMessages";
 import { useNotification } from "../../../../contexts/NotificationContext";
 import { useAuth } from "../../../../contexts/AuthContext";
+import { ROUTES } from '../../../../routes/constants/ROUTES';
 
 import "../AuthStyles.css";
 
@@ -109,7 +110,7 @@ const SignIn: React.FC<{
                 <label>
                   <input type="checkbox" disabled={isLoading} /> Remember me
                 </label>
-                <Link to="/auth/forgot-password" onClick={onClose}>
+                <Link to={ROUTES.AUTH.FORGOT_PASSWORD} onClick={onClose}>
                   Forgot password?
                 </Link>
               </div>

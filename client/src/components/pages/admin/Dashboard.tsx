@@ -8,6 +8,10 @@ import AdminRevenue from './AdminRevenue';
 import AdminSidebar from './AdminSidebar';
 import styles from './Dashboard.module.css';
 import { useCar } from '../../../contexts/CarContext';
+import { Gauge, gaugeClasses, GaugeContainer, GaugeReferenceArc, GaugeValueArc, GaugeValueText } from '@mui/x-charts/Gauge';
+import { Box } from '@mui/material';
+import { Stack } from '@mui/material';
+import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
@@ -48,7 +52,7 @@ const Dashboard: React.FC = () => {
                 <p>Welcome back, {user?.firstName} {user?.lastName}</p>
               </div>
             </div>
-            
+
             <div className={styles.statsGrid}>
               <div className={styles.statCard}>
                 <h3>Total Users</h3>
@@ -72,7 +76,19 @@ const Dashboard: React.FC = () => {
               <div className={styles.section}>
                 <h2>Recent Activities</h2>
                 <div className={styles.activityList}>
-                  <p>No recent activities</p>
+                  <Stack direction="row" sx={{ width: '100%' }}>
+                    <Box sx={{ flexGrow: 1 }}>
+                      <SparkLineChart data={[1, 4, 2, 5, 7, 2, 4, 6]} height={100} />
+                    </Box>
+                    <Box sx={{ flexGrow: 1 }}>
+                      <SparkLineChart
+                        plotType="bar"
+                        data={[1, 4, 2, 5, 7, 2, 4, 6]}
+                        height={100}
+                      />
+                    </Box>
+                  </Stack>
+
                 </div>
               </div>
             </div>
@@ -121,9 +137,9 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <AdminSidebar 
-        activeTab={activeTab} 
-        onTabChange={setActiveTab} 
+      <AdminSidebar
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
       />

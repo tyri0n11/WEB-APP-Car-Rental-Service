@@ -8,7 +8,12 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { Booking, BookingStatus, CarStatus } from '@prisma/client';
+import {
+  ActivityType,
+  Booking,
+  BookingStatus,
+  CarStatus,
+} from '@prisma/client';
 import { Queue } from 'bullmq';
 import * as dayjs from 'dayjs';
 import Redis from 'ioredis';
@@ -26,7 +31,8 @@ import {
 } from './dtos/response.dto';
 import { UnlockCarQueue } from './enums/queue';
 import * as crypto from 'crypto';
-
+import { ActivityService } from '../activity/activity.service';
+import { ActivityTitle } from '../activity/consts/title.const';
 @Injectable()
 export class BookingService extends BaseService<Booking> {
   private readonly logger = new Logger(BookingService.name);
@@ -35,6 +41,7 @@ export class BookingService extends BaseService<Booking> {
     private readonly carService: CarService,
     private readonly paymentService: PaymentService,
     private readonly transactionService: TransactionService,
+    private readonly activityService: ActivityService,
     @InjectRedis() private readonly redisService: Redis,
     @InjectQueue(UnlockCarQueue.name) private readonly unlockCarQueue: Queue,
   ) {
@@ -168,6 +175,14 @@ export class BookingService extends BaseService<Booking> {
       { delay: this.BOOKING_TIMEOUT },
     );
     this.logger.log(`Added ${bookingCode} to unlockCarQueue`);
+
+    await this.activityService.create({
+      bookingId: bookingData.bookingCode,
+      carId: bookingData.carId,
+      amount: bookingData.totalPrice,
+      type: ActivityType.BOOKING,
+      title: ActivityTitle.BOOKING,
+    });
     return { bookingData, paymentUrl };
   }
 
@@ -181,6 +196,13 @@ export class BookingService extends BaseService<Booking> {
       throw new BadRequestException('Booking not found or completed');
     }
     const bookingData: BookingResponseOnRedisDTO = JSON.parse(bookingDataJson);
+    await this.activityService.create({
+      bookingId: bookingData.bookingCode,
+      carId: bookingData.carId,
+      amount: bookingData.totalPrice,
+      type: ActivityType.PAYMENT,
+      title: ActivityTitle.PAYMENT,
+    });
     const createdBooking = await this.databaseService.$transaction(
       async (tx) => {
         await tx.car.update({
@@ -291,37 +313,48 @@ export class BookingService extends BaseService<Booking> {
   }
 
   async handleReturnCar(id: string): Promise<BookingResponseDTO> {
-    return await this.databaseService.$transaction(async (tx) => {
-      const booking = await tx.booking.findUnique({
-        where: { id },
-        include: { car: true },
-      });
+    const updatedBooking = await this.databaseService.$transaction(
+      async (tx) => {
+        const booking = await tx.booking.findUnique({
+          where: { id },
+          include: { car: true },
+        });
 
-      if (!booking) {
-        throw new BadRequestException('Booking not found');
-      }
+        if (!booking) {
+          throw new BadRequestException('Booking not found');
+        }
 
-      if (booking.status !== BookingStatus.ONGOING) {
-        throw new BadRequestException('Booking is not ongoing');
-      }
+        if (booking.status !== BookingStatus.ONGOING) {
+          throw new BadRequestException('Booking is not ongoing');
+        }
 
-      const updatedBooking = await tx.booking.update({
-        where: { id },
-        data: {
-          status: BookingStatus.COMPLETED,
-          updatedAt: new Date(),
-        },
-      });
+        const updatedBooking = await tx.booking.update({
+          where: { id },
+          data: {
+            status: BookingStatus.COMPLETED,
+            updatedAt: new Date(),
+          },
+        });
 
-      await tx.car.update({
-        where: { id: booking.carId },
-        data: {
-          status: CarStatus.AVAILABLE,
-        },
-      });
+        await tx.car.update({
+          where: { id: booking.carId },
+          data: {
+            status: CarStatus.AVAILABLE,
+          },
+        });
 
-      return updatedBooking;
+        return updatedBooking;
+      },
+    );
+
+    this.activityService.create({
+      bookingId: updatedBooking.id,
+      carId: updatedBooking.carId,
+      type: ActivityType.RETURN,
+      title: ActivityTitle.RETURN,
     });
+
+    return updatedBooking;
   }
 
   async updateStatus(

@@ -13,6 +13,7 @@ import { TransactionQueue } from '../payment/enums/queue';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { ProcessTransactionWorker } from './workers/processTransaction.worker';
 import { UnlockCarQueue } from './enums/queue';
+import { ActivityModule } from '../activity/activity.module';
 
 @Module({
   controllers: [BookingController],
@@ -21,6 +22,7 @@ import { UnlockCarQueue } from './enums/queue';
     CarModule,
     PaymentModule,
     TransactionModule,
+    ActivityModule,
     BullModule.registerQueue({
       name: UnlockCarQueue.name,
     }),

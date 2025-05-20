@@ -77,24 +77,24 @@
 .form-box .name-box .input-box input {
   border: 1px solid rgba(73, 73, 73, 0.63);
   width: 100%;
-  border-radius: 11px !important;
+  border-radius: 11px;
 }
 
 .input-box label {
   font-size: 12px;
   display: block;
   margin-bottom: 5px;
-  color: #5e5d5d;
+  color: #000000;
 }
 
 .input-box input {
   height: 32px;
   margin-bottom: 6px;
   width: 100%;
-  border: 1px solid rgba(73, 73, 73, 0.63);
+  border: 1px solid rgba(0, 0, 0, 0.63);
   border-radius: 11px;
   font-size: 14px;
-  color: black;
+  color: rgb(0, 0, 0);
   padding: 8px 12px;
 }
 
@@ -103,7 +103,7 @@
 }
 
 .input-box input::placeholder {
-  color: grey;
+  color: rgb(0, 0, 0);
 }
 
 .input-box input::content {
@@ -116,7 +116,7 @@
   top: 100%;
   translate: 0 -50%;
   font-size: 14px;
-  color: #333;
+  color: #000000;
 }
 
 .form-box .remember-forgot {
@@ -131,24 +131,24 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  color: #333;
+  color: #000000;
   text-decoration: none;
 }
 
 .remember-forgot label input {
-  accent-color: #333;
+  accent-color: #000000;
   margin-right: 4px;
   cursor: pointer;
 }
 
 .remember-forgot label {
   display: flex;
-  color: #333;
+  color: #000000;
   text-decoration: none;
 }
 
 .remember-forgot a {
-  color: #333;
+  color: #000000;
   text-decoration: none;
 }
 
@@ -202,7 +202,7 @@
 
 .login-link p,
 .register-link p {
-  color: #333;
+  color: #000000;
   text-decoration: none;
 }
 

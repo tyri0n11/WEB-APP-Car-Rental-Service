@@ -11,7 +11,7 @@ interface NotificationProps {
 
 const Notification: React.FC<NotificationProps> = ({ show, type, message, onClose }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const NOTIFICATION_DURATION = 1000; // 1 second in milliseconds
+  const NOTIFICATION_DURATION = 1000; // 1 giây
 
   useEffect(() => {
     if (show) {
@@ -110,7 +110,6 @@ const Notification: React.FC<NotificationProps> = ({ show, type, message, onClos
     }
   };
 
-  // Update the progressVariants to match the notification duration
   const progressVariants = {
     hidden: { width: "100%", opacity: 0 },
     visible: {
@@ -291,7 +290,7 @@ const Notification: React.FC<NotificationProps> = ({ show, type, message, onClos
                   setIsVisible(false);
                   setTimeout(onClose, 500);
                 }}
-                aria-label="Close notification"
+                aria-label="Đóng thông báo"
               >
                 <FaTimes />
               </button>

@@ -11,8 +11,8 @@ const ForgotPassword: React.FC = () => {
     const { showNotification } = useNotification();
 
     const validate = () => {
-        if (!email) return "Email is required";
-        if (!email.includes("@")) return "Please enter a valid email address";
+        if (!email) return "Email là bắt buộc";
+        if (!email.includes("@")) return "Vui lòng nhập địa chỉ email hợp lệ";
         return null;
     };
 
@@ -38,13 +38,13 @@ const ForgotPassword: React.FC = () => {
     return (
         <div style={styles.container}>
             <div style={styles.box}>
-                <h1 style={styles.title}>Forgot Password</h1>
+                <h1 style={styles.title}>Quên mật khẩu</h1>
                 <form onSubmit={handleSubmit} autoComplete="off">
                     <input
                         type="text"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Enter your email"
+                        placeholder="Nhập email của bạn"
                         style={styles.input}
                         disabled={isLoading}
                         autoComplete="off"
@@ -55,7 +55,7 @@ const ForgotPassword: React.FC = () => {
                         </div>
                     )}
                     <button type="submit" style={styles.button(isLoading)} disabled={isLoading}>
-                        {isLoading ? "Sending..." : "Send Reset Link"}
+                        {isLoading ? "Đang gửi..." : "Gửi liên kết"}
                     </button>
                 </form>
             </div>

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../../../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { bookingApi } from '../../../../../apis/booking';
-import type { Booking, BookingStatus, PaginatedResponse } from '../../../../../types/booking';
+import { useBooking } from '../../../../../contexts/BookingContext';
+import type { Booking, BookingStatus } from '../../../../../types/booking';
 import './Rides.css';
 
 interface GroupedBookings {
@@ -10,7 +10,7 @@ interface GroupedBookings {
 }
 
 function formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    return new Date(dateString).toLocaleDateString('vi-VN', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
@@ -21,7 +21,7 @@ function RidesSkeleton() {
     return (
         <div className="my-rides-root">
             <div className="my-rides-header">
-                <h2>My Rides</h2>
+                <h2>Chuyến đi của tôi</h2>
                 <div className="rides-filters">
                     <div className="skeleton-filter" />
                     <div className="skeleton-filter" />
@@ -47,28 +47,14 @@ function RidesSkeleton() {
 export function MyRides() {
     const { user } = useAuth();
     const navigate = useNavigate();
-    const [bookings, setBookings] = useState<PaginatedResponse<Booking> | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const { getBookings, bookings, isLoading, error } = useBooking();
     const [selectedStatus, setSelectedStatus] = useState<BookingStatus | 'ALL'>('ALL');
-
-    const fetchBookings = async () => {
-        try {
-            setIsLoading(true);
-            const response = await bookingApi.findMany();
-            setBookings(response);
-            setError(null);
-        } catch (err) {
-            setError('Failed to load bookings');
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     useEffect(() => {
         if (user) {
-            fetchBookings();
+            getBookings();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     const handleRebook = (booking: Booking) => {
@@ -77,9 +63,9 @@ export function MyRides() {
         }
     };
 
-    // Get the bookings array from the paginated response
+    // Get the bookings array from the context
     const bookingsArray = bookings?.data || [];
-    
+
     const filteredBookings = bookingsArray.filter((booking: Booking) => {
         if (selectedStatus === 'ALL') return true;
         return booking.status === selectedStatus;
@@ -100,8 +86,8 @@ export function MyRides() {
         return (
             <div className="my-rides-root">
                 <div className="my-rides-error">
-                    <p>Error loading rides: {error}</p>
-                    <button onClick={fetchBookings}>Try Again</button>
+                    <p>Lỗi khi tải chuyến đi: {error}</p>
+                    <button onClick={getBookings}>Thử lại</button>
                 </div>
             </div>
         );
@@ -111,53 +97,61 @@ export function MyRides() {
         return (
             <div className="my-rides-root">
                 <div className="my-rides-empty">
-                    <h2>No Rides Yet</h2>
-                    <p>You haven't booked any rides yet. Start exploring our cars!</p>
-                    <button 
+                    <h2>Chưa có chuyến đi nào</h2>
+                    <p>Bạn chưa đặt chuyến đi nào. Hãy khám phá các xe của chúng tôi!</p>
+                    <button
                         className="explore-button"
                         onClick={() => navigate('/services')}
                     >
-                        Explore Cars
+                        Khám phá xe
                     </button>
                 </div>
             </div>
         );
     }
 
+    // Vietnamese status mapping
+    const statusMap: Record<string, string> = {
+        CONFIRMED: "Đã xác nhận",
+        ONGOING: "Đang diễn ra",
+        COMPLETED: "Hoàn thành",
+        CANCELLED: "Đã hủy"
+    };
+
     return (
         <div className="my-rides-root">
             <div className="my-rides-header">
-                <h2>My Rides</h2>
+                <h2>Chuyến đi của tôi</h2>
                 <div className="rides-filters">
                     <button
                         className={`filter-button ${selectedStatus === 'ALL' ? 'active' : ''}`}
                         onClick={() => setSelectedStatus('ALL')}
                     >
-                        All
+                        Tất cả
                     </button>
                     <button
                         className={`filter-button ${selectedStatus === 'CONFIRMED' ? 'active' : ''}`}
                         onClick={() => setSelectedStatus('CONFIRMED' as BookingStatus)}
                     >
-                        Confirmed
+                        Đã xác nhận
                     </button>
                     <button
                         className={`filter-button ${selectedStatus === 'ONGOING' ? 'active' : ''}`}
                         onClick={() => setSelectedStatus('ONGOING' as BookingStatus)}
                     >
-                        Ongoing
+                        Đang diễn ra
                     </button>
                     <button
                         className={`filter-button ${selectedStatus === 'COMPLETED' ? 'active' : ''}`}
                         onClick={() => setSelectedStatus('COMPLETED' as BookingStatus)}
                     >
-                        Completed
+                        Hoàn thành
                     </button>
                     <button
                         className={`filter-button ${selectedStatus === 'CANCELLED' ? 'active' : ''}`}
                         onClick={() => setSelectedStatus('CANCELLED' as BookingStatus)}
                     >
-                        Cancelled
+                        Đã hủy
                     </button>
                 </div>
             </div>
@@ -165,32 +159,32 @@ export function MyRides() {
             {Object.entries(groupedBookings).map(([status, statusBookings]) => (
                 <div key={status} className="rides-group">
                     <h3 className={`group-title ${status.toLowerCase()}`}>
-                        {status.charAt(0) + status.slice(1).toLowerCase()}
+                        {statusMap[status] || status}
                     </h3>
                     <div className="rides-list">
                         {(statusBookings as Booking[]).map((booking: Booking) => (
                             <div key={booking.id} className="ride-card">
                                 <div className="ride-image">
-                                    <img 
-                                        src={booking.car?.images?.[0]?.url || '/placeholder-car.jpg'} 
-                                        alt={`${booking.car?.make || 'Car'} ${booking.car?.model || ''}`} 
+                                    <img
+                                        src={booking.car?.images?.[0]?.url || '/placeholder-car.jpg'}
+                                        alt={`${booking.car?.make || 'Xe'} ${booking.car?.model || ''}`}
                                     />
                                 </div>
                                 <div className="ride-content">
-                                    <h3>{booking.car ? `${booking.car.make} ${booking.car.model}` : 'Car'}</h3>
+                                    <h3>{booking.car ? `${booking.car.make} ${booking.car.model}` : 'Xe'}</h3>
                                     <p className="ride-dates">
                                         {formatDate(booking.startDate)} - {formatDate(booking.endDate)}
                                     </p>
                                     <p className="ride-status">
-                                        Status: <span className={booking.status.toLowerCase()}>{booking.status}</span>
+                                        Trạng thái: <span className={booking.status.toLowerCase()}>{statusMap[booking.status] || booking.status}</span>
                                     </p>
-                                    <p className="ride-price">Total: ${booking.totalPrice}</p>
+                                    <p className="ride-price">Tổng tiền: {booking.totalPrice.toLocaleString()}₫</p>
                                     {(booking.status === 'COMPLETED' || booking.status === 'CANCELLED') && (
                                         <button
                                             className="rebook-button"
                                             onClick={() => handleRebook(booking)}
                                         >
-                                            Rebook
+                                            Đặt lại
                                         </button>
                                     )}
                                 </div>

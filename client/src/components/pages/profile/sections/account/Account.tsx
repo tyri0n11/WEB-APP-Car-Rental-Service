@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FaUser, FaEdit, FaSave, FaTimes, FaUpload } from 'react-icons/fa';
+import { FaIdCard, FaUser, FaEdit, FaSave, FaTimes, FaUpload } from 'react-icons/fa';
 import { useAuth } from '../../../../../contexts/AuthContext';
 import { useUser } from '../../../../../contexts/UserContext';
-import type { User } from '../../../../../types/user';
 import type { UpdateProfileInput, UpdateDrivingLicenseInput } from '../../../../../types/user';
 import { uploadImage } from '../../../../../utils/image';
 import './Account.css';
+
+const styles = {
+  section: {
+    fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
+  },
+};
 
 const Account: React.FC = () => {
   const { user: authUser } = useAuth();
@@ -18,7 +23,7 @@ const Account: React.FC = () => {
   const [uploadingBack, setUploadingBack] = useState(false);
   const [frontImage, setFrontImage] = useState<string>('');
   const [backImage, setBackImage] = useState<string>('');
-  const [debugPayload, setDebugPayload] = useState<string | null>(null);
+  const [debugPayload] = useState<string | null>(null);
   const frontLicenseInputRef = useRef<HTMLInputElement>(null);
   const backLicenseInputRef = useRef<HTMLInputElement>(null);
 
@@ -37,12 +42,12 @@ const Account: React.FC = () => {
       const licenseImages = user.drivingLicence?.drivingLicenseImages || [];
       setFrontImage(licenseImages[0] || '');
       setBackImage(licenseImages[1] || '');
-      
-      // Format the expiry date to YYYY-MM-DD for the input
-      const expiryDate = user.drivingLicence?.expiryDate 
+
+      // Định dạng ngày hết hạn sang YYYY-MM-DD cho input
+      const expiryDate = user.drivingLicence?.expiryDate
         ? new Date(user.drivingLicence.expiryDate).toISOString().split('T')[0]
         : '';
-      
+
       setFormData({
         firstName: user.firstName,
         lastName: user.lastName,
@@ -93,10 +98,10 @@ const Account: React.FC = () => {
         }));
       }
 
-      setSuccess(`${side === 'front' ? 'Front' : 'Back'} license image uploaded successfully`);
+      setSuccess(`Tải ảnh mặt ${side === 'front' ? 'trước' : 'sau'} giấy phép lái xe thành công`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : `Failed to upload ${side} license image`);
-      // Clear the file input
+      setError(err instanceof Error ? err.message : `Tải ảnh mặt ${side === 'front' ? 'trước' : 'sau'} thất bại`);
+      // Xóa file input
       if (side === 'front') {
         if (frontLicenseInputRef.current) frontLicenseInputRef.current.value = '';
       } else {
@@ -118,7 +123,7 @@ const Account: React.FC = () => {
       setLoading(true);
       setError(null);
 
-      // Update profile
+      // Cập nhật thông tin cá nhân
       await updateProfile({
         firstName: formData.firstName,
         lastName: formData.lastName,
@@ -126,17 +131,17 @@ const Account: React.FC = () => {
         avatar: formData.avatar
       });
 
-      // Update driving license with image URLs
+      // Cập nhật giấy phép lái xe với ảnh
       await updateDrivingLicense({
         licenceNumber: formData.licenceNumber,
         expiryDate: new Date(formData.expiryDate).toISOString(),
         imageUrls: [frontImage, backImage].filter(Boolean)
       });
 
-      setSuccess('Profile updated successfully');
+      setSuccess('Cập nhật thông tin thành công');
       setIsEditing(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update profile');
+      setError(err instanceof Error ? err.message : 'Cập nhật thông tin thất bại');
     } finally {
       setLoading(false);
     }
@@ -149,7 +154,7 @@ const Account: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div className="loading">Loading user data...</div>;
+    return <div className="loading">Đang tải dữ liệu người dùng...</div>;
   }
 
   if (apiError) {
@@ -157,16 +162,16 @@ const Account: React.FC = () => {
   }
 
   if (!user) {
-    return <div className="error">No user data available</div>;
+    return <div className="error">Không có dữ liệu người dùng</div>;
   }
 
   return (
-    <div className="account-section">
+    <div className="account-section" style={styles.section}>
       <div className="section-header">
-        <h2><FaUser /> Account Information</h2>
+        <h2><FaUser /> Thông tin tài khoản</h2>
         <button onClick={toggleEdit} className="edit-button">
           {isEditing ? <FaTimes /> : <FaEdit />}
-          {isEditing ? 'Cancel' : 'Edit'}
+          {isEditing ? 'Hủy' : 'Chỉnh sửa'}
         </button>
       </div>
 
@@ -175,7 +180,7 @@ const Account: React.FC = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>First Name</label>
+          <label>Họ</label>
           <input
             type="text"
             name="firstName"
@@ -187,7 +192,7 @@ const Account: React.FC = () => {
         </div>
 
         <div className="form-group">
-          <label>Last Name</label>
+          <label>Tên</label>
           <input
             type="text"
             name="lastName"
@@ -208,7 +213,7 @@ const Account: React.FC = () => {
         </div>
 
         <div className="form-group">
-          <label>Phone Number</label>
+          <label>Số điện thoại</label>
           <input
             type="tel"
             name="phoneNumber"
@@ -217,15 +222,15 @@ const Account: React.FC = () => {
             disabled={!isEditing}
             required
             pattern="[0-9]{10}"
-            title="Please enter a valid 10-digit phone number"
+            title="Vui lòng nhập số điện thoại 10 chữ số hợp lệ"
           />
         </div>
 
         <div className="license-section">
-          <h3>Driving License Information</h3>
-          
+          <h2><FaIdCard /> Thông tin giấy phép lái xe</h2>
+
           <div className="form-group">
-            <label>License Number</label>
+            <label>Số Giấy Phép Lái Xe</label>
             <input
               type="text"
               name="licenceNumber"
@@ -237,7 +242,7 @@ const Account: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="expiryDate">Expiry Date</label>
+            <label htmlFor="expiryDate">Ngày hết hạn</label>
             <input
               type="date"
               id="expiryDate"
@@ -251,10 +256,10 @@ const Account: React.FC = () => {
 
           <div className="license-images">
             <div className="image-upload">
-              <label>Front License Image</label>
+              <label>Ảnh mặt trước GPLX</label>
               {frontImage && (
                 <div className="preview-image">
-                  <img src={frontImage} alt="Front License" />
+                  <img src={frontImage} alt="Mặt trước GPLX" />
                 </div>
               )}
               <input
@@ -271,15 +276,15 @@ const Account: React.FC = () => {
                 disabled={!isEditing || uploadingFront}
                 className="upload-button"
               >
-                <FaUpload /> {uploadingFront ? 'Uploading...' : 'Upload Front'}
+                <FaUpload /> {uploadingFront ? 'Đang tải...' : 'Tải ảnh trước'}
               </button>
             </div>
 
             <div className="image-upload">
-              <label>Back License Image</label>
+              <label>Ảnh mặt sau GPLX</label>
               {backImage && (
                 <div className="preview-image">
-                  <img src={backImage} alt="Back License" />
+                  <img src={backImage} alt="Mặt sau GPLX" />
                 </div>
               )}
               <input
@@ -296,18 +301,20 @@ const Account: React.FC = () => {
                 disabled={!isEditing || uploadingBack}
                 className="upload-button"
               >
-                <FaUpload /> {uploadingBack ? 'Uploading...' : 'Upload Back'}
+                <FaUpload /> {uploadingBack ? 'Đang tải...' : 'Tải ảnh sau'}
               </button>
             </div>
           </div>
         </div>
 
-        {isEditing && (
-          <button type="submit" className="save-button" disabled={loading}>
-            <FaSave /> Save Changes
-          </button>
-        )}
-      </form>
+        {
+          isEditing && (
+            <button type="submit" className="save-button" disabled={loading}>
+              <FaSave /> Lưu thay đổi
+            </button>
+          )
+        }
+      </form >
 
       {debugPayload && (
         <div className="debug-section">
@@ -315,7 +322,7 @@ const Account: React.FC = () => {
           <pre>{debugPayload}</pre>
         </div>
       )}
-    </div>
+    </div >
   );
 };
 

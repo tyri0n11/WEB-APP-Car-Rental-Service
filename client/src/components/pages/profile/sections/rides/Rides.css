@@ -1,3 +1,10 @@
+.my-rides-root,
+.my-rides-root *,
+.my-rides-root *::before,
+.my-rides-root *::after {
+    font-family: 'Be Vietnam Pro', Arial, Helvetica, sans-serif !important;
+}
+
 .my-rides-root {
     padding: 2rem;
     max-width: 1200px;
@@ -267,9 +274,12 @@
 }
 
 @keyframes pulse {
-    0%, 100% {
+
+    0%,
+    100% {
         opacity: 1;
     }
+
     50% {
         opacity: .5;
     }

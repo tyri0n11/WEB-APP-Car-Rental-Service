@@ -7,7 +7,7 @@ const NotFound: React.FC = () => {
 
   const styles = {
     container: {
-      minHeight: 'calc(100vh - 80px)', // Subtract header height
+      minHeight: 'calc(100vh - 80px)',
       display: 'flex',
       flexDirection: 'column' as const,
       alignItems: 'center',
@@ -58,20 +58,20 @@ const NotFound: React.FC = () => {
   return (
     <div style={styles.container}>
       <FaExclamationTriangle style={styles.icon} />
-      <h1 style={styles.title}>404 - Page Not Found</h1>
+      <h1 style={styles.title}>404 - Không tìm thấy trang</h1>
       <p style={styles.message}>
-        Sorry, the page you are looking for does not exist or has been moved.
-        Please check the URL or return to homepage.
+        Xin lỗi, trang bạn đang tìm kiếm không tồn tại hoặc đã được di chuyển.
+        Vui lòng kiểm tra lại đường dẫn hoặc quay về trang chủ.
       </p>
-      <button 
+      <button
         style={styles.button}
         onClick={() => navigate('/')}
       >
         <FaHome style={styles.homeIcon} />
-        Back to Home
+        Về trang chủ
       </button>
     </div>
   );
 };
 
-export default NotFound; 
+export default NotFound;

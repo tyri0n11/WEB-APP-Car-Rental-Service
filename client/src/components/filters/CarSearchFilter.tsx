@@ -28,13 +28,13 @@ const CarSearchFilter: React.FC<CarSearchFilterProps> = ({ onSearch }) => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const filteredParams: Partial<CarQueryParams> = {};
-    
+
     Object.entries(searchParams).forEach(([key, value]) => {
       if (value !== '' && value !== undefined && value !== null) {
         filteredParams[key as keyof CarQueryParams] = value as any;
       }
     });
-    
+
     if (Object.keys(filteredParams).length === 0) {
       onSearch(undefined);
     } else {
@@ -77,7 +77,7 @@ const CarSearchFilter: React.FC<CarSearchFilterProps> = ({ onSearch }) => {
             <input
               type="text"
               name="q"
-              placeholder="Seeking for a car..."
+              placeholder="Tìm kiếm xe..."
               value={searchParams.q}
               onChange={handleInputChange}
             />
@@ -88,7 +88,7 @@ const CarSearchFilter: React.FC<CarSearchFilterProps> = ({ onSearch }) => {
             <input
               type="text"
               name="address"
-              placeholder="Location"
+              placeholder="Địa điểm"
               value={searchParams.address}
               onChange={handleInputChange}
             />
@@ -123,7 +123,7 @@ const CarSearchFilter: React.FC<CarSearchFilterProps> = ({ onSearch }) => {
               value={searchParams.make}
               onChange={handleInputChange}
             >
-              <option value="">All brands</option>
+              <option value="">Tất cả hãng xe</option>
               <option value="Toyota">Toyota</option>
               <option value="Honda">Honda</option>
               <option value="Ford">Ford</option>
@@ -139,10 +139,10 @@ const CarSearchFilter: React.FC<CarSearchFilterProps> = ({ onSearch }) => {
               value={searchParams.fuelType || ''}
               onChange={handleInputChange}
             >
-              <option value="">All fuel types</option>
-              <option value={FuelType.PETROL}>Gasoline</option>
-              <option value={FuelType.DIESEL}>Diesel</option>
-              <option value={FuelType.ELECTRIC}>Electric</option>
+              <option value="">Tất cả loại nhiên liệu</option>
+              <option value={FuelType.PETROL}>Xăng</option>
+              <option value={FuelType.DIESEL}>Dầu</option>
+              <option value={FuelType.ELECTRIC}>Điện</option>
               <option value={FuelType.HYBRID}>Hybrid</option>
             </select>
           </div>
@@ -175,4 +175,4 @@ const CarSearchFilter: React.FC<CarSearchFilterProps> = ({ onSearch }) => {
   );
 };
 
-export default CarSearchFilter; 
+export default CarSearchFilter;

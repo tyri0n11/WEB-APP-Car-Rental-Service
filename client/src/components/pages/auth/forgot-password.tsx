@@ -1,47 +1,61 @@
 import React, { useState } from "react";
 import { useAuth } from "../../../hooks/useAuth";
-import { useNotificationWithState } from "../../../contexts/NotificationContext";
+import { useNotification } from "../../../contexts/NotificationContext";
 import { AUTH_NOTIFICATIONS } from "../../../constants/notificationMessages";
-//import images from "../../../assets/images/images";
 
 const ForgotPassword: React.FC = () => {
     const [email, setEmail] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const { forgotPassword } = useAuth();
-    const { isLoading, handleAsync } = useNotificationWithState();
+    const { showNotification } = useNotification();
+
+    const validate = () => {
+        if (!email) return "Email là bắt buộc";
+        if (!email.includes("@")) return "Vui lòng nhập địa chỉ email hợp lệ";
+        return null;
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        const validationError = validate();
+        setError(validationError);
+        if (validationError) return;
 
-        if (!email) {
-            return;
+        setIsLoading(true);
+        try {
+            await forgotPassword(email);
+            showNotification("success", AUTH_NOTIFICATIONS.forgotPassword.success);
+            setEmail("");
+        } catch (err: any) {
+            const backendMsg = err?.response?.data?.message || err?.message;
+            setError(backendMsg || AUTH_NOTIFICATIONS.forgotPassword.error);
+        } finally {
+            setIsLoading(false);
         }
-
-        await handleAsync(
-            async () => forgotPassword(email),
-            {
-                loading: AUTH_NOTIFICATIONS.forgotPassword.loading,
-                success: AUTH_NOTIFICATIONS.forgotPassword.success,
-                error: AUTH_NOTIFICATIONS.forgotPassword.error
-            }
-        );
     };
 
     return (
         <div style={styles.container}>
             <div style={styles.box}>
-                <h1 style={styles.title}>Forgot Password</h1>
-                <form onSubmit={handleSubmit}>
+                <h1 style={styles.title}>Quên mật khẩu</h1>
+                <form onSubmit={handleSubmit} autoComplete="off">
                     <input
-                        type="email"
+                        type="text"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Enter your email"
+                        placeholder="Nhập email của bạn"
                         style={styles.input}
-                        required
                         disabled={isLoading}
+                        autoComplete="off"
                     />
+                    {error && (
+                        <div style={{ color: 'red', fontSize: 13, marginBottom: 8 }}>
+                            {error}
+                        </div>
+                    )}
                     <button type="submit" style={styles.button(isLoading)} disabled={isLoading}>
-                        {isLoading ? "Sending..." : "Send Reset Link"}
+                        {isLoading ? "Đang gửi..." : "Gửi liên kết"}
                     </button>
                 </form>
             </div>
@@ -57,7 +71,6 @@ const styles = {
         height: "100vh",
         width: "100vw",
         padding: "20px",
-        //backgroundImage: `url(${images.background})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -82,7 +95,8 @@ const styles = {
         border: "1px solid #ddd",
         borderRadius: "6px",
         fontSize: "16px",
-        marginBottom: "15px",
+        marginBottom: "8px",
+        background: "#fff",
     },
     button: (loading: boolean) => ({
         width: "100%",

@@ -37,7 +37,7 @@ const Contact: React.FC = () => {
   const contactInfo = [
     {
       icon: <FaPhone />,
-      title: 'Phone',
+      title: 'Điện thoại',
       content: '+84 123 456 789',
       link: 'tel:+84123456789',
     },
@@ -49,14 +49,14 @@ const Contact: React.FC = () => {
     },
     {
       icon: <FaMapMarkerAlt />,
-      title: 'Address',
-      content: '123 Nguyen Van Linh, District 7, Ho Chi Minh City',
+      title: 'Địa chỉ',
+      content: '123 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh',
       link: 'https://maps.google.com',
     },
     {
       icon: <FaClock />,
-      title: 'Working Hours',
-      content: 'Mon - Sun: 24/7',
+      title: 'Giờ làm việc',
+      content: 'Thứ 2 - Chủ nhật: 24/7',
       link: null,
     },
   ];
@@ -73,45 +73,54 @@ const Contact: React.FC = () => {
       maxWidth: '1250px',
       margin: '0 auto',
       padding: '48px 16px',
+      fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
     },
     header: {
       textAlign: 'center' as const,
       marginBottom: '48px',
+      fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
     },
     title: {
       fontSize: '36px',
       fontWeight: 'bold' as const,
       color: colors.text,
       marginBottom: '16px',
+      fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
+      letterSpacing: "0.5px",
     },
     subtitle: {
       fontSize: '18px',
       color: colors.textLight,
       maxWidth: '600px',
       margin: '0 auto',
+      fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
     },
     content: {
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
-      gap: '48px',
+      gap: '32px',
+      fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
+      marginBottom: '32px',
       '@media (max-width: 768px)': {
         gridTemplateColumns: '1fr',
       },
     },
     contactInfo: {
       display: 'grid',
-      gap: '24px',
+      gap: '16px',
+      fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
     },
     infoCard: {
       display: 'flex',
       alignItems: 'center',
-      gap: '16px',
-      padding: '24px',
+      gap: '20px', // tăng spacing giữa icon và text
+      padding: '28px',
       backgroundColor: colors.background,
       borderRadius: '12px',
       boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
       transition: 'all 0.3s ease',
       cursor: 'pointer',
+      fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
       '&:hover': {
         transform: 'translateY(-4px)',
         boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
@@ -127,42 +136,50 @@ const Contact: React.FC = () => {
       borderRadius: '12px',
       color: colors.primary,
       fontSize: '24px',
+      fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
     },
     infoContent: {
       flex: 1,
+      fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
     },
     infoTitle: {
       fontSize: '18px',
       fontWeight: 'bold' as const,
       color: colors.text,
       marginBottom: '4px',
+      fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
     },
     infoText: {
       color: colors.textLight,
       textDecoration: 'none',
+      fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
     },
     form: {
       backgroundColor: colors.background,
-      padding: '32px',
+      padding: '36px',
       borderRadius: '12px',
       boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+      fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
     },
     formGroup: {
-      marginBottom: '24px',
+      marginBottom: '28px', // tăng spacing giữa các trường
+      fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
     },
     label: {
       display: 'block',
-      marginBottom: '8px',
+      marginBottom: '10px',
       color: colors.text,
       fontWeight: 'bold' as const,
+      fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
     },
     input: {
       width: '100%',
-      padding: '12px',
+      padding: '14px',
       border: `1px solid ${colors.border}`,
       borderRadius: '8px',
       fontSize: '16px',
       transition: 'all 0.2s',
+      fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
       '&:focus': {
         outline: 'none',
         borderColor: colors.primary,
@@ -170,13 +187,14 @@ const Contact: React.FC = () => {
     },
     textarea: {
       width: '100%',
-      padding: '12px',
+      padding: '14px',
       border: `1px solid ${colors.border}`,
       borderRadius: '8px',
       fontSize: '16px',
       minHeight: '150px',
       resize: 'vertical' as const,
       transition: 'all 0.2s',
+      fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
       '&:focus': {
         outline: 'none',
         borderColor: colors.primary,
@@ -193,6 +211,8 @@ const Contact: React.FC = () => {
       fontWeight: 'bold' as const,
       cursor: 'pointer',
       transition: 'all 0.2s',
+      fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
+      marginTop: "8px",
       '&:hover': {
         backgroundColor: colors.primaryHover,
       },
@@ -200,8 +220,9 @@ const Contact: React.FC = () => {
     socialLinks: {
       display: 'flex',
       justifyContent: 'center',
-      gap: '16px',
-      marginTop: '32px',
+      gap: '20px', // tăng spacing giữa các icon
+      marginTop: '40px',
+      fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
     },
     socialLink: {
       width: '40px',
@@ -214,6 +235,7 @@ const Contact: React.FC = () => {
       color: colors.text,
       fontSize: '20px',
       transition: 'all 0.3s ease',
+      fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
       '&:hover': {
         transform: 'translateY(-4px)',
       },
@@ -232,16 +254,20 @@ const Contact: React.FC = () => {
       animation: 'slideIn 0.3s ease-out',
       backgroundColor: (notification.type === 'success' ? colors.success : '#EF4444'),
       color: colors.background,
+      fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
     },
     notificationIcon: {
       fontSize: '20px',
+      fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
     },
     notificationText: {
       fontSize: '14px',
       fontWeight: 'bold' as const,
+      fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
     },
     loadingSpinner: {
       animation: 'spin 1s linear infinite',
+      fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
     },
     '@keyframes slideIn': {
       from: {
@@ -270,7 +296,6 @@ const Contact: React.FC = () => {
       message,
     });
 
-    // Auto hide after 5 seconds
     setTimeout(() => {
       setNotification(prev => ({ ...prev, show: false }));
     }, 5000);
@@ -281,20 +306,16 @@ const Contact: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Reset form
       setFormData({
         name: '',
         email: '',
         subject: '',
         message: '',
       });
-
-      showNotification('success', 'Your message has been sent successfully!');
+      showNotification('success', 'Gửi tin nhắn thành công!');
     } catch (error) {
-      showNotification('error', 'Failed to send message. Please try again.');
+      showNotification('error', 'Gửi tin nhắn thất bại. Vui lòng thử lại.');
     } finally {
       setIsLoading(false);
     }
@@ -319,9 +340,9 @@ const Contact: React.FC = () => {
       )}
 
       <div style={styles.header}>
-        <h1 style={styles.title}>Get in Touch</h1>
+        <h1 style={styles.title}>Liên hệ với chúng tôi</h1>
         <p style={styles.subtitle}>
-          Have questions about our services? We're here to help you 24/7.
+          Có thắc mắc về dịch vụ? Chúng tôi luôn sẵn sàng hỗ trợ bạn 24/7.
         </p>
       </div>
 
@@ -346,7 +367,7 @@ const Contact: React.FC = () => {
 
         <form style={styles.form} onSubmit={handleSubmit}>
           <div style={styles.formGroup}>
-            <label style={styles.label} htmlFor="name">Full Name</label>
+            <label style={styles.label} htmlFor="name">Họ và tên</label>
             <input
               type="text"
               id="name"
@@ -359,7 +380,7 @@ const Contact: React.FC = () => {
           </div>
 
           <div style={styles.formGroup}>
-            <label style={styles.label} htmlFor="email">Email Address</label>
+            <label style={styles.label} htmlFor="email">Địa chỉ Email</label>
             <input
               type="email"
               id="email"
@@ -372,7 +393,7 @@ const Contact: React.FC = () => {
           </div>
 
           <div style={styles.formGroup}>
-            <label style={styles.label} htmlFor="subject">Subject</label>
+            <label style={styles.label} htmlFor="subject">Chủ đề</label>
             <input
               type="text"
               id="subject"
@@ -385,7 +406,7 @@ const Contact: React.FC = () => {
           </div>
 
           <div style={styles.formGroup}>
-            <label style={styles.label} htmlFor="message">Message</label>
+            <label style={styles.label} htmlFor="message">Nội dung</label>
             <textarea
               id="message"
               name="message"
@@ -396,18 +417,18 @@ const Contact: React.FC = () => {
             />
           </div>
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             style={styles.submitButton}
             disabled={isLoading}
           >
             {isLoading ? (
               <>
                 <FaSpinner style={{ ...styles.notificationIcon, ...styles.loadingSpinner }} />
-                Sending...
+                Đang gửi...
               </>
             ) : (
-              'Send Message'
+              'Gửi tin nhắn'
             )}
           </button>
         </form>
@@ -430,4 +451,4 @@ const Contact: React.FC = () => {
   );
 };
 
-export default Contact; 
+export default Contact;

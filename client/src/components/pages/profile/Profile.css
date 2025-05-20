@@ -1,3 +1,12 @@
+.profilePage,
+.profilePage *,
+.profilePage *::before,
+.profilePage *::after {
+  font-family: 'Be Vietnam Pro', Arial, Helvetica, sans-serif !important;
+  font-size: 1.08rem;
+  /* Slightly bigger base font size */
+}
+
 .profilePage {
   display: flex;
   padding: 80px 0;
@@ -117,7 +126,7 @@
   .profileContainer {
     flex-direction: column;
   }
-  
+
   .profileSidebar {
     flex: 100%;
     max-width: 100%;
@@ -127,12 +136,12 @@
     padding: 0;
     margin-bottom: 16px;
   }
-  
+
   .profileSidebarItem {
     width: auto;
     min-width: 110px;
   }
-  
+
   .profileContent {
     flex: 100%;
   }
@@ -142,22 +151,22 @@
   .profilePage {
     padding: 60px 0;
   }
-  
+
   .profileSidebar {
     flex-direction: column;
     align-items: center;
   }
-  
+
   .profileSidebarItem {
     width: 100%;
     justify-content: center;
   }
-  
+
   .profileTitle {
     font-size: 18px;
     padding: 12px 16px;
   }
-  
+
   .profileDetails {
     padding: 0 12px 12px;
   }
@@ -167,11 +176,11 @@
   .profilePage {
     padding: 40px 0;
   }
-  
+
   .profileLayout {
     width: 100%;
   }
-  
+
   .profileSidebarItem {
     padding: 8px 12px;
     font-size: 13px;
@@ -250,6 +259,7 @@
 
 /* Responsive Design */
 @media (max-width: 640px) {
+
   .loading-container,
   .error-container {
     padding: 1rem;
@@ -266,6 +276,9 @@
 
   .error-container pre {
     font-size: 0.8rem;
+    padding: 0.75rem;
+
+
     padding: 0.75rem;
   }
 }

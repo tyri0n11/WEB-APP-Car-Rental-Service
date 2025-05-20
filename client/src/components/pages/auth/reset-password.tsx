@@ -23,9 +23,9 @@ const ResetPassword: React.FC = () => {
         const result = await handleAsync(
             async () => resetPassword(token, newPassword),
             {
-                loading: AUTH_NOTIFICATIONS.resetPassword.loading,
-                success: AUTH_NOTIFICATIONS.resetPassword.success,
-                error: AUTH_NOTIFICATIONS.resetPassword.error
+                loading: "Đang đặt lại mật khẩu...",
+                success: "Đặt lại mật khẩu thành công!",
+                error: "Đặt lại mật khẩu thất bại. Vui lòng thử lại.",
             }
         );
 
@@ -40,19 +40,19 @@ const ResetPassword: React.FC = () => {
         <div style={styles.container}>
             <div style={styles.overlay}>
                 <div style={styles.box}>
-                    <h1 style={styles.title}>Reset Password</h1>
+                    <h1 style={styles.title}>Đặt Lại Mật Khẩu</h1>
                     <form onSubmit={handleSubmit}>
                         <input
                             type="password"
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
-                            placeholder="Enter your new password"
+                            placeholder="Nhập mật khẩu mới"
                             style={styles.input}
                             required
                             disabled={isLoading}
                         />
                         <button type="submit" style={styles.button(isLoading)} disabled={isLoading}>
-                            {isLoading ? "Resetting..." : "Reset Password"}
+                            {isLoading ? "Đang đặt lại..." : "Đặt Lại Mật Khẩu"}
                         </button>
                     </form>
                 </div>
@@ -68,9 +68,8 @@ const styles = {
         alignItems: "center",
         justifyContent: "center",
         height: "100vh",
-        width: "100vw", // Full width of the browser
-        padding: "20px", // Prevents content from touching edges on small screens
-        //backgroundImage: `url(${images.background})`,]
+        width: "100vw",
+        padding: "20px",
         backgroundSize: "cover",
         backgroundPosition: "center",
     },
@@ -83,8 +82,8 @@ const styles = {
         backgroundColor: "rgba(0, 0, 0, 0.5)",
     },
     box: {
-        width: "90%", // Responsive width for mobile screens
-        maxWidth: "500px", // Prevents it from being too wide on larger screens
+        width: "90%",
+        maxWidth: "500px",
         padding: "40px",
         background: "white",
         borderRadius: "10px",

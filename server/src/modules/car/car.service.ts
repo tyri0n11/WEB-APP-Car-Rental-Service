@@ -1,6 +1,6 @@
 import { BaseService } from '@/services/base/base.service';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { Car, CarStatus, Prisma } from '@prisma/client';
+import { ActivityType, Car, CarStatus, Prisma } from '@prisma/client';
 import * as crypto from 'crypto';
 import * as dayjs from 'dayjs';
 import { CategoryService } from '../category/category.service';
@@ -11,6 +11,8 @@ import {
   CarResponseDTO,
   CarsWithPaginationResponseDTO,
 } from './dtos/response.dto';
+import { ActivityService } from '../activity/activity.service';
+import { ActivityTitle } from '../activity/consts/title.const';
 
 @Injectable()
 export class CarService extends BaseService<Car> {
@@ -76,6 +78,7 @@ export class CarService extends BaseService<Car> {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly categoryService: CategoryService,
+    private readonly activityService: ActivityService,
   ) {
     super(databaseService, 'car', CarResponseDTO);
   }
@@ -100,6 +103,14 @@ export class CarService extends BaseService<Car> {
       }
     }
 
+    const existingLicensePlate = await this.findOne({
+      licensePlate: carData.licensePlate,
+    });
+
+    if (existingLicensePlate) {
+      throw new BadRequestException('License plate already exists');
+    }
+
     const carId = this.genCarId();
     const car = await super.create(
       {
@@ -122,6 +133,12 @@ export class CarService extends BaseService<Car> {
       },
     );
 
+    this.activityService.create({
+      carId: car.id,
+      type: ActivityType.CAR_ADDED,
+      title: ActivityTitle.CAR_ADDED,
+    });
+
     return this.processCarResponse(car);
   }
 
@@ -130,7 +147,7 @@ export class CarService extends BaseService<Car> {
     if (!car) {
       throw new BadRequestException(`Car with ID ${id} not found`);
     }
-    
+
     return this.processCarResponse(car);
   }
 
@@ -213,6 +230,12 @@ export class CarService extends BaseService<Car> {
       throw new BadRequestException('Car not found');
     }
     await super.update({ id }, input);
+
+    this.activityService.create({
+      carId: foundCar.id,
+      type: ActivityType.CAR_UPDATED,
+      title: ActivityTitle.CAR_UPDATED,
+    });
   }
 
   async updateStatus(id: string, status: CarStatus): Promise<void> {

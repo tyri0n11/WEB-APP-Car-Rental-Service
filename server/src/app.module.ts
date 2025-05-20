@@ -27,6 +27,8 @@ import { ExpressAdapter } from '@bull-board/express';
 import { TransactionModule } from './modules/transaction/transaction.module';
 import { ReviewModule } from './modules/review/review.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { ActivityModule } from './modules/activity/activity.module';
 
 @Module({
   imports: [
@@ -109,6 +111,8 @@ import { LoggerMiddleware } from './middlewares/logger.middleware';
     PaymentModule,
     TransactionModule,
     ReviewModule,
+    DashboardModule,
+    ActivityModule,
   ],
   controllers: [AppController],
   providers: [

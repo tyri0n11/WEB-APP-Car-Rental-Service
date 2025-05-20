@@ -7,7 +7,6 @@ import {
   CreatePaymentLinkOptions,
 } from './interfaces/paymentGateway.interface';
 import { TransactionQueue } from './enums/queue';
-
 @Injectable()
 export class PaymentService {
   constructor(

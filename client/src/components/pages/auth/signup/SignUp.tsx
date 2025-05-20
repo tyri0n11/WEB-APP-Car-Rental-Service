@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { useAuth } from "../../../../hooks/useAuth";
-import Notification from "../../../common/Notification";
+import { useNotification } from "../../../../contexts/NotificationContext";
 import "../AuthStyles.css";
 
 const SignUp: React.FC<{
@@ -15,15 +15,6 @@ const SignUp: React.FC<{
   const [password, setPassword] = useState("");
   const [repassword, setRepassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [notification, setNotification] = useState<{
-    show: boolean;
-    type: 'success' | 'error';
-    message: string;
-  }>({
-    show: false,
-    type: 'success',
-    message: '',
-  });
   const [isAgreed, setIsAgreed] = useState(false);
   const [errors, setErrors] = useState<{
     firstName?: string;
@@ -36,54 +27,40 @@ const SignUp: React.FC<{
   }>({});
 
   const { signup } = useAuth();
-
-  const showNotification = (type: 'success' | 'error', message: string) => {
-    setNotification({
-      show: true,
-      type,
-      message,
-    });
-  };
+  const { showNotification } = useNotification();
 
   function prettifyErrorMessage(msg: string): string {
     if (!msg) return ''
     return msg
-      .replace(/phoneNumber/gi, 'Phone number')
-      .replace(/firstName/gi, 'First name')
-      .replace(/lastName/gi, 'Last name')
-      .replace(/repassword/gi, 'Retyped password')
-      .replace(/password/gi, 'Password')
+      .replace(/phoneNumber/gi, 'Số điện thoại')
+      .replace(/firstName/gi, 'Tên')
+      .replace(/lastName/gi, 'Họ')
+      .replace(/repassword/gi, 'Nhập lại mật khẩu')
+      .replace(/password/gi, 'Mật khẩu')
       .replace(/email/gi, 'Email')
-      .replace(/is required/gi, 'is required')
-      .replace(/is not valid/gi, 'is not valid')
-      .replace(/must be at least/gi, 'must be at least')
-      .replace(/must contain at least/gi, 'must contain at least')
+      .replace(/is required/gi, 'là bắt buộc')
+      .replace(/is not valid/gi, 'không hợp lệ')
+      .replace(/must be at least/gi, 'phải có ít nhất')
+      .replace(/must contain at least/gi, 'phải chứa ít nhất')
+      .replace(/Passwords do not match/gi, 'Mật khẩu không khớp');
   }
 
   const validateForm = () => {
-    const newErrors: {
-      firstName?: string;
-      lastName?: string;
-      email?: string;
-      phoneNumber?: string;
-      password?: string;
-      repassword?: string;
-      agree?: string;
-    } = {};
-    if (!firstName) newErrors.firstName = 'First name is required';
-    if (!lastName) newErrors.lastName = 'Last name is required';
-    if (!email) newErrors.email = 'Email is required';
-    else if (!email.includes('@')) newErrors.email = 'Please enter a valid email address';
-    if (!phoneNumber) newErrors.phoneNumber = 'Phone number is required';
-    else if (!/^\d{10}$/.test(phoneNumber)) newErrors.phoneNumber = 'Please enter a valid 10-digit phone number';
-    if (!password) newErrors.password = 'Password is required';
-    else if (password.length < 6) newErrors.password = 'Password must be at least 6 characters';
-    else if (!/[A-Z]/.test(password)) newErrors.password = 'Password must contain at least one uppercase letter';
-    else if (!/[a-z]/.test(password)) newErrors.password = 'Password must contain at least one lowercase letter';
-    else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) newErrors.password = 'Password must contain at least one special character';
-    if (!repassword) newErrors.repassword = 'Please retype your password';
-    else if (password !== repassword) newErrors.repassword = 'Passwords do not match';
-    if (!isAgreed) newErrors.agree = 'You must agree to the terms and policies';
+    const newErrors: typeof errors = {};
+    if (!firstName) newErrors.firstName = 'Tên là bắt buộc';
+    if (!lastName) newErrors.lastName = 'Họ là bắt buộc';
+    if (!email) newErrors.email = 'Email là bắt buộc';
+    else if (!email.includes('@')) newErrors.email = 'Vui lòng nhập địa chỉ email hợp lệ';
+    if (!phoneNumber) newErrors.phoneNumber = 'Số điện thoại là bắt buộc';
+    else if (!/^\d{10}$/.test(phoneNumber)) newErrors.phoneNumber = 'Vui lòng nhập số điện thoại 10 chữ số hợp lệ';
+    if (!password) newErrors.password = 'Mật khẩu là bắt buộc';
+    else if (password.length < 6) newErrors.password = 'Mật khẩu phải có ít nhất 6 ký tự';
+    else if (!/[A-Z]/.test(password)) newErrors.password = 'Mật khẩu phải chứa ít nhất một chữ hoa';
+    else if (!/[a-z]/.test(password)) newErrors.password = 'Mật khẩu phải chứa ít nhất một chữ thường';
+    else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) newErrors.password = 'Mật khẩu phải chứa ít nhất một ký tự đặc biệt';
+    if (!repassword) newErrors.repassword = 'Vui lòng nhập lại mật khẩu';
+    else if (password !== repassword) newErrors.repassword = 'Mật khẩu không khớp';
+    if (!isAgreed) newErrors.agree = 'Bạn phải đồng ý với điều khoản và chính sách';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -103,16 +80,16 @@ const SignUp: React.FC<{
         phoneNumber,
       });
       signupSuccess = true;
-      showNotification('success', 'Account created!');
       setFirstName('');
       setLastName('');
       setEmail('');
       setPhoneNumber('');
       setPassword('');
       setRepassword('');
+      showNotification('success', 'Tạo tài khoản thành công!');
     } catch (error: any) {
       const backendMsg = error?.response?.data?.message || error?.message;
-      showNotification('error', backendMsg ? prettifyErrorMessage(backendMsg) : 'Failed to create account. Please try again.');
+      showNotification('error', prettifyErrorMessage(backendMsg) || 'Tạo tài khoản thất bại');
     } finally {
       setIsLoading(false);
       if (signupSuccess) {
@@ -125,40 +102,34 @@ const SignUp: React.FC<{
 
   return (
     <>
-      <Notification
-        show={notification.show}
-        type={notification.type}
-        message={notification.message}
-        onClose={() => setNotification(prev => ({ ...prev, show: false }))}
-      />
-
       <div className="modal">
         <div className="signup-wrapper">
           <FaTimes className="close-btn" onClick={onClose} />
           <div className="form-box signup">
             <form onSubmit={handleSubmit} noValidate>
-              <h1>Sign Up</h1>
+              <h1>Đăng Ký</h1>
               <div className="name-box">
                 <div className="input-box">
-                  <label>First Name</label>
+                  <label>Tên</label>
                   <input
                     type="text"
-                    placeholder="First name"
+                    placeholder="Tên"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     disabled={isLoading}
+                    className={errors.firstName ? "input-error" : ""}
                   />
                   {errors.firstName && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.firstName}</div>}
                 </div>
-
                 <div className="input-box">
-                  <label>Last Name</label>
+                  <label>Họ</label>
                   <input
                     type="text"
-                    placeholder="Last name"
+                    placeholder="Họ"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     disabled={isLoading}
+                    className={errors.lastName ? "input-error" : ""}
                   />
                   {errors.lastName && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.lastName}</div>}
                 </div>
@@ -168,79 +139,92 @@ const SignUp: React.FC<{
                 <label>Email</label>
                 <input
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder="Nhập email của bạn"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={isLoading}
+                  className={errors.email ? "input-error" : ""}
                 />
                 {errors.email && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.email}</div>}
               </div>
 
               <div className="input-box">
-                <label>Phone Number</label>
+                <label>Số điện thoại</label>
                 <input
                   type="tel"
-                  placeholder="Enter your phone number"
+                  placeholder="Nhập số điện thoại"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   disabled={isLoading}
+                  className={errors.phoneNumber ? "input-error" : ""}
                 />
                 {errors.phoneNumber && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.phoneNumber}</div>}
               </div>
 
               <div className="input-box">
-                <label>Password</label>
+                <label>Mật khẩu</label>
                 <input
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder="Nhập mật khẩu"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isLoading}
+                  className={errors.password ? "input-error" : ""}
                 />
                 {errors.password && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.password}</div>}
               </div>
 
               <div className="input-box">
-                <label>Retype password</label>
+                <label>Nhập lại mật khẩu</label>
                 <input
                   type="password"
-                  placeholder="Retype your password"
+                  placeholder="Nhập lại mật khẩu"
                   value={repassword}
                   onChange={(e) => setRepassword(e.target.value)}
                   disabled={isLoading}
+                  className={errors.repassword ? "input-error" : ""}
                 />
                 {errors.repassword && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.repassword}</div>}
               </div>
 
-              <div className="remember-forgot">
-                <label>
+              <div className="remember-forgot" style={{ flexDirection: 'column', gap: '4px' }}>
+                <label style={{ marginBottom: '2px' }}>
                   <input
                     type="checkbox"
                     checked={isAgreed}
                     onChange={e => setIsAgreed(e.target.checked)}
                     disabled={isLoading}
                   />
-                  I agree to the terms and policies
+                  Tôi đồng ý với các điều khoản và chính sách
                 </label>
-              {errors.agree && (
-                <div style={{ color: 'red', fontSize: 12, marginTop: 6 }}>{errors.agree}</div>
-              )}
+                {errors.agree && (
+                  <div style={{
+                    color: 'red',
+                    fontSize: 12,
+                    display: 'block',
+                    marginTop: 0
+                  }}>
+                    {errors.agree}
+                  </div>
+                )}
               </div>
 
-              <button type="submit" disabled={isLoading}>
-                {isLoading ? 'Creating Account...' : 'Sign Up'}
-              </button>
+              <div className="button-box">
+                <button type="submit" disabled={isLoading}>
+                  {isLoading ? 'Đang tạo tài khoản...' : 'Đăng Ký'}
+                </button>
+              </div>
 
               <div className="login-link">
                 <p>
-                  Already have an account?{" "}
+                  Đã có tài khoản?{" "}
                   <span
                     className="link"
                     onClick={onSwitchToSignIn}
                     role="button"
                     tabIndex={0}
                   >
-                    Sign In
+                    Đăng nhập
                   </span>
                 </p>
               </div>

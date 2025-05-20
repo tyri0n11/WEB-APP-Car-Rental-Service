@@ -17,7 +17,7 @@ const styles: { [key: string]: CSSProperties } = {
         alignItems: 'center',
         width: '90%',
         margin: '0 auto',
-        
+
     },
     footerNav: {
         display: 'flex',
@@ -26,7 +26,7 @@ const styles: { [key: string]: CSSProperties } = {
 };
 const Footer: React.FC = () => {
     return (
-        <footer style={styles.footer }>
+        <footer style={styles.footer}>
             <div style={styles.footerContent}>
                 <p>&copy; {new Date().getFullYear()} Car Rental Service. All rights reserved.</p>
                 <nav style={styles.footerNav}>

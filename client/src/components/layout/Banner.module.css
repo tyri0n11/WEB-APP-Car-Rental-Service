@@ -1,4 +1,3 @@
-
 /* ✅ BANNER STYLES */
 .banner {
   background-color: #007bff;
@@ -22,6 +21,7 @@
   from {
     transform: translateX(0);
   }
+
   to {
     transform: translateX(-200%);
   }

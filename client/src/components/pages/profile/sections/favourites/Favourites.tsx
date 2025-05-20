@@ -28,8 +28,8 @@ const Favourites: React.FC = () => {
             const favoriteCars = await carApi.findFavorites();
             setFavorites(favoriteCars);
         } catch (err) {
-            setError('Failed to load favorites');
-            showNotification('error', 'Failed to load favorites');
+            setError('Không thể tải danh sách yêu thích');
+            showNotification('error', 'Không thể tải danh sách yêu thích');
         } finally {
             setIsLoading(false);
         }
@@ -45,33 +45,37 @@ const Favourites: React.FC = () => {
         try {
             await carApi.removeFavorite(carId);
             setFavorites(prev => prev.filter(car => car.id !== carId));
-            showNotification('success', 'Car removed from favorites');
+            showNotification('success', 'Đã xóa xe khỏi danh sách yêu thích');
         } catch (err) {
-            showNotification('error', 'Failed to remove car from favorites');
+            showNotification('error', 'Không thể xóa xe khỏi danh sách yêu thích');
         }
     };
 
     const handleBookCar = (car: Car) => {
         if (!selectedDates.startDate || !selectedDates.endDate) {
-            showNotification('error', 'Please select both start and end dates');
+            showNotification('error', 'Vui lòng chọn ngày nhận và trả xe');
             return;
         }
 
-        // Calculate total price based on number of days
+        // Tính tổng tiền dựa trên số ngày
         const startDate = new Date(selectedDates.startDate);
         const endDate = new Date(selectedDates.endDate);
         const days = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
         const totalPrice = days * car.pricePerDay;
 
+<<<<<<< HEAD
         // Navigate to booking confirmation with all necessary data
         navigate('/user/booking-confirmation', {
+=======
+        // Điều hướng đến trang xác nhận đặt xe với dữ liệu cần thiết
+        navigate('/booking-confirmation', {
+>>>>>>> main
             state: {
                 carId: car.id,
                 carDetails: car,
                 startTime: startDate.toISOString(),
                 endTime: endDate.toISOString(),
                 totalPrice,
-                // These will be filled in the booking confirmation step
                 customerName: '',
                 phoneNumber: '',
                 pickupLocation: '',
@@ -84,7 +88,7 @@ const Favourites: React.FC = () => {
         return (
             <div className="favourites-loading">
                 <FaSpinner className="spinner" />
-                <p>Loading favorites...</p>
+                <p>Đang tải danh sách yêu thích...</p>
             </div>
         );
     }
@@ -93,7 +97,7 @@ const Favourites: React.FC = () => {
         return (
             <div className="favourites-error">
                 <p>{error}</p>
-                <button onClick={() => fetchFavorites()}>Try Again</button>
+                <button onClick={() => fetchFavorites()}>Thử lại</button>
             </div>
         );
     }
@@ -102,7 +106,7 @@ const Favourites: React.FC = () => {
         return (
             <div className="favourites-empty">
                 <FaHeart className="empty-icon" />
-                <p>No favorite cars yet.</p>
+                <p>Chưa có xe yêu thích nào.</p>
             </div>
         );
     }
@@ -114,26 +118,26 @@ const Favourites: React.FC = () => {
                     {favorites.map((car) => (
                         <div key={car.id} className="favourite-card">
                             <div className="car-image-container">
-                                <img 
+                                <img
                                     className="car-image"
-                                    src={car.images[0]?.url} 
-                                    alt={`${car.brand} ${car.model}`} 
+                                    src={car.images[0]?.url}
+                                    alt={`${car.brand} ${car.model}`}
                                 />
                                 <div className="price-badge">
-                                    ${car.pricePerDay}/day
+                                    {car.pricePerDay.toLocaleString()}₫/ngày
                                 </div>
                             </div>
                             <div className="car-info">
                                 <h5 className="car-name">{car.brand} {car.model}</h5>
                                 <div className="car-details">
                                     <div className="car-detail">
-                                        <span>Year: {car.year}</span>
+                                        <span>Năm: {car.year}</span>
                                     </div>
                                     <div className="car-detail">
-                                        <span>Fuel: {typeof car.fuelType === 'string' || typeof car.fuelType === 'number' ? car.fuelType : 'N/A'}</span>
+                                        <span>Nhiên liệu: {car.fuelType}</span>
                                     </div>
                                     <div className="car-detail">
-                                        <span>Seats: {car.seats}</span>
+                                        <span>Số chỗ: {car.seats}</span>
                                     </div>
                                 </div>
                                 {bookingCarId === car.id ? (
@@ -144,14 +148,14 @@ const Favourites: React.FC = () => {
                                                 value={selectedDates.startDate}
                                                 onChange={(e) => setSelectedDates(prev => ({ ...prev, startDate: e.target.value }))}
                                                 min={new Date().toISOString().split('T')[0]}
-                                                placeholder="Pickup Date"
+                                                placeholder="Ngày nhận"
                                             />
                                             <input
                                                 type="date"
                                                 value={selectedDates.endDate}
                                                 onChange={(e) => setSelectedDates(prev => ({ ...prev, endDate: e.target.value }))}
                                                 min={selectedDates.startDate || new Date().toISOString().split('T')[0]}
-                                                placeholder="Return Date"
+                                                placeholder="Ngày trả"
                                             />
                                         </div>
                                         <div className="booking-actions">
@@ -159,7 +163,7 @@ const Favourites: React.FC = () => {
                                                 className="cancel-button"
                                                 onClick={() => setBookingCarId(null)}
                                             >
-                                                Cancel
+                                                Hủy
                                             </button>
                                             <button
                                                 className="confirm-button"
@@ -169,7 +173,7 @@ const Favourites: React.FC = () => {
                                                 {isBookingLoading ? (
                                                     <FaSpinner className="spinner" />
                                                 ) : (
-                                                    'Continue to Booking'
+                                                    'Tiếp tục đặt xe'
                                                 )}
                                             </button>
                                         </div>
@@ -181,14 +185,14 @@ const Favourites: React.FC = () => {
                                             onClick={() => handleRemoveFavorite(car.id)}
                                         >
                                             <FaHeart className="icon" />
-                                            Remove
+                                            Bỏ yêu thích
                                         </button>
                                         <button
                                             className="book-car"
                                             onClick={() => setBookingCarId(car.id)}
                                         >
                                             <FaCalendarAlt className="icon" />
-                                            Book Now
+                                            Đặt xe
                                         </button>
                                     </div>
                                 )}

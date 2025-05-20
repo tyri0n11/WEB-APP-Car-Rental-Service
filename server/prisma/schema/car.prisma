@@ -30,6 +30,7 @@ model Car {
     images       CarImage[]
     bookings     Booking[]
     favoritedBy  FavoriteCar[]
+    activities   Activity[]
     createdAt    DateTime      @default(now())
     updatedAt    DateTime      @updatedAt
 

@@ -1,15 +1,15 @@
 import { motion } from "framer-motion";
 import React from "react";
-// import SearchBar from "./SearchBar"; // Commented out since SearchBar component doesn't exist yet
+// import SearchBar from "./SearchBar"; // Đã comment vì SearchBar chưa tồn tại
 /*import AnimatedButton from '../../../buttons/AnimatedButton';*/
 
 const Hero: React.FC = () => {
   const description =
-    "Looking for a reliable and affordable car rental service? At CRS, we offer a wide range of well-maintained vehicles to meet your travel needs.";
+    "Bạn đang tìm kiếm dịch vụ thuê xe uy tín và giá tốt? Tại CRS, chúng tôi cung cấp đa dạng các dòng xe được bảo dưỡng kỹ lưỡng, đáp ứng mọi nhu cầu di chuyển của bạn.";
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { 
+    visible: {
       opacity: 1,
       transition: { duration: 0.5, when: "beforeChildren" }
     }
@@ -46,31 +46,31 @@ const Hero: React.FC = () => {
       animate="visible"
       variants={containerVariants}
     >
-      <motion.div 
+      <motion.div
         style={styles.backgroundLayer}
         variants={backgroundVariants}
       />
       <div style={styles.overlay} />
       <div style={styles.contentLayer}>
-        <motion.div 
+        <motion.div
           style={styles.contentBox}
           variants={contentVariants}
         >
-          <motion.h1 
+          <motion.h1
             style={styles.heading}
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            CRS - Accompanying You on Every Ride
+            CRS - Đồng hành cùng bạn trên mọi hành trình
           </motion.h1>
-          <motion.hr 
+          <motion.hr
             style={styles.divider}
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             transition={{ duration: 0.8, delay: 0.5 }}
           />
-          <motion.p 
+          <motion.p
             style={styles.description}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -78,7 +78,7 @@ const Hero: React.FC = () => {
           >
             {description}
           </motion.p>
-          {/*<AnimatedButton text="Get Started" onClick={() => console.log("Get Started")} />*/}
+          {/*<AnimatedButton text="Bắt đầu ngay" onClick={() => console.log("Get Started")} />*/}
         </motion.div>
         <motion.div
           style={styles.searchBarWrapper}

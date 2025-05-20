@@ -1,11 +1,9 @@
-
 import React, { useState, Component, ErrorInfo, ReactNode, useEffect } from "react";
 import { FaAddressCard, FaCar, FaHeart, FaLock, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useUser } from "../../../contexts/UserContext";
 import "./Profile.css";
 import Account from "./sections/account/Account";
-import Address from "./sections/address/Address";
 import ChangePassword from "./sections/change-password/ChangePassword";
 import Favourites from "./sections/favourites/Favourites";
 import MyRides from "./sections/rides/Rides";
@@ -45,13 +43,13 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     if (this.state.hasError) {
       return (
         <div className="error-container">
-          <h2>Something went wrong</h2>
+          <h2>Đã xảy ra lỗi</h2>
           <pre>{this.state.error?.message}</pre>
           <button onClick={() => {
             this.setState({ hasError: false, error: null });
             this.props.onReset();
           }}>
-            Try again
+            Thử lại
           </button>
         </div>
       );
@@ -65,7 +63,7 @@ function LoadingFallback() {
   return (
     <div className="loading-container">
       <div className="loading-spinner"></div>
-      <p>Loading...</p>
+      <p>Đang tải...</p>
     </div>
   );
 }
@@ -87,7 +85,7 @@ const Profile: React.FC = () => {
       <div className="profilePage">
         <div className="profileLayout">
           <div className="profileContainer">
-            <div className="loading">Loading user information...</div>
+            <div className="loading">Đang tải thông tin người dùng...</div>
           </div>
         </div>
       </div>
@@ -95,24 +93,18 @@ const Profile: React.FC = () => {
   }
 
   const menuItems = [
-    { label: "My Account", icon: <FaUser />, content: <Account /> },
-
-    { label: "Favourites", icon: <FaHeart />, content: <Favourites /> },
-    { label: "My Ride", icon: <FaCar />, content: <MyRides /> },
+    { label: "Tài Khoản", icon: <FaUser />, content: <Account /> },
+    { label: "Xe Yêu Thích", icon: <FaHeart />, content: <Favourites /> },
+    { label: "Lịch Sử Đặt", icon: <FaCar />, content: <MyRides /> },
     {
-      label: "Address",
-      icon: <FaAddressCard />,
-      content: <Address />,
-    },
-    {
-      label: "Change Password",
+      label: "Đổi mật khẩu",
       icon: <FaLock />,
       content: <ChangePassword />,
     },
     {
-      label: "Log Out",
+      label: "Đăng xuất",
       icon: <FaSignOutAlt />,
-      content: "Logging out...",
+      content: "Đang đăng xuất...",
       isLogout: true
     },
   ];
@@ -131,7 +123,7 @@ const Profile: React.FC = () => {
         <div className="profileContainer">
           <div className="profileSidebar">
             <div className="profileTitle">
-              Hi, {user?.firstName || ""} {user?.lastName || "there"}
+              Xin chào, {user?.firstName || ""} {user?.lastName || "bạn"}
             </div>
             <hr className="profileHr" />
             {menuItems.map((item, index) => (

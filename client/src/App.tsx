@@ -75,16 +75,16 @@ function App() {
             <Routes>
               {/* Public Routes */}
               <Route path="/*" element={<PublicRoutes />} />
-              
+
               {/* Auth Routes */}
               <Route path="/auth/*" element={<AuthRoutes />} />
-              
+
               <Route path="/user/*" element={<ProtectedRoutes />} />
 
 
               {/* Admin Routes */}
               <Route path="/admin/*" element={<AdminRoutes />} />
-              
+
               {/* 404 Route */}
               <Route path="*" element={<NotFound />} />
             </Routes>

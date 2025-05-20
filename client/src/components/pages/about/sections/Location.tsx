@@ -91,7 +91,7 @@ const styles: { [key: string]: React.CSSProperties } = {
 const Location: React.FC = () => {
     return (
         <div style={styles.servicesContainer}>
-            <h1 style={styles.title}>Service Locations</h1>
+            <h1 style={styles.title}>Địa điểm dịch vụ</h1>
             <div style={styles.cardsContainer}>
                 {/* Left Card */}
                 <div style={styles.card}>

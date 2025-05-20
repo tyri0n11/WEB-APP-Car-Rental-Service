@@ -1,0 +1,29 @@
+enum ActivityType {
+    BOOKING
+    RETURN
+    PAYMENT
+    CAR_ADDED
+    CAR_UPDATED
+}
+
+model Activity {
+    id        String       @id @default(uuid())
+    createdAt DateTime     @default(now())
+    updatedAt DateTime     @updatedAt
+    type      ActivityType
+
+    bookingId String?
+    booking   Booking? @relation(fields: [bookingId], references: [id])
+    carId     String?
+    car       Car?     @relation(fields: [carId], references: [id])
+
+    title       String // e.g. "New Booking Created", "Car Returned"
+    description String? // e.g. "Customer John Doe booked Toyota Camry"
+    amount      Float?
+    metadata    Json?
+
+    @@index([createdAt])
+    @@index([bookingId])
+    @@index([carId])
+    @@map("activities")
+}

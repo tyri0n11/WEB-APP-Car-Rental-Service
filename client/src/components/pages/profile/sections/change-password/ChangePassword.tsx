@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../../../../hooks/useAuth';
 import { useNotificationWithState } from '../../../../../contexts/NotificationContext';
-import { AUTH_NOTIFICATIONS } from '../../../../../constants/notificationMessages';
 import Notification from '../../../../common/Notification';
 import './ChangePassword.css';
 
@@ -41,22 +40,22 @@ const ChangePassword: React.FC = () => {
     };
 
     const validatePassword = (password: string): string => {
-        if (password.length < 8) return 'Password must be at least 8 characters';
-        if (!/[a-z]/.test(password)) return 'Password must contain at least one lowercase letter';
-        if (!/[0-9]/.test(password)) return 'Password must contain at least one number';
-        if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) return 'Password must contain at least one special character';
+        if (password.length < 8) return 'Mật khẩu phải có ít nhất 8 ký tự';
+        if (!/[a-z]/.test(password)) return 'Mật khẩu phải chứa ít nhất một chữ thường';
+        if (!/[0-9]/.test(password)) return 'Mật khẩu phải chứa ít nhất một số';
+        if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) return 'Mật khẩu phải chứa ít nhất một ký tự đặc biệt';
         return '';
     };
 
     const validateForm = () => {
         const newErrors: typeof errors = {};
-        
+
         if (!passwordInfo.oldPassword) {
-            newErrors.oldPassword = 'Current password is required';
+            newErrors.oldPassword = 'Vui lòng nhập mật khẩu hiện tại';
         }
 
         if (!passwordInfo.newPassword) {
-            newErrors.newPassword = 'New password is required';
+            newErrors.newPassword = 'Vui lòng nhập mật khẩu mới';
         } else {
             const passwordError = validatePassword(passwordInfo.newPassword);
             if (passwordError) {
@@ -65,9 +64,9 @@ const ChangePassword: React.FC = () => {
         }
 
         if (!passwordInfo.confirmPassword) {
-            newErrors.confirmPassword = 'Please confirm your new password';
+            newErrors.confirmPassword = 'Vui lòng xác nhận mật khẩu mới';
         } else if (passwordInfo.newPassword !== passwordInfo.confirmPassword) {
-            newErrors.confirmPassword = 'Passwords do not match';
+            newErrors.confirmPassword = 'Mật khẩu xác nhận không khớp';
         }
 
         setErrors(newErrors);
@@ -89,15 +88,15 @@ const ChangePassword: React.FC = () => {
 
         try {
             if (!user) {
-                throw new Error('You must be logged in to change your password.');
+                throw new Error('Bạn cần đăng nhập để đổi mật khẩu.');
             }
 
             await handleAsync(
                 async () => changePassword(passwordInfo.oldPassword, passwordInfo.newPassword),
                 {
-                    loading: AUTH_NOTIFICATIONS.changePassword.loading,
-                    success: AUTH_NOTIFICATIONS.changePassword.success,
-                    error: AUTH_NOTIFICATIONS.changePassword.error
+                    loading: 'Đang đổi mật khẩu...',
+                    success: 'Đổi mật khẩu thành công!',
+                    error: 'Đổi mật khẩu thất bại. Vui lòng thử lại.'
                 }
             );
 
@@ -108,9 +107,9 @@ const ChangePassword: React.FC = () => {
             });
             setErrors({});
             setIsSubmitted(false);
-            showNotification('success', 'Password changed successfully!');
+            showNotification('success', 'Đổi mật khẩu thành công!');
         } catch (error: any) {
-            showNotification('error', error?.message || 'Failed to change password.');
+            showNotification('error', error?.message || 'Đổi mật khẩu thất bại.');
         }
     };
 
@@ -123,9 +122,9 @@ const ChangePassword: React.FC = () => {
                 onClose={() => setNotification(prev => ({ ...prev, show: false }))}
             />
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="change-password-form">
                 <div className="form-group">
-                    <label htmlFor="oldPassword">Current Password</label>
+                    <label htmlFor="oldPassword">Mật khẩu hiện tại</label>
                     <input
                         type="password"
                         id="oldPassword"
@@ -133,16 +132,16 @@ const ChangePassword: React.FC = () => {
                         value={passwordInfo.oldPassword}
                         onChange={handleInputChange}
                         disabled={isLoading}
-                        placeholder="Enter your current password"
+                        placeholder="Nhập mật khẩu hiện tại"
                         className="input-field"
                     />
                     {isSubmitted && errors.oldPassword && (
-                        <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.oldPassword}</div>
+                        <div className="error-text">{errors.oldPassword}</div>
                     )}
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="newPassword">New Password</label>
+                    <label htmlFor="newPassword">Mật khẩu mới</label>
                     <input
                         type="password"
                         id="newPassword"
@@ -150,16 +149,16 @@ const ChangePassword: React.FC = () => {
                         value={passwordInfo.newPassword}
                         onChange={handleInputChange}
                         disabled={isLoading}
-                        placeholder="Enter your new password"
+                        placeholder="Nhập mật khẩu mới"
                         className="input-field"
                     />
                     {isSubmitted && errors.newPassword && (
-                        <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.newPassword}</div>
+                        <div className="error-text">{errors.newPassword}</div>
                     )}
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="confirmPassword">Confirm New Password</label>
+                    <label htmlFor="confirmPassword">Xác nhận mật khẩu mới</label>
                     <input
                         type="password"
                         id="confirmPassword"
@@ -167,20 +166,20 @@ const ChangePassword: React.FC = () => {
                         value={passwordInfo.confirmPassword}
                         onChange={handleInputChange}
                         disabled={isLoading}
-                        placeholder="Confirm your new password"
+                        placeholder="Nhập lại mật khẩu mới"
                         className="input-field"
                     />
                     {isSubmitted && errors.confirmPassword && (
-                        <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.confirmPassword}</div>
+                        <div className="error-text">{errors.confirmPassword}</div>
                     )}
                 </div>
 
-                <button 
-                    type="submit" 
+                <button
+                    type="submit"
                     disabled={isLoading}
-                    className="change-password-button"
+                    className="change-password-button small"
                 >
-                    {isLoading ? 'Changing Password...' : 'Change Password'}
+                    {isLoading ? 'Đang đổi...' : 'Đổi mật khẩu'}
                 </button>
             </form>
         </div>

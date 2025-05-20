@@ -26,11 +26,11 @@ interface CustomePaginateProps {
 }
 
 const CustomePaginate: React.FC<CustomePaginateProps> = ({
-  itemsPerPage = 12, // Default value
-  defaultCarImage = "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&auto=format&fit=crop&q=60", // Default value
-  showFilter = true, // Default value
-  showPagination = true, // Default value
-  limit // Optional limit for the number of cars
+  itemsPerPage = 12,
+  defaultCarImage = "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&auto=format&fit=crop&q=60",
+  showFilter = true,
+  showPagination = true,
+  limit
 }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -92,7 +92,7 @@ const CustomePaginate: React.FC<CustomePaginateProps> = ({
       if (response) {
         let fetchedCars = response.data?.cars?.map(addDefaultImage) || [];
         if (limit) {
-          fetchedCars = fetchedCars.slice(0, limit); // Apply limit if provided
+          fetchedCars = fetchedCars.slice(0, limit);
         }
         setCars(fetchedCars);
         setPagination({
@@ -104,11 +104,11 @@ const CustomePaginate: React.FC<CustomePaginateProps> = ({
           next: response.data?.pagination?.next
         });
       } else {
-        throw new Error('Invalid response format');
+        throw new Error('Dữ liệu trả về không hợp lệ');
       }
     } catch (err) {
-      console.error('Error fetching cars:', err);
-      setError('Failed to load cars. Please try again.');
+      console.error('Lỗi khi tải xe:', err);
+      setError('Không thể tải danh sách xe. Vui lòng thử lại.');
       setCars([]);
       setPagination(prev => ({
         ...prev,
@@ -133,10 +133,8 @@ const CustomePaginate: React.FC<CustomePaginateProps> = ({
 
   const handleCarClick = (carId: string) => {
     if (user?.role === 'ADMIN') {
-      // Navigate to admin car edit page
       navigate(`/admin/cars/${carId}/edit`);
     } else {
-      // Navigate to car details page for regular customers
       navigate(ROUTES.PUBLIC.CAR_DETAIL(carId));
     }
   };
@@ -144,7 +142,7 @@ const CustomePaginate: React.FC<CustomePaginateProps> = ({
   if (loading) {
     return (
       <div className="loading-container">
-        <p>Loading cars...</p>
+        <p>Đang tải xe...</p>
       </div>
     );
   }
@@ -153,7 +151,7 @@ const CustomePaginate: React.FC<CustomePaginateProps> = ({
     return (
       <div className="error-container">
         <p>{error}</p>
-        <button onClick={() => fetchCars()}>Try Again</button>
+        <button onClick={() => fetchCars()}>Thử lại</button>
       </div>
     );
   }
@@ -164,14 +162,14 @@ const CustomePaginate: React.FC<CustomePaginateProps> = ({
 
       {cars.length === 0 ? (
         <div className="empty-container">
-          <p>No cars available at the moment.</p>
+          <p>Hiện tại chưa có xe nào.</p>
         </div>
       ) : (
         <>
           <div className="cars-grid">
             {cars.map((car) => (
-              <div 
-                key={car.id} 
+              <div
+                key={car.id}
                 className="car-item"
                 onClick={() => handleCarClick(car.id)}
                 style={{ cursor: 'pointer' }}
@@ -188,11 +186,11 @@ const CustomePaginate: React.FC<CustomePaginateProps> = ({
                 onClick={() => handlePageChange(pagination.currentPage - 1)}
                 disabled={!pagination.prev}
               >
-                Previous
+                Trước
               </button>
 
               <span className="page-info">
-                Page {pagination.currentPage} of {pagination.lastPage}
+                Trang {pagination.currentPage} / {pagination.lastPage}
               </span>
 
               <button
@@ -200,7 +198,7 @@ const CustomePaginate: React.FC<CustomePaginateProps> = ({
                 onClick={() => handlePageChange(pagination.currentPage + 1)}
                 disabled={!pagination.next}
               >
-                Next
+                Tiếp
               </button>
             </div>
           )}

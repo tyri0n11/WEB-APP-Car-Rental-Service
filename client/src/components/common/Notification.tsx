@@ -11,6 +11,7 @@ interface NotificationProps {
 
 const Notification: React.FC<NotificationProps> = ({ show, type, message, onClose }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const NOTIFICATION_DURATION = 1000; // 1 giây
 
   useEffect(() => {
     if (show) {
@@ -19,29 +20,29 @@ const Notification: React.FC<NotificationProps> = ({ show, type, message, onClos
         const timer = setTimeout(() => {
           setIsVisible(false);
           setTimeout(onClose, 300);
-        }, 4000);
+        }, NOTIFICATION_DURATION);
         return () => clearTimeout(timer);
       }
     }
   }, [show, onClose, type]);
 
   const overlayVariants = {
-    hidden: { 
+    hidden: {
       opacity: 0,
       backdropFilter: 'blur(0px)'
     },
-    visible: { 
+    visible: {
       opacity: 1,
       backdropFilter: 'blur(8px)',
-      transition: { 
+      transition: {
         duration: 0.3,
         ease: "easeOut"
       }
     },
-    exit: { 
+    exit: {
       opacity: 0,
       backdropFilter: 'blur(0px)',
-      transition: { 
+      transition: {
         duration: 0.3,
         ease: "easeIn"
       }
@@ -49,13 +50,13 @@ const Notification: React.FC<NotificationProps> = ({ show, type, message, onClos
   };
 
   const notificationVariants = {
-    hidden: { 
+    hidden: {
       y: -50,
       opacity: 0,
       scale: 0.9,
       rotateX: 45
     },
-    visible: { 
+    visible: {
       y: 0,
       opacity: 1,
       scale: 1,
@@ -67,7 +68,7 @@ const Notification: React.FC<NotificationProps> = ({ show, type, message, onClos
         mass: 1.5
       }
     },
-    exit: { 
+    exit: {
       y: -50,
       opacity: 0,
       scale: 0.9,
@@ -80,12 +81,12 @@ const Notification: React.FC<NotificationProps> = ({ show, type, message, onClos
   };
 
   const iconVariants = {
-    hidden: { 
+    hidden: {
       scale: 0.5,
       opacity: 0,
       rotate: -180
     },
-    visible: { 
+    visible: {
       scale: 1,
       opacity: 1,
       rotate: 0,
@@ -111,11 +112,11 @@ const Notification: React.FC<NotificationProps> = ({ show, type, message, onClos
 
   const progressVariants = {
     hidden: { width: "100%", opacity: 0 },
-    visible: { 
+    visible: {
       width: "0%",
       opacity: 1,
-      transition: { 
-        duration: 5,
+      transition: {
+        duration: NOTIFICATION_DURATION / 1000,
         ease: "linear",
         opacity: { duration: 0.3 }
       }
@@ -261,7 +262,7 @@ const Notification: React.FC<NotificationProps> = ({ show, type, message, onClos
             animate="visible"
             exit="exit"
           >
-            <motion.div 
+            <motion.div
               style={styles.iconWrapper}
               variants={iconVariants}
               initial="hidden"
@@ -289,7 +290,7 @@ const Notification: React.FC<NotificationProps> = ({ show, type, message, onClos
                   setIsVisible(false);
                   setTimeout(onClose, 500);
                 }}
-                aria-label="Close notification"
+                aria-label="Đóng thông báo"
               >
                 <FaTimes />
               </button>
@@ -309,4 +310,4 @@ const Notification: React.FC<NotificationProps> = ({ show, type, message, onClos
   );
 };
 
-export default Notification; 
+export default Notification;

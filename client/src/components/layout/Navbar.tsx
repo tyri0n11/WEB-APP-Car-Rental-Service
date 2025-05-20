@@ -41,7 +41,7 @@ const Navbar: React.FC<{
         <button
           className={styles.menuToggle}
           onClick={toggleMenu}
-          aria-label="Toggle menu"
+          aria-label="Chuyển đổi menu"
         >
           <span className={isMenuOpen ? styles.barOpen : ""}></span>
           <span className={isMenuOpen ? styles.barOpen : ""}></span>
@@ -55,7 +55,7 @@ const Navbar: React.FC<{
                 className={styles.navButton}
                 onClick={() => handleNavigation("/about")}
               >
-                About
+                Giới thiệu
               </button>
             </li>
             <li>
@@ -64,7 +64,7 @@ const Navbar: React.FC<{
                 className={styles.navButton}
                 onClick={() => handleNavigation("/services")}
               >
-                Services
+                Dịch vụ
               </button>
             </li>
             <li>
@@ -73,7 +73,7 @@ const Navbar: React.FC<{
                 className={styles.navButton}
                 onClick={() => handleNavigation("/contact")}
               >
-                Contact
+                Liên hệ
               </button>
             </li>
           </ul>
@@ -86,7 +86,7 @@ const Navbar: React.FC<{
                       className={styles.adminDashboardBtn}
                       onClick={() => handleNavigation("/admin")}
                     >
-                      Admin Dashboard
+                      Bảng điều khiển Admin
                     </button>
                   </div>
                 ) : (
@@ -100,9 +100,9 @@ const Navbar: React.FC<{
                         src={
                           "https://cdn-icons-png.flaticon.com/128/1077/1077012.png"
                         }
-                        alt="User Avatar"
+                        alt="Ảnh đại diện người dùng"
                       />
-                      <p className={styles.userGreet}>Welcome {user.lastName}</p>
+                      <p className={styles.userGreet}>Xin chào {user.lastName}</p>
                     </button>
                   </div>
                 )}
@@ -114,14 +114,14 @@ const Navbar: React.FC<{
                   onClick={onSignInClick}
                   className={styles.loginButton}
                 >
-                  Sign In
+                  Đăng nhập
                 </button>
                 <button
                   type="button"
                   onClick={onSignUpClick}
                   className={styles.signupButton}
                 >
-                  Sign Up
+                  Đăng ký
                 </button>
               </>
             )}

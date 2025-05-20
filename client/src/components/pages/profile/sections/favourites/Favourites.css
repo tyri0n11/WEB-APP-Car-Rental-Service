@@ -1,3 +1,10 @@
+.favourites-root,
+.favourites-root *,
+.favourites-root *::before,
+.favourites-root *::after {
+    font-family: 'Be Vietnam Pro', Arial, Helvetica, sans-serif !important;
+}
+
 .favourites-root {
     padding: 1.5rem;
 }
@@ -219,8 +226,13 @@
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 @media (max-width: 1200px) {
@@ -233,16 +245,16 @@
     .favourites-section {
         padding: 1.5rem;
     }
-    
+
     .favourites-header {
         margin-bottom: 1.5rem;
     }
-    
+
     .favourites-grid {
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
         gap: 1.25rem;
     }
-    
+
     .car-image-container {
         height: 180px;
     }
@@ -252,38 +264,38 @@
     .favourites-root {
         padding: 1.5rem;
     }
-    
+
     .favourites-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .car-image-container {
         height: 160px;
     }
-    
+
     .favourites-header {
         flex-direction: column;
         gap: 1rem;
         align-items: flex-start;
     }
-    
+
     .data-source-toggle {
         width: 100%;
     }
-    
+
     .data-source-toggle button {
         flex: 1;
         text-align: center;
     }
-    
+
     .car-name {
         font-size: 1.1rem;
     }
-    
+
     .car-detail {
         font-size: 0.9rem;
     }
-    
+
     .car-price {
         font-size: 1.1rem;
     }
@@ -296,31 +308,32 @@
         flex-direction: column;
     }
 }
+
 @media (max-width: 576px) {
     .favourites-root {
         padding: 1rem;
     }
-    
+
     .favourites-section {
         padding: 1rem;
     }
-    
+
     .favourites-header h4 {
         font-size: 1.1rem;
     }
-    
+
     .car-image-container {
         height: 140px;
     }
-    
+
     .car-info {
         padding: 1rem;
     }
-    
+
     .car-actions {
         flex-direction: column;
     }
-    
+
     .book-car,
     .remove-favourite {
         padding: 0.625rem;

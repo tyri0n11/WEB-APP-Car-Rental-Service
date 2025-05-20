@@ -56,5 +56,6 @@ const styles: { [key: string]: React.CSSProperties } = {
         fontSize: "2rem",
         lineHeight: 1.5,
         color: "lightblue",
+        fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
     },
 };

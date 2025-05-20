@@ -34,7 +34,7 @@ export class PaymentController {
   @NoApplyResInterceptor()
   @ApiPost({ path: 'zalopay/callback' })
   async zalopayCallback(@Req() req: Request) {
-    return await this.paymentService.handleCallback(GatewayName.ZALOPAY, {
+    this.paymentService.handleCallback(GatewayName.ZALOPAY, {
       data: req.body,
       host: `${req.protocol}://${req.get('host')}`,
     });

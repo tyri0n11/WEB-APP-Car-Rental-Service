@@ -20,6 +20,7 @@ export const ROUTES = {
     PROFILE: '/profile',
     BOOKING_CONFIRMATION: '/booking-confirmation',
     PAYMENT: '/payment',
+    COMPLETED_BOOKING: '/completed-booking',
   },
 
   // Admin routes

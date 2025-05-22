@@ -8,12 +8,12 @@ import { useUser } from '../contexts/UserContext';
 
 export const ProtectedRoutes = () => {
   const { user } = useUser();
-  if(!user) return <Navigate to={ROUTES.PUBLIC.HOME} />
+  if (!user) return <Navigate to={ROUTES.PUBLIC.HOME} />
   return (
     <Routes>
-      <Route element={<ProtectedRoute/>}>
+      <Route element={<ProtectedRoute />}>
         <Route path={ROUTES.PROTECTED.PROFILE} element={<Profile />} />
-        <Route path={ROUTES.PROTECTED.BOOKING_CONFIRMATION} element={<BookingConfirmation />} />
+        <Route path="/booking-confirmation" element={<BookingConfirmation />} />
         <Route path={ROUTES.PROTECTED.PAYMENT} element={<Payment />} />
       </Route>
     </Routes>

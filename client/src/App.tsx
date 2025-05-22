@@ -14,6 +14,9 @@ import { BookingProvider } from "./contexts/BookingContext";
 import { NotificationProvider } from './contexts/NotificationContext';
 import NotFound from "./components/pages/NotFound";
 import { useUser } from "./contexts/UserContext";
+import BookingConfirmation from './components/pages/booking/BookingConfirmation';
+import Payment from './components/pages/booking/Payment';
+import CompletedBooking from './components/pages/booking/CompletedBooking';
 
 function App() {
   const [showSignIn, setShowSignIn] = useState(false);
@@ -84,6 +87,11 @@ function App() {
 
               {/* Admin Routes */}
               <Route path="/admin/*" element={<AdminRoutes />} />
+
+              {/* Booking Confirmation Route */}
+              <Route path="/booking-confirmation" element={<BookingConfirmation />} />
+              <Route path="/payment" element={<Payment />} />
+              <Route path="/completed-booking" element={<CompletedBooking />} />
 
               {/* 404 Route */}
               <Route path="*" element={<NotFound />} />

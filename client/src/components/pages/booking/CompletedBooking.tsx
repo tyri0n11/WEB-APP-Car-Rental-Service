@@ -179,7 +179,7 @@ const CompletedBooking: React.FC = () => {
     fetchData();
 
     // Return empty cleanup function to avoid memory leaks
-    return () => {};
+    return () => { };
   }, [location.pathname, parseZaloPayReturnParams, navigate]);
 
   const handleViewBookings = () => {

@@ -7,6 +7,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { FuelType } from '../../../types/car';
 import { User } from '../../../types/auth';
 import './carDetail.css';
+import { ROUTES } from '../../../routes/constants/ROUTES';
 
 const DEFAULT_CAR_IMAGE = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&auto=format&fit=crop&q=60";
 
@@ -116,7 +117,7 @@ const CarDetail: React.FC = () => {
       alert('Please select start and end dates for your booking');
       return;
     }
-    
+
     if (!car?.id) {
       alert('Car information is missing');
       return;
@@ -124,23 +125,16 @@ const CarDetail: React.FC = () => {
 
     const userWithPhone = user as User & { phoneNumber: string };
 
-    navigate('/booking-confirmation', {
+    navigate(ROUTES.PROTECTED.BOOKING_CONFIRMATION, {
       state: {
+        carId: car.id,
         customerName: user.firstName + ' ' + user.lastName,
         phoneNumber: userWithPhone.phoneNumber,
         startTime: startDate,
         endTime: endDate,
         totalPrice: totalPrice,
-        carId: car.id,
         pickupLocation: car.address || 'Default pickup location',
         returnLocation: car.address || 'Default pickup location',
-        car: {
-          make: car.make,
-          model: car.model,
-          year: car.year,
-          images: car.images,
-          dailyPrice: car.dailyPrice,
-        }
       },
     });
   };
@@ -186,11 +180,11 @@ const CarDetail: React.FC = () => {
           <img src={mainImage} alt={`${car.make} ${car.model}`} className="main-image" />
           <div className="thumbnail-container">
             {otherImages.map((image, index) => (
-              <img 
-                key={image.id || index} 
-                src={image.url} 
-                alt={`${car.make} ${car.model} view ${index + 1}`} 
-                className="thumbnail" 
+              <img
+                key={image.id || index}
+                src={image.url}
+                alt={`${car.make} ${car.model} view ${index + 1}`}
+                className="thumbnail"
               />
             ))}
           </div>
@@ -198,7 +192,7 @@ const CarDetail: React.FC = () => {
 
         <div className="car-info">
           <h1 className="title">{`${car.make} ${car.model} ${car.year}`}</h1>
-          
+
           <div className="rating">
             <span>⭐ {car.rating}</span>
           </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaBars } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
@@ -7,22 +7,40 @@ import AdminCars from './AdminCars';
 import AdminRevenue from './AdminRevenue';
 import AdminSidebar from './AdminSidebar';
 import styles from './Dashboard.module.css';
-import { useCar } from '../../../contexts/CarContext';
-import { Gauge, gaugeClasses, GaugeContainer, GaugeReferenceArc, GaugeValueArc, GaugeValueText } from '@mui/x-charts/Gauge';
 import { Box } from '@mui/material';
 import { Stack } from '@mui/material';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
+import { dashboardApi } from '../../../apis/dashboard';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
-  const { fetchCars, cars } = useCar();
-  const numberOfCars = cars.length;
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(() => {
     const savedTab = localStorage.getItem('adminActiveTab');
     return savedTab || 'dashboard';
   });
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [statistics, setStatistics] = useState({
+    totalCars: 0,
+    totalBookings: 0,
+    totalRevenue: 0,
+    activeRentals: 0
+  });
+
+  useEffect(() => {
+    const fetchStatistics = async () => {
+      try {
+        const stats = await dashboardApi.getStatistics();
+        setStatistics(stats);
+      } catch (error) {
+        console.error('Error fetching dashboard statistics:', error);
+      }
+    };
+
+    if (activeTab === 'dashboard') {
+      fetchStatistics();
+    }
+  }, [activeTab]);
 
   React.useEffect(() => {
     localStorage.setItem('adminActiveTab', activeTab);
@@ -55,20 +73,20 @@ const Dashboard: React.FC = () => {
 
             <div className={styles.statsGrid}>
               <div className={styles.statCard}>
-                <h3>Total Users</h3>
-                <p className={styles.statNumber}>0</p>
+                <h3>Total Cars</h3>
+                <p className={styles.statNumber}>{statistics.totalCars}</p>
               </div>
               <div className={styles.statCard}>
-                <h3>Total Cars</h3>
-                <p className={styles.statNumber}>{numberOfCars}</p>
+                <h3>Total Bookings</h3>
+                <p className={styles.statNumber}>{statistics.totalBookings}</p>
               </div>
               <div className={styles.statCard}>
                 <h3>Active Rentals</h3>
-                <p className={styles.statNumber}>0</p>
+                <p className={styles.statNumber}>{statistics.activeRentals}</p>
               </div>
               <div className={styles.statCard}>
                 <h3>Total Revenue</h3>
-                <p className={styles.statNumber}>$0</p>
+                <p className={styles.statNumber}>${(statistics.totalRevenue ?? 0).toLocaleString()}</p>
               </div>
             </div>
 
@@ -88,7 +106,6 @@ const Dashboard: React.FC = () => {
                       />
                     </Box>
                   </Stack>
-
                 </div>
               </div>
             </div>

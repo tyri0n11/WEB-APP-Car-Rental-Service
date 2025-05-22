@@ -3,7 +3,7 @@ import CustomePaginate from '../../paginations/CustomePaginate';
 const AdminCars: React.FC = () => {
     return (
         <div style={{padding: 32}}>
-            <CustomePaginate />
+            <CustomePaginate isAdmin />
         </div>
     );
 }

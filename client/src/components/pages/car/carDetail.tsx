@@ -124,7 +124,7 @@ const CarDetail: React.FC = () => {
 
     const userWithPhone = user as User & { phoneNumber: string };
 
-    navigate('/booking-confirmation', {
+    navigate('/user/booking-confirmation', {
       state: {
         customerName: user.firstName + ' ' + user.lastName,
         phoneNumber: userWithPhone.phoneNumber,

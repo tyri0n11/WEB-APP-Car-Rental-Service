@@ -65,7 +65,7 @@ const BookingConfirmation: React.FC = () => {
     setIsSubmitting(true);
 
     // Navigate to Payment (Step 2)
-    navigate(ROUTES.PROTECTED.PAYMENT, {
+    navigate('/payment', {
       state: {
         carId,
         carDetails,

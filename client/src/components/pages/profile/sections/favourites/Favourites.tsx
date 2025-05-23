@@ -63,8 +63,8 @@ const Favourites: React.FC = () => {
         const days = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
         const totalPrice = days * car.pricePerDay;
 
-        // Điều hướng đến trang xác nhận đặt xe với dữ liệu cần thiết
-        navigate('/booking-confirmation', {
+        // Navigate to booking confirmation with all necessary data
+        navigate('/user/booking-confirmation', {
             state: {
                 carId: car.id,
                 carDetails: car,
@@ -129,7 +129,7 @@ const Favourites: React.FC = () => {
                                         <span>Năm: {car.year}</span>
                                     </div>
                                     <div className="car-detail">
-                                        <span>Nhiên liệu: {car.fuelType}</span>
+                                        <span>Nhiên liệu: {car.fuelType as string}</span>
                                     </div>
                                     <div className="car-detail">
                                         <span>Số chỗ: {car.seats}</span>

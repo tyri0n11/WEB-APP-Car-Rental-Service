@@ -144,7 +144,7 @@ export const updateCar = async (id: string, carData: UpdateCarData): Promise<Car
   return response.data;
 };
 
-export const updateCarStatus = async (id: string, status: CarStatus): Promise<Car> => {
+export const updateCarStatus = async (id: string, status: string): Promise<Car> => {
   const response = await axiosInstance.patch(`/${id}/status`, { status });
   return response.data;
 };

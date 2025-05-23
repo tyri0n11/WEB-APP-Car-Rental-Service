@@ -20,7 +20,7 @@ const Payment: React.FC = () => {
     totalPrice,
     carId,
   } = state || {};
-  
+
   const handleConfirmPayment = async () => {
     try {
       setIsLoading(true);

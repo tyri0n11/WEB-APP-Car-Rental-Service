@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import StepNavigation from './StepNavigation'; // Import StepNavigation component
 import './BookingConfirmation.css'; // Import the updated CSS file
+import { ROUTES } from '../../../routes/constants/ROUTES';
 
 const BookingConfirmation: React.FC = () => {
   const navigate = useNavigate();
@@ -64,7 +65,7 @@ const BookingConfirmation: React.FC = () => {
     setIsSubmitting(true);
 
     // Navigate to Payment (Step 2)
-    navigate('/user/payment', {
+    navigate('/payment', {
       state: {
         carId,
         carDetails,
@@ -83,16 +84,16 @@ const BookingConfirmation: React.FC = () => {
     <div className="confirmation-container">
       <div className="confirmation-info">
         <StepNavigation currentStep={1} />
-        
+
         <h2 className="title">Contact Information</h2>
 
         <form className="booking-form">
           <div className="user-info">
             <label>
               <strong>Full Name:</strong>
-              <input 
-                type="text" 
-                value={customerNameInput} 
+              <input
+                type="text"
+                value={customerNameInput}
                 onChange={handleCustomerNameChange}
                 placeholder="Enter your name"
                 required
@@ -101,8 +102,8 @@ const BookingConfirmation: React.FC = () => {
 
             <label>
               <strong>Phone Number:</strong>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={phoneNumberInput}
                 onChange={handlePhoneNumberChange}
                 placeholder="Enter your phone number"
@@ -134,10 +135,10 @@ const BookingConfirmation: React.FC = () => {
               />
             </label>
           </div>
-          
-          <button 
-            type="button" 
-            className="confirm-button" 
+
+          <button
+            type="button"
+            className="confirm-button"
             onClick={handleConfirmBooking}
             disabled={isSubmitting}
           >

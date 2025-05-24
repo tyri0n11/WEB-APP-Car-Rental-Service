@@ -11,7 +11,8 @@ interface NotificationProps {
 
 const Notification: React.FC<NotificationProps> = ({ show, type, message, onClose }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const NOTIFICATION_DURATION = 1000; // 1 giây
+  // Define different durations for success and error
+  const NOTIFICATION_DURATION = type === 'success' ? 1000 : 2000; // 1s for success, 2s for error
 
   useEffect(() => {
     if (show) {
@@ -24,7 +25,7 @@ const Notification: React.FC<NotificationProps> = ({ show, type, message, onClos
         return () => clearTimeout(timer);
       }
     }
-  }, [show, onClose, type]);
+  }, [show, onClose, type, NOTIFICATION_DURATION]);
 
   const overlayVariants = {
     hidden: {
@@ -110,13 +111,14 @@ const Notification: React.FC<NotificationProps> = ({ show, type, message, onClos
     }
   };
 
+  // Update the progress bar animation duration
   const progressVariants = {
     hidden: { width: "100%", opacity: 0 },
     visible: {
       width: "0%",
       opacity: 1,
       transition: {
-        duration: NOTIFICATION_DURATION / 1000,
+        duration: NOTIFICATION_DURATION / 1000, // Convert to seconds
         ease: "linear",
         opacity: { duration: 0.3 }
       }

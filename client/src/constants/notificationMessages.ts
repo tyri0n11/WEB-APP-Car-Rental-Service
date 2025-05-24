@@ -1,130 +1,130 @@
 export const AUTH_NOTIFICATIONS = {
   // Đăng nhập
   signIn: {
-    success: "Successfully signed in!",
-    error: "Sign in failed. Please check your credentials.",
-    loading: "Signing in...",
+    success: "Đăng nhập thành công!",
+    error: "Đăng nhập thất bại. Vui lòng kiểm tra thông tin đăng nhập.",
+    loading: "Đang đăng nhập...",
   },
 
   // Đăng ký
   signUp: {
-    success: "Account created successfully!",
-    error: "Registration failed. Please try again.",
-    loading: "Creating your account...",
+    success: "Tạo tài khoản thành công!",
+    error: "Đăng ký thất bại. Vui lòng thử lại.",
+    loading: "Đang tạo tài khoản...",
   },
 
   // Đăng xuất
   signOut: {
-    success: "Successfully signed out!",
-    error: "Sign out failed. Please try again.",
-    loading: "Signing out...",
+    success: "Đăng xuất thành công!",
+    error: "Đăng xuất thất bại. Vui lòng thử lại.",
+    loading: "Đang đăng xuất...",
   },
 
   // Quên mật khẩu
   forgotPassword: {
-    success: "Password reset instructions sent to your email.",
-    error: "Failed to send reset instructions. Please try again.",
-    loading: "Sending reset instructions...",
+    success: "Hướng dẫn đặt lại mật khẩu đã được gửi đến email của bạn.",
+    error: "Không thể gửi hướng dẫn. Vui lòng thử lại.",
+    loading: "Đang gửi hướng dẫn đặt lại mật khẩu...",
   },
 
   // Đổi mật khẩu
   changePassword: {
-    success: "Password changed successfully!",
-    error: "Failed to change password. Please try again.",
-    loading: "Changing password...",
+    success: "Đổi mật khẩu thành công!",
+    error: "Đổi mật khẩu thất bại. Vui lòng thử lại.",
+    loading: "Đang đổi mật khẩu...",
   },
 
   // Reset mật khẩu
   resetPassword: {
-    success: "Password reset successfully!",
-    error: "Failed to reset password. Please try again.",
-    loading: "Resetting password...",
+    success: "Đặt lại mật khẩu thành công!",
+    error: "Đặt lại mật khẩu thất bại. Vui lòng thử lại.",
+    loading: "Đang đặt lại mật khẩu...",
   },
 };
 
 export const BOOKING_NOTIFICATIONS = {
   // Đặt xe
   create: {
-    success: "Booking created successfully!",
-    error: "Failed to create booking. Please try again.",
-    loading: "Creating your booking...",
+    success: "Đặt xe thành công!",
+    error: "Đặt xe thất bại. Vui lòng thử lại.",
+    loading: "Đang tạo đơn đặt xe...",
   },
 
   // Hủy đặt xe
   cancel: {
-    success: "Booking cancelled successfully!",
-    error: "Failed to cancel booking. Please try again.",
-    loading: "Cancelling booking...",
+    success: "Hủy đặt xe thành công!",
+    error: "Hủy đặt xe thất bại. Vui lòng thử lại.",
+    loading: "Đang hủy đặt xe...",
   },
 
   // Thanh toán
   payment: {
-    success: "Payment processed successfully!",
-    error: "Payment failed. Please try again.",
-    loading: "Processing payment...",
+    success: "Thanh toán thành công!",
+    error: "Thanh toán thất bại. Vui lòng thử lại.",
+    loading: "Đang xử lý thanh toán...",
   },
 };
 
 export const USER_NOTIFICATIONS = {
   // Cập nhật thông tin
   updateProfile: {
-    success: "Profile updated successfully!",
-    error: "Failed to update profile. Please try again.",
-    loading: "Updating profile...",
+    success: "Cập nhật thông tin thành công!",
+    error: "Cập nhật thông tin thất bại. Vui lòng thử lại.",
+    loading: "Đang cập nhật thông tin...",
   },
 
   // Upload ảnh
   uploadAvatar: {
-    success: "Profile picture updated successfully!",
-    error: "Failed to upload profile picture. Please try again.",
-    loading: "Uploading profile picture...",
+    success: "Cập nhật ảnh đại diện thành công!",
+    error: "Tải ảnh đại diện thất bại. Vui lòng thử lại.",
+    loading: "Đang tải ảnh đại diện...",
   },
 };
 
 export const CAR_NOTIFICATIONS = {
   // Thêm xe
   add: {
-    success: "Car added successfully!",
-    error: "Failed to add car. Please try again.",
-    loading: "Adding car...",
+    success: "Thêm xe thành công!",
+    error: "Thêm xe thất bại. Vui lòng thử lại.",
+    loading: "Đang thêm xe...",
   },
 
   // Cập nhật xe
   update: {
-    success: "Car updated successfully!",
-    error: "Failed to update car. Please try again.",
-    loading: "Updating car...",
+    success: "Cập nhật xe thành công!",
+    error: "Cập nhật xe thất bại. Vui lòng thử lại.",
+    loading: "Đang cập nhật xe...",
   },
 
   // Xóa xe
   delete: {
-    success: "Car deleted successfully!",
-    error: "Failed to delete car. Please try again.",
-    loading: "Deleting car...",
+    success: "Xóa xe thành công!",
+    error: "Xóa xe thất bại. Vui lòng thử lại.",
+    loading: "Đang xóa xe...",
   },
 };
 
 export const REVIEW_NOTIFICATIONS = {
   // Đánh giá
   add: {
-    success: "Review added successfully!",
-    error: "Failed to add review. Please try again.",
-    loading: "Adding review...",
+    success: "Thêm đánh giá thành công!",
+    error: "Thêm đánh giá thất bại. Vui lòng thử lại.",
+    loading: "Đang thêm đánh giá...",
   },
 
   // Xóa đánh giá
   delete: {
-    success: "Review deleted successfully!",
-    error: "Failed to delete review. Please try again.",
-    loading: "Deleting review...",
+    success: "Xóa đánh giá thành công!",
+    error: "Xóa đánh giá thất bại. Vui lòng thử lại.",
+    loading: "Đang xóa đánh giá...",
   },
 };
 
 export const COMMON_NOTIFICATIONS = {
   // Lỗi chung
-  networkError: "Network error. Please check your connection.",
-  serverError: "Server error. Please try again later.",
-  success: "Operation completed successfully!",
-  error: "An error occurred. Please try again.",
-  loading: "Processing...",
-}; 
+  networkError: "Lỗi kết nối. Vui lòng kiểm tra đường truyền.",
+  serverError: "Lỗi máy chủ. Vui lòng thử lại sau.",
+  success: "Thao tác thành công!",
+  error: "Đã xảy ra lỗi. Vui lòng thử lại.",
+  loading: "Đang xử lý...",
+};

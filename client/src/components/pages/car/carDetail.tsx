@@ -7,7 +7,6 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { FuelType } from '../../../types/car';
 import { User } from '../../../types/auth';
 import './carDetail.css';
-import { ROUTES } from '../../../routes/constants/ROUTES';
 
 const DEFAULT_CAR_IMAGE = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&auto=format&fit=crop&q=60";
 
@@ -21,26 +20,74 @@ const CarDetail: React.FC = () => {
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
   const [totalPrice, setTotalPrice] = useState<number>(0);
+  const [isRetrying, setIsRetrying] = useState(false);
 
   // Fetch car details
   useEffect(() => {
-    const fetchCarDetails = async () => {
-      if (!id) return;
+    const fetchCarDetails = async (retryCount = 0) => {
+      if (!id) {
+        setError('Invalid car ID');
+        setLoading(false);
+        return;
+      }
+
       try {
         setLoading(true);
+        setError(null);
+        setIsRetrying(retryCount > 0);
+
+        console.log(`Attempting to fetch car details for ID: ${id} (Attempt ${retryCount + 1})`);
         const carData = await getCarById(id);
-        console.log('Car data:', carData);
+
+        // Validate car data structure
+        if (!carData || !carData.id || !carData.make || !carData.model) {
+          console.error('Invalid car data received:', carData);
+          throw new Error('Invalid car data received from server');
+        }
+
+        console.log('Successfully fetched car data:', carData);
         setCar(carData);
+        setLoading(false);
+        setIsRetrying(false);
+
       } catch (err) {
         console.error('Error fetching car details:', err);
-        setError('Failed to load car details');
+        
+        // Handle 401 Unauthorized
+        if (err instanceof Error && err.message.includes('401')) {
+          if (retryCount < 2) {
+            console.log('Token might be refreshing, retrying...');
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            return fetchCarDetails(retryCount + 1);
+          }
+          setError('Please sign in to view car details');
+          navigate('/auth/login', { 
+            replace: true,
+            state: { returnUrl: `/cars/${id}` } 
+          });
+          return;
+        }
+
+        // Handle 404 Not Found
+        if (err instanceof Error && err.message.includes('404')) {
+          setError('Car not found or no longer available');
+          return;
+        }
+
+        // Handle other errors
+        setError(
+          err instanceof Error
+            ? `Error loading car details: ${err.message}`
+            : 'Failed to load car details. Please try again later.'
+        );
       } finally {
         setLoading(false);
+        setIsRetrying(false);
       }
     };
 
     fetchCarDetails();
-  }, [id]);
+  }, [id, navigate]);
 
   // Format date helper
   const formatDate = (date: Date): string => {
@@ -125,11 +172,7 @@ const CarDetail: React.FC = () => {
 
     const userWithPhone = user as User & { phoneNumber: string };
 
-<<<<<<< HEAD
-    navigate(ROUTES.PROTECTED.BOOKING_CONFIRMATION, {
-=======
     navigate('/user/booking-confirmation', {
->>>>>>> d834f17664c81ca0a39d2ad7f8a30f90a174ff98
       state: {
         carId: car.id,
         customerName: user.firstName + ' ' + user.lastName,
@@ -146,7 +189,15 @@ const CarDetail: React.FC = () => {
   if (loading) {
     return (
       <div className="loading-container">
-        <p>Loading car details...</p>
+        <p>{isRetrying ? 'Retrying to load car details...' : 'Loading car details...'}</p>
+        {isRetrying && (
+          <button 
+            className="cancel-retry-button"
+            onClick={() => window.location.reload()}
+          >
+            Cancel and Refresh
+          </button>
+        )}
       </div>
     );
   }
@@ -154,7 +205,34 @@ const CarDetail: React.FC = () => {
   if (error || !car) {
     return (
       <div className="error-container">
-        <p>{error || 'Car not found'}</p>
+        <div className="error-content">
+          <h2>Error</h2>
+          <p>{error || 'Car information is not available'}</p>
+          <div className="error-actions">
+            <button 
+              className="retry-button"
+              onClick={() => {
+                if (error?.toLowerCase().includes('sign in') || error?.toLowerCase().includes('login')) {
+                  navigate('/auth/login', { 
+                    state: { returnUrl: `/cars/${id}` } 
+                  });
+                } else {
+                  window.location.reload();
+                }
+              }}
+            >
+              {error?.toLowerCase().includes('sign in') || error?.toLowerCase().includes('login') 
+                ? 'Sign In' 
+                : 'Try Again'}
+            </button>
+            <button 
+              className="back-button"
+              onClick={() => navigate('/cars')}
+            >
+              Back to Cars
+            </button>
+          </div>
+        </div>
       </div>
     );
   }

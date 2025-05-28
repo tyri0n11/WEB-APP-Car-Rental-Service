@@ -1,5 +1,5 @@
 import React, { createContext, useState, useCallback, useEffect, ReactNode } from 'react'
-import type { AuthContextValue, LoginInput, SignupInput, User } from '../types/auth'
+import type { AuthContextValue, LoginInput, SignupInput } from '../types/auth'
 import { authApi } from '../apis/auth'
 
 const initialState: Omit<AuthContextValue, 'login' | 'signup' | 'logout' | 'refreshToken' | 'forgotPassword' | 'resetPassword' | 'verifyEmail' | 'resendVerificationEmail' | 'changePassword'> = {
@@ -16,170 +16,182 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const checkAuth = useCallback(async () => {
         try {
-            const token = localStorage.getItem('accessToken')
+            const token = localStorage.getItem('accessToken');
             if (!token) {
-                setState(prev => ({ ...prev, loading: false, isAuthenticated: false }))
-                return
+                setState(prev => ({ ...prev, loading: false, isAuthenticated: false }));
+                return;
             }
 
-            const user = await authApi.getMe()
+            const user = await authApi.getMe();
             setState(prev => ({
                 ...prev,
                 user,
                 loading: false,
                 isAuthenticated: true
-            }))
+            }));
         } catch (error) {
-            localStorage.removeItem('accessToken')
+            localStorage.removeItem('accessToken');
             setState(prev => ({
                 ...prev,
                 user: null,
                 loading: false,
                 isAuthenticated: false,
                 error: error instanceof Error ? error.message.toString() : 'An error occurred'
-            }))
+            }));
         }
     }, [])
 
     useEffect(() => {
-        checkAuth()
+        checkAuth();
     }, [checkAuth])
 
     const login = useCallback(async (input: LoginInput) => {
         try {
-            setState(prev => ({ ...prev, loading: true, error: null }))
-            const { accessToken, user } = await authApi.login(input)
-            localStorage.setItem('accessToken', accessToken)
+            setState(prev => ({ ...prev, loading: true, error: null }));
+            const { accessToken, refreshToken, user } = await authApi.login(input);
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('refreshToken', refreshToken);
             setState(prev => ({
                 ...prev,
                 user,
                 loading: false,
                 isAuthenticated: true
-            }))
-            await checkAuth()
+            }));
+            await checkAuth();
         } catch (error) {
             setState(prev => ({
                 ...prev,
                 error: error instanceof Error ? error.message : 'An error occurred',
                 loading: false
-            }))
-            throw error
+            }));
+            throw error;
         }
     }, [checkAuth])
 
     const signup = useCallback(async (input: SignupInput) => {
         try {
-            setState(prev => ({ ...prev, loading: true, error: null }))
-            await authApi.signup(input)
-            setState(prev => ({ ...prev, loading: false }))
+            setState(prev => ({ ...prev, loading: true, error: null }));
+            await authApi.signup(input);
+            setState(prev => ({ ...prev, loading: false }));
         } catch (error) {
             setState(prev => ({
                 ...prev,
                 error: error instanceof Error ? error.message : 'An error occurred',
                 loading: false
-            }))
-            throw error
+            }));
+            throw error;
         }
-    }, [])
+    }, []);
 
     const logout = useCallback(async () => {
-        localStorage.removeItem('accessToken')
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
         setState(prev => ({
             ...prev,
             user: null,
-            isAuthenticated: false
-        }))
-    }, [])
+            isAuthenticated: false,
+            error: null
+        }));
+    }, []);
 
     const refreshToken = useCallback(async () => {
         try {
-            const { accessToken } = await authApi.refreshToken()
-            localStorage.setItem('accessToken', accessToken)
+            setState(prev => ({ ...prev, loading: true, error: null }));
+            const { accessToken } = await authApi.refreshToken();
+            if (!accessToken) {
+                throw new Error('Failed to refresh access token');
+            }
+            localStorage.setItem('accessToken', accessToken);
+            await checkAuth();
+            setState(prev => ({ ...prev, loading: false }));
         } catch (error) {
-            localStorage.removeItem('accessToken')
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
             setState(prev => ({
                 ...prev,
                 user: null,
-                isAuthenticated: false
-            }))
-            throw error
+                loading: false,
+                isAuthenticated: false,
+                error: error instanceof Error ? error.message : 'Your session has expired. Please log in again.'
+            }));
+            throw error;
         }
-    }, [])
+    }, [checkAuth]);
 
     const forgotPassword = useCallback(async (email: string) => {
         try {
-            setState(prev => ({ ...prev, loading: true, error: null }))
-            await authApi.forgotPassword(email)
-            setState(prev => ({ ...prev, loading: false }))
+            setState(prev => ({ ...prev, loading: true, error: null }));
+            await authApi.forgotPassword(email);
+            setState(prev => ({ ...prev, loading: false }));
         } catch (error) {
             setState(prev => ({
                 ...prev,
                 error: error instanceof Error ? error.message : 'An error occurred',
                 loading: false
-            }))
-            throw error
+            }));
+            throw error;
         }
-    }, [])
+    }, []);
 
     const resetPassword = useCallback(async (token: string, password: string) => {
         try {
-            setState(prev => ({ ...prev, loading: true, error: null }))
-            await authApi.resetPassword(token, password)
-            setState(prev => ({ ...prev, loading: false }))
+            setState(prev => ({ ...prev, loading: true, error: null }));
+            await authApi.resetPassword(token, password);
+            setState(prev => ({ ...prev, loading: false }));
         } catch (error) {
             setState(prev => ({
                 ...prev,
                 error: error instanceof Error ? error.message : 'An error occurred',
                 loading: false
-            }))
-            throw error
+            }));
+            throw error;
         }
-    }, [])
+    }, []);
 
     const verifyEmail = useCallback(async (token: string) => {
         try {
-            setState(prev => ({ ...prev, loading: true, error: null }))
-            await authApi.verifyEmail(token)
-            setState(prev => ({ ...prev, loading: false }))
+            setState(prev => ({ ...prev, loading: true, error: null }));
+            await authApi.verifyEmail(token);
+            setState(prev => ({ ...prev, loading: false }));
         } catch (error) {
             setState(prev => ({
                 ...prev,
                 error: error instanceof Error ? error.message : 'An error occurred',
                 loading: false
-            }))
-            throw error
+            }));
+            throw error;
         }
-    }, [])
+    }, []);
 
     const resendVerificationEmail = useCallback(async (email: string) => {
         try {
-            setState(prev => ({ ...prev, loading: true, error: null }))
-            await authApi.resendVerificationEmail(email)
-            setState(prev => ({ ...prev, loading: false }))
+            setState(prev => ({ ...prev, loading: true, error: null }));
+            await authApi.resendVerificationEmail(email);
+            setState(prev => ({ ...prev, loading: false }));
         } catch (error) {
             setState(prev => ({
                 ...prev,
                 error: error instanceof Error ? error.message : 'An error occurred',
                 loading: false
-            }))
-            throw error
+            }));
+            throw error;
         }
-    }, [])
+    }, []);
 
     const changePassword = useCallback(async (currentPassword: string, newPassword: string) => {
         try {
-            setState(prev => ({ ...prev, loading: true, error: null }))
-            await authApi.changePassword(currentPassword, newPassword)
-            setState(prev => ({ ...prev, loading: false }))
+            setState(prev => ({ ...prev, loading: true, error: null }));
+            await authApi.changePassword(currentPassword, newPassword);
+            setState(prev => ({ ...prev, loading: false }));
         } catch (error) {
             setState(prev => ({
                 ...prev,
                 error: error instanceof Error ? error.message : 'An error occurred',
                 loading: false
-            }))
-            throw error
+            }));
+            throw error;
         }
-    }, [])
+    }, []);
 
     const value = {
         ...state,

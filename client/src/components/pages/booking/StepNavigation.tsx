@@ -1,7 +1,6 @@
 import React from 'react';
 import './StepNavigation.css';
 import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '../../../routes/constants/ROUTES';
 
 interface StepNavigationProps {
   currentStep: number; // Current step index (1-based)
@@ -21,21 +20,12 @@ const StepNavigation: React.FC<StepNavigationProps> = ({ currentStep }) => {
   };
 
   const handleStepClick = (step: number) => {
-    // Navigate to the specific step's page
+    // Navigate to the specific step's page with protected routes
     if (step === 1) {
-<<<<<<< HEAD
-      navigate(ROUTES.PROTECTED.BOOKING_CONFIRMATION);
-    } else if (step === 2) {
-      navigate(ROUTES.PROTECTED.PAYMENT);
-    } else if (step === 3) {
-      navigate(ROUTES.PROTECTED.COMPLETED_BOOKING);
-    }
-=======
       navigate('/user/booking-confirmation'); // Navigate to Booking Confirm page (Step 1)
     } else if (step === 2) {
       navigate('/user/payment'); // Navigate to Payment & Hold page (Step 2)
     } 
->>>>>>> d834f17664c81ca0a39d2ad7f8a30f90a174ff98
   };
 
   return (

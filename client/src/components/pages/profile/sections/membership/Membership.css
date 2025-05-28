@@ -1,0 +1,233 @@
+.membership-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.membership-status-card {
+  padding: 24px;
+  border-radius: 12px;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.membership-silver {
+  background: linear-gradient(135deg, #B8B8B8 0%, #717171 100%);
+}
+
+.membership-gold {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+}
+
+.membership-diamond {
+  background: linear-gradient(135deg, #B9F2FF 0%, #4B0082 100%);
+}
+
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.level-icon {
+  font-size: 2.5rem;
+}
+
+.progress-section {
+  margin-top: 20px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  margin: 8px 0;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: progressShine 2s infinite;
+}
+
+@keyframes progressShine {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.points-needed {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.rewards-section, .points-history-section {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.rewards-section h3, .points-history-section h3 {
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.rewards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.reward-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  background: #f8f9fa;
+}
+
+.exchange-button {
+  margin-top: 12px;
+  padding: 8px 16px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s;
+}
+
+.exchange-button:hover:not(:disabled) {
+  background: #388E3C;
+}
+
+.exchange-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.history-description {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.history-date {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.points-change {
+  font-weight: bold;
+}
+
+.points-earned {
+  color: #28a745;
+}
+
+.points-spent {
+  color: #dc3545;
+}
+
+.points-highlight {
+  animation: pointsPulse 3s ease-in-out;
+  font-weight: bold;
+  color: #4CAF50;
+  position: relative;
+}
+
+.points-highlight::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  bottom: -5px;
+  left: -5px;
+  border: 2px solid #4CAF50;
+  border-radius: 4px;
+  animation: borderPulse 3s ease-in-out;
+}
+
+@keyframes borderPulse {
+  0% {
+    transform: scale(1);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes pointsPulse {
+  0% {
+    transform: scale(1);
+    color: inherit;
+  }
+  10% {
+    transform: scale(1.2);
+    color: #4CAF50;
+  }
+  20% {
+    transform: scale(1);
+    color: #4CAF50;
+  }
+  30% {
+    transform: scale(1.1);
+    color: #4CAF50;
+  }
+  100% {
+    transform: scale(1);
+    color: inherit;
+  }
+}

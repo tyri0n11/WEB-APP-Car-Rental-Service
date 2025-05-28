@@ -167,85 +167,123 @@ export class BookingService extends BaseService<Booking> {
     }
 
     const bookingDataJson = await this.redisService.hget(bookingKey, 'data');
-    const bookingData: BookingResponseOnRedisDTO = JSON.parse(bookingDataJson);
-
-    await this.unlockCarQueue.add(
+    const bookingData: BookingResponseOnRedisDTO = JSON.parse(bookingDataJson);    await this.unlockCarQueue.add(
       UnlockCarQueue.jobName,
       { bookingCode },
       { delay: this.BOOKING_TIMEOUT },
     );
     this.logger.log(`Added ${bookingCode} to unlockCarQueue`);
-
-    await this.activityService.create({
-      bookingId: bookingData.bookingCode,
-      carId: bookingData.carId,
-      amount: bookingData.totalPrice,
-      type: ActivityType.BOOKING,
-      title: ActivityTitle.BOOKING,
-    });
     return { bookingData, paymentUrl };
   }
-
   async completeBooking(
     bookingCode: string,
     transactionId: string,
   ): Promise<BookingResponseDTO> {
     const bookingKey = await this.genRedisKey.booking(bookingCode);
     const bookingDataJson = await this.redisService.hget(bookingKey, 'data');
-    if (!bookingDataJson) {
-      throw new BadRequestException('Booking not found or completed');
+    
+    // Check if booking exists in database first
+    try {
+      const existingBooking = await super.findOne({ code: bookingCode });
+      if (existingBooking) {
+        this.logger.log(`Booking ${bookingCode} already exists in database`);
+        return existingBooking;
+      }
+    } catch (error) {
+      this.logger.error(`Error checking for existing booking ${bookingCode}:`, error);
     }
-    const bookingData: BookingResponseOnRedisDTO = JSON.parse(bookingDataJson);
-    await this.activityService.create({
-      bookingId: bookingData.bookingCode,
-      carId: bookingData.carId,
-      amount: bookingData.totalPrice,
-      type: ActivityType.PAYMENT,
-      title: ActivityTitle.PAYMENT,
-    });
-    const createdBooking = await this.databaseService.$transaction(
-      async (tx) => {
-        await tx.car.update({
-          where: {
-            id: bookingData.carId,
-          },
-          data: {
-            status: CarStatus.RENTED,
-          },
+
+    if (!bookingDataJson) {
+      throw new BadRequestException('Booking not found or expired');
+    }
+    
+    // Parse booking data from Redis
+    let bookingData: BookingResponseOnRedisDTO;
+    try {
+      bookingData = JSON.parse(bookingDataJson);
+    } catch (error) {
+      this.logger.error(`Error parsing booking data from Redis for ${bookingCode}:`, error);
+      throw new InternalServerErrorException('Invalid booking data format');
+    }
+
+    // Execute database transaction with retries
+    let retryCount = 0;
+    const maxRetries = 3;
+    let finalBooking: BookingResponseDTO | null = null;
+    
+    while (retryCount < maxRetries) {
+      try {
+        const createdBooking = await this.databaseService.$transaction(async (tx) => {
+          // First check if booking already exists to handle race conditions
+          const existingBooking = await tx.booking.findUnique({
+            where: { code: bookingCode },
+          });
+          
+          if (existingBooking) {
+            this.logger.log(`Booking ${bookingCode} already exists in database`);
+            return existingBooking;
+          }
+
+          // Update car status
+          await tx.car.update({
+            where: { id: bookingData.carId },
+            data: { status: CarStatus.RENTED },
+          });
+
+          // Create booking
+          return await tx.booking.create({
+            data: {
+              code: bookingData.bookingCode,
+              startDate: bookingData.startDate,
+              endDate: bookingData.endDate,
+              totalPrice: bookingData.totalPrice,
+              pickupAddress: bookingData.pickupAddress,
+              returnAddress: bookingData.returnAddress,
+              status: BookingStatus.CONFIRMED,
+              user: {
+                connect: { id: bookingData.userId },
+              },
+              car: {
+                connect: { id: bookingData.carId },
+              },
+              transaction: {
+                connect: { id: transactionId },
+              },
+            },
+          });
         });
 
-        return await tx.booking.create({
-          data: {
-            code: bookingData.bookingCode,
-            startDate: bookingData.startDate,
-            endDate: bookingData.endDate,
-            totalPrice: bookingData.totalPrice,
-            pickupAddress: bookingData.pickupAddress,
-            returnAddress: bookingData.returnAddress,
-            status: BookingStatus.CONFIRMED,
-            user: {
-              connect: {
-                id: bookingData.userId,
-              },
-            },
-            car: {
-              connect: {
-                id: bookingData.carId,
-              },
-            },
-            transaction: {
-              connect: {
-                id: transactionId,
-              },
-            },
-          },
+        // Only delete from Redis if transaction was successful
+        await this.redisService.del(bookingKey);
+        this.logger.log(`Successfully completed booking ${bookingCode}`);
+        finalBooking = createdBooking;
+
+        // Create activity after booking is confirmed
+        await this.activityService.create({
+          bookingId: createdBooking.id,
+          carId: bookingData.carId,
+          amount: bookingData.totalPrice,
+          type: ActivityType.BOOKING_CREATED,
+          title: ActivityTitle.BOOKING_CREATED,
         });
-      },
-    );
 
-    await this.redisService.del(bookingKey);
+        break;
 
-    return createdBooking;
+      } catch (error) {
+        retryCount++;
+        if (retryCount === maxRetries) {
+          this.logger.error(`Failed to complete booking ${bookingCode} after ${maxRetries} attempts:`, error);
+          throw new InternalServerErrorException('Failed to complete booking');
+        }
+        this.logger.warn(`Retrying booking completion for ${bookingCode}, attempt ${retryCount}`);
+        await new Promise(resolve => setTimeout(resolve, 1000 * retryCount)); // Exponential backoff
+      }
+    }
+
+    if (!finalBooking) {
+      throw new InternalServerErrorException('Failed to complete booking');
+    }
+    return finalBooking;
   }
 
   async processTransaction(bookingCode: string) {
@@ -303,10 +341,9 @@ export class BookingService extends BaseService<Booking> {
       perPage,
     });
   }
-
   async findById(id: string): Promise<BookingResponseDTO> {
     const foundBooking = await super.findOne({ id });
-    if (foundBooking) {
+    if (!foundBooking) {
       throw new NotFoundException('Booking not found');
     }
     return foundBooking;
@@ -347,11 +384,12 @@ export class BookingService extends BaseService<Booking> {
       },
     );
 
-    this.activityService.create({
+    await this.activityService.create({
       bookingId: updatedBooking.id,
       carId: updatedBooking.carId,
-      type: ActivityType.RETURN,
-      title: ActivityTitle.RETURN,
+      type: ActivityType.BOOKING_COMPLETED,
+      title: ActivityTitle.BOOKING_COMPLETED,
+      description: `Car returned for booking ${updatedBooking.id}`
     });
 
     return updatedBooking;
@@ -377,9 +415,54 @@ export class BookingService extends BaseService<Booking> {
       throw new BadRequestException('Booking not found or completed');
     }
     await this.redisService.del(bookingKey);
+  }  async findByCode(bookingCode: string): Promise<BookingResponseDTO> {
+    try {
+      this.logger.log(`Searching for booking with code: ${bookingCode}`);
+
+      // Try database first since most bookings will be there
+      try {
+        const dbBooking = await super.findOne({ code: bookingCode });
+        if (dbBooking) {
+          this.logger.log(`Found booking with code ${bookingCode} in database`);
+          return dbBooking;
+        }
+      } catch (error) {
+        if (!(error instanceof NotFoundException)) {
+          throw error;
+        }
+      }
+      
+      // If not in database, check Redis for pending bookings
+      this.logger.log(`Checking Redis for pending booking with code: ${bookingCode}`);
+      const pendingBooking = await this.getPendingBookingFromRedis(bookingCode);
+      
+      if (!pendingBooking) {
+        this.logger.warn(`Booking with code ${bookingCode} not found in either database or Redis`);
+        throw new NotFoundException('Booking not found');
+      }
+      
+      this.logger.log(`Found pending booking with code ${bookingCode} in Redis`);
+      return pendingBooking;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      this.logger.error(`Error finding booking with code ${bookingCode}:`, error);
+      throw new InternalServerErrorException('Error retrieving booking details');
+    }
   }
 
-  async findByCode(bookingCode: string): Promise<BookingResponseDTO> {
-    return await super.findOne({ code: bookingCode });
+  async getPendingBookingFromRedis(bookingCode: string) {
+    try {
+      const bookingKey = this.genRedisKey.booking(bookingCode);
+      const bookingDataJson = await this.redisService.hget(bookingKey, 'data');
+      if (bookingDataJson) {
+        return JSON.parse(bookingDataJson);
+      }
+      return null;
+    } catch (error) {
+      console.error('Error getting pending booking from Redis:', error);
+      return null;
+    }
   }
 }

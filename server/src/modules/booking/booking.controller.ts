@@ -20,7 +20,7 @@ import { BookingService } from './booking.service';
 import { ApiBookingQueries } from './decorators/findManyQuery.decorator';
 import { CreateBookingRequestDTO } from './dtos/create.request.dto';
 import { FindManyBookingsQueryDTO } from './dtos/findMany.request.dto';
-import { ResourceOwnerGuard } from '@/guards/base/resourceOwner.guard';
+import { BookingOwnerGuard } from './guards/bookingOwner.guard';
 @UseGuards(JwtAccessGuard)
 @Controller('bookings')
 export class BookingController {
@@ -42,6 +42,12 @@ export class BookingController {
     });
   }
 
+  @Get('my-bookings')
+  async getMyBookings(@Req() req: RequestWithUser) {
+    const bookings = await this.bookingService.findManyByUserId(req.user.id);
+    return { data: bookings };
+  }
+
   @Get()
   @ApiPagination()
   @ApiBookingQueries()
@@ -51,8 +57,14 @@ export class BookingController {
     return this.bookingService.findManyWithPagination(query);
   }
 
+  @Get('code/:code')
+  @UseGuards(BookingOwnerGuard)
+  findByCode(@Param('code') code: string) {
+    return this.bookingService.findByCode(code);
+  }
+
   @Get(':id')
-  @UseGuards(ResourceOwnerGuard)
+  @UseGuards(BookingOwnerGuard)
   findOne(@Param('id') id: string) {
     return this.bookingService.findOne({ id });
   }
@@ -62,11 +74,5 @@ export class BookingController {
   @Roles(Role.ADMIN)
   returnCar(@Param('id') id: string) {
     return this.bookingService.handleReturnCar(id);
-  }
-
-  @Get('code/:code')
-  @UseGuards(ResourceOwnerGuard)
-  findByCode(@Param('code') code: string) {
-    return this.bookingService.findByCode(code);
   }
 }

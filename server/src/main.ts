@@ -46,8 +46,10 @@ async function bootstrap() {
     }),
   );
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-
-  await app.listen(configService.get('PORT'), () => {
+  const port = configService.get('PORT');
+  await app.listen(port, () => {
+    logger.log(`🚀 Application is running on: http://localhost:${port}`);
+    logger.log(`📝 API Documentation available at: http://localhost:${port}/api-docs`);
     logger.log(
       `Server running on http://localhost:${configService.get('PORT')}`,
     );

@@ -8,12 +8,16 @@ import { TransactionQueue } from './enums/queue';
 import { PaymentGatewayFactory } from './gateways/gateway.factory';
 import { ZalopayGateWay } from './gateways/zalo.gateway';
 import { HttpModule } from '@nestjs/axios';
+import { PrismaModule } from '@/modules/prisma/prisma.module';
+import { MembershipModule } from '@/modules/membership/membership.module';
 
 @Module({
   controllers: [PaymentController],
   providers: [PaymentService, PaymentGatewayFactory, ZalopayGateWay],
   imports: [
     HttpModule,
+    PrismaModule,
+    MembershipModule,
     BullModule.registerQueue({
       name: TransactionQueue.name,
       defaultJobOptions: {

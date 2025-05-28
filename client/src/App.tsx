@@ -12,11 +12,8 @@ import { ProtectedRoutes } from "./routes/ProtectedRoutes";
 import { PublicRoutes } from "./routes/PublicRoutes";
 import { BookingProvider } from "./contexts/BookingContext";
 import { NotificationProvider } from './contexts/NotificationContext';
-import NotFound from "./components/pages/NotFound";
+import { MembershipProvider } from './contexts/MembershipContext';
 import { useUser } from "./contexts/UserContext";
-import BookingConfirmation from './components/pages/booking/BookingConfirmation';
-import Payment from './components/pages/booking/Payment';
-import CompletedBooking from './components/pages/booking/CompletedBooking';
 
 function App() {
   const [showSignIn, setShowSignIn] = useState(false);
@@ -55,70 +52,56 @@ function App() {
   const showBannerAndFooter = !(user?.role === 'ADMIN' && isAdminRoute);
 
   return (
-    <NotificationProvider>
-      <BookingProvider>
-        <div className="App">
-          {showBannerAndFooter && (
-            <header className="navbar">
-              <Banner />
-              <NavBar
-                onSignInClick={() => {
-                  setShowSignIn(true);
-                  setShowSignUp(false);
-                }}
-                onSignUpClick={() => {
-                  setShowSignUp(true);
+    <div className="App">
+      <NotificationProvider>
+        <MembershipProvider>
+          <BookingProvider>
+            {showBannerAndFooter && (
+              <header className="navbar">
+                <Banner />
+                <NavBar
+                  onSignInClick={() => {
+                    setShowSignIn(true);
+                    setShowSignUp(false);
+                  }}
+                  onSignUpClick={() => {
+                    setShowSignUp(true);
+                    setShowSignIn(false);
+                  }}
+                />
+              </header>
+            )}            <section className="main-content">
+              <Routes>
+                <Route path="/*" element={<PublicRoutes />} />
+                <Route path="/auth/*" element={<AuthRoutes />} />
+                <Route path="/admin/*" element={<AdminRoutes />} />
+                <Route path="/user/*" element={<ProtectedRoutes />} />
+              </Routes>
+            </section>
+
+            {showSignIn && (
+              <SignIn
+                onClose={() => setShowSignIn(false)}
+                onSwitchToSignUp={() => {
                   setShowSignIn(false);
+                  setShowSignUp(true);
                 }}
               />
-            </header>
-          )}
-
-          <section className="main-content">
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/*" element={<PublicRoutes />} />
-
-              {/* Auth Routes */}
-              <Route path="/auth/*" element={<AuthRoutes />} />
-
-              <Route path="/user/*" element={<ProtectedRoutes />} />
-
-
-              {/* Admin Routes */}
-              <Route path="/admin/*" element={<AdminRoutes />} />
-
-              {/* Booking Confirmation Route */}
-              <Route path="/booking-confirmation" element={<BookingConfirmation />} />
-              <Route path="/payment" element={<Payment />} />
-              <Route path="/completed-booking" element={<CompletedBooking />} />
-
-              {/* 404 Route */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </section>
-          {showSignIn && (
-            <SignIn
-              onClose={() => setShowSignIn(false)}
-              onSwitchToSignUp={() => {
-                setShowSignIn(false);
-                setShowSignUp(true);
-              }}
-            />
-          )}
-          {showSignUp && (
-            <SignUp
-              onClose={() => setShowSignUp(false)}
-              onSwitchToSignIn={() => {
-                setShowSignUp(false);
-                setShowSignIn(true);
-              }}
-            />
-          )}
-          {showBannerAndFooter && <Footer />}
-        </div>
-      </BookingProvider>
-    </NotificationProvider>
+            )}
+            {showSignUp && (
+              <SignUp
+                onClose={() => setShowSignUp(false)}
+                onSwitchToSignIn={() => {
+                  setShowSignUp(false);
+                  setShowSignIn(true);
+                }}
+              />
+            )}
+            {showBannerAndFooter && <Footer />}
+          </BookingProvider>
+        </MembershipProvider>
+      </NotificationProvider>
+    </div>
   );
 }
 

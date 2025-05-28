@@ -14,13 +14,19 @@ export const ROUTES = {
     FORGOT_PASSWORD: '/auth/forgot-password',
     RESET_PASSWORD: '/auth/reset-password',
   },
-
   // Protected routes
   PROTECTED: {
-    PROFILE: '/profile',
-    BOOKING_CONFIRMATION: '/booking-confirmation',
-    PAYMENT: '/payment',
-    COMPLETED_BOOKING: '/completed-booking',
+    PROFILE: '/user/profile',
+    PROFILE_SECTIONS: {
+      MEMBERSHIP: '/user/profile/membership',
+      RIDES: '/user/profile/rides',
+      FAVORITES: '/user/profile/favorites',
+      ACCOUNT: '/user/profile/account',
+      PASSWORD: '/user/profile/password',
+    },
+    BOOKING_CONFIRMATION: '/user/booking-confirmation',
+    PAYMENT: '/user/payment',
+    COMPLETED_BOOKING: '/user/completed-booking'
   },
 
   // Admin routes

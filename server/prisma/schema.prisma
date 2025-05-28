@@ -1,0 +1,328 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum CarStatus {
+  AVAILABLE
+  RENTED
+  MAINTENANCE
+  INACTIVE
+}
+
+enum FuelType {
+  DIESEL
+  PETROL
+  ELECTRIC
+  HYBRID
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER
+}
+
+enum ActivityType {
+  USER_REGISTERED
+  CAR_CREATED
+  CAR_UPDATED
+  CAR_DELETED
+  CAR_ADDED
+  BOOKING_CREATED
+  BOOKING_UPDATED
+  BOOKING_CANCELLED
+  BOOKING_COMPLETED
+  PAYMENT_COMPLETED
+  REVIEW_ADDED
+}
+
+enum BookingStatus {
+  CONFIRMED
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum TransactionStatus {
+  COMPLETED
+  REFUNDED
+}
+
+enum PaymentProvider {
+  STRIPE
+  PAYPAL
+  ZALOPAY
+}
+
+enum MembershipLevel {
+  SILVER
+  GOLD
+  DIAMOND
+}
+
+model Car {
+  id           String        @id @default(uuid())
+  make         String
+  model        String
+  year         Int
+  kilometers   Int           @default(0)
+  description  String        @default("")
+  dailyPrice   Float
+  licensePlate String        @unique
+  numSeats     Int           @default(5)
+  address      String        @default("To be updated")
+  autoGearbox  Boolean       @default(false)
+  rating       Float         @default(0)
+  fuelType     FuelType
+  status       CarStatus     @default(AVAILABLE)
+  categories   CarCategory[]
+  reviews      Review[]
+  images       CarImage[]
+  bookings     Booking[]
+  favoritedBy  FavoriteCar[]
+  activities   Activity[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@map("cars")
+}
+
+model CarImage {
+  id        String   @id @default(uuid())
+  url       String
+  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  carId     String
+  isMain    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([carId, url])
+  @@map("car_images")
+}
+
+model Category {
+  id            String        @id @default(uuid())
+  name          String        @unique
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  carCategories CarCategory[]
+  description   String?
+
+  @@map("categories")
+}
+
+model CarCategory {
+  id         String   @id @default(uuid())
+  car        Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  carId      String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([carId, categoryId])
+  @@map("car_categories")
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  rating    Int
+  comment   String?
+  booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  bookingId String   @unique
+  userId    String
+  userName  String
+  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  carId     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("reviews")
+}
+
+model User {
+  id             String          @id @default(uuid())
+  email          String          @unique
+  password       String
+  firstName      String
+  lastName       String
+  phoneNumber    String?
+  isVerified     Boolean         @default(false)
+  role           Role            @default(CUSTOMER)
+  drivingLicence DrivingLicence?
+  bookings       Booking[]
+  favoriteCars   FavoriteCar[]
+  membership     Membership?
+  rewards        Reward[]
+  pointHistory   PointHistory[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@map("users")
+}
+
+model DrivingLicence {
+  id                   String                @id @default(uuid())
+  licenceNumber        String
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  expiryDate           DateTime
+  user                 User?                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId               String?               @unique
+  drivingLicenseImages DrivingLicenceImage[]
+
+  @@map("driving_licences")
+}
+
+model DrivingLicenceImage {
+  id               String         @id @default(uuid())
+  imageUrl         String
+  drivingLicence   DrivingLicence @relation(fields: [drivingLicenceId], references: [id], onDelete: Cascade)
+  drivingLicenceId String
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@map("driving_licence_images")
+}
+
+model FavoriteCar {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  carId     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, carId])
+  @@map("favorite_cars")
+}
+
+model Activity {
+  id          String       @id @default(uuid())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  type        ActivityType
+  bookingId   String?
+  booking     Booking?     @relation(fields: [bookingId], references: [id])
+  carId       String?
+  car         Car?         @relation(fields: [carId], references: [id])
+  title       String
+  description String?
+  amount      Float?
+  metadata    Json?
+
+  @@index([createdAt])
+  @@index([bookingId])
+  @@index([carId])
+  @@map("activities")
+}
+
+model Booking {
+  id            String        @id @default(uuid())
+  user          User          @relation(fields: [userId], references: [id])
+  userId        String
+  car           Car           @relation(fields: [carId], references: [id], onDelete: Cascade)
+  carId         String
+  code          String        @unique
+  startDate     DateTime
+  endDate       DateTime
+  totalPrice    Float
+  status        BookingStatus
+  transaction   Transaction?  @relation("BookingTransaction", fields: [transactionId], references: [id])
+  review        Review?
+  activities    Activity[]
+  transactionId String?       @unique
+  pickupAddress String
+  returnAddress String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  payment       Payment?
+
+  @@map("bookings")
+}
+
+model Payment {
+  id            String        @id @default(uuid())
+  booking       Booking       @relation(fields: [bookingId], references: [id])
+  bookingId     String        @unique
+  amount        Float
+  status        PaymentStatus
+  provider      String
+  providerTxnId String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@map("payments")
+}
+
+model Transaction {
+  id              String            @id @default(uuid())
+  amount          Float
+  discount        Float?
+  paymentProvider PaymentProvider
+  status          TransactionStatus @default(COMPLETED)
+  paidAt          DateTime?
+  refundedAt      DateTime?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  booking         Booking?          @relation("BookingTransaction")
+  bookingId       String?           @unique
+
+  @@map("transactions")
+}
+
+model Membership {
+  id        String          @id @default(uuid())
+  userId    String          @unique
+  level     MembershipLevel @default(SILVER)
+  points    Int             @default(0)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  history   PointHistory[]
+
+  @@map("memberships")
+}
+
+model Reward {
+  id          String         @id @default(uuid())
+  title       String
+  description String
+  pointsCost  Int
+  isPublic    Boolean        @default(false)
+  isUsed      Boolean        @default(false)
+  userId      String?
+  expiryDate  DateTime
+  createdAt   DateTime       @default(now())
+  user        User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  history     PointHistory[]
+
+  @@map("rewards")
+}
+
+model PointHistory {
+  id          String     @id @default(uuid())
+  userId      String
+  points      Int
+  description String
+  rewardId    String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade, map: "ph_user_fkey")
+  reward      Reward?    @relation(fields: [rewardId], references: [id], onDelete: SetNull, map: "ph_reward_fkey")
+  membership  Membership @relation(fields: [userId], references: [userId], onDelete: Cascade, map: "ph_membership_fkey")
+
+  @@map("point_history")
+}

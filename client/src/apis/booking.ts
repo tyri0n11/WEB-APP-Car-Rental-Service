@@ -15,6 +15,27 @@ class BookingApi extends BaseApi {
     } catch (error) {
       throw handleApiError(error)
     }
+  }  async getMyBookings(): Promise<Booking[]> {
+    try {
+      interface BookingsResponse {
+        data: Booking[] | { data: Booking[] }
+      }
+      const result = await this.get<BookingsResponse>('/bookings/my-bookings');
+      const responseData = result.data;
+      
+      // Handle both possible response formats
+      if (Array.isArray(responseData)) {
+        return responseData;
+      } else if (responseData && 'data' in responseData && Array.isArray(responseData.data)) {
+        return responseData.data;
+      }
+      // Return empty array if no valid data
+      console.warn('No valid bookings data in response:', result);
+      return [];
+    } catch (error) {
+      console.error('Error in getMyBookings:', error);
+      throw handleApiError(error);
+    }
   }
 
   async findMany(query?: FindManyBookingsQuery): Promise<PaginatedResponse<Booking>> {
@@ -62,4 +83,4 @@ class BookingApi extends BaseApi {
   }
 }
 
-export const bookingApi = new BookingApi() 
+export const bookingApi = new BookingApi()

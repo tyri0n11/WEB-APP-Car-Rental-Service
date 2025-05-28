@@ -26,14 +26,28 @@ class AuthApi extends BaseApi {
         } catch (error) {
             throw handleApiError(error)
         }
-    }
-
-    async refreshToken(): Promise<{ accessToken: string }> {
+    }    async refreshToken(): Promise<{ accessToken: string }> {
         try {
-            const result = await this.post<{ data: { accessToken: string } }>('/auth/refresh-token')
-            return result.data
+            const refreshToken = localStorage.getItem('refreshToken');
+            if (!refreshToken) {
+                throw new Error('No refresh token available');
+            }
+
+            const result = await this.post<{ data: { accessToken: string } }>(
+                '/auth/refresh-token',
+                { refreshToken }
+            );
+
+            if (!result?.data?.accessToken) {
+                throw new Error('Invalid refresh token response');
+            }
+
+            localStorage.setItem('accessToken', result.data.accessToken);
+            return result.data;
         } catch (error) {
-            throw handleApiError(error)
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            throw handleApiError(error);
         }
     }
 
@@ -78,4 +92,4 @@ class AuthApi extends BaseApi {
     }
 }
 
-export const authApi = new AuthApi() 
+export const authApi = new AuthApi();

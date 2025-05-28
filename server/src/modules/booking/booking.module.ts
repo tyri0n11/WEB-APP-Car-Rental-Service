@@ -3,6 +3,7 @@ import { BookingService } from './booking.service';
 import { BookingController } from './booking.controller';
 import { CarService } from '../car/car.service';
 import { PaymentService } from '../payment/payment.service';
+import { BookingOwnerGuard } from './guards/bookingOwner.guard';
 import { TransactionService } from '../transaction/transaction.service';
 import { CarModule } from '../car/car.module';
 import { PaymentModule } from '../payment/payment.module';
@@ -17,7 +18,7 @@ import { ActivityModule } from '../activity/activity.module';
 
 @Module({
   controllers: [BookingController],
-  providers: [BookingService, ProcessTransactionWorker],
+  providers: [BookingService, ProcessTransactionWorker, BookingOwnerGuard],
   imports: [
     CarModule,
     PaymentModule,

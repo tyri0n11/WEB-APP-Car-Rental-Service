@@ -47,15 +47,8 @@ export class ZalopayGateWay implements PaymentGatewayInterface {
 
   private initZaloPayRequestConfig(data: ZaloPayRequestConfigInterface) {
     const now = dayjs();
-    const transID = now.format('YYMMDD');
-
-    // Append bookingCode to returnUrl if it's not already there
-    let returnUrl = data.returnUrl;
-    if (returnUrl.includes('?')) {
-      returnUrl += `&bookingCode=${data.orderCode}`;
-    } else {
-      returnUrl += `?bookingCode=${data.orderCode}`;
-    }
+    const transID = now.format('YYMMDD');    // Append bookingCode to returnUrl
+    let returnUrl = data.returnUrl + data.orderCode;
 
     const config = {
       app_id: this.appID * 1,
@@ -116,28 +109,46 @@ export class ZalopayGateWay implements PaymentGatewayInterface {
 
     return res.data.order_url;
   }
-
   async handleCallback(callbackData: any): Promise<ZalopayCallbackResponseDTO> {
-    const requestMac = crypto
-      .createHmac('sha256', this.key2)
-      .update(callbackData.data)
-      .digest('hex');
-    if (requestMac !== callbackData.mac) {
+    try {
+      this.logger.log('Received ZaloPay callback data:', callbackData);
+
+      const requestMac = crypto
+        .createHmac('sha256', this.key2)
+        .update(callbackData.data)
+        .digest('hex');
+
+      this.logger.debug('Calculated MAC:', requestMac);
+      this.logger.debug('Received MAC:', callbackData.mac);
+
+      if (requestMac !== callbackData.mac) {
+        this.logger.error('MAC verification failed');
+        return {
+          success: false,
+          response: this.initZaloPayCallbackRes(
+            this.callbackErrorCode,
+            'Invalid mac',
+          ),
+        };
+      }      const transData = JSON.parse(callbackData.data);
+      this.logger.log('Parsed transaction data:', transData);
+
+      // Extract booking code from app_trans_id (format: YYMMDD_bookingCode)
+      const [, bookingCode] = transData.app_trans_id.split('_');
+      if (!bookingCode) {
+        this.logger.error('Invalid app_trans_id format:', transData.app_trans_id);
+        throw new Error('Invalid transaction ID format');
+      }
+      this.logger.log('Extracted booking code:', bookingCode);
+
       return {
-        success: false,
-        response: this.initZaloPayCallbackRes(
-          this.callbackErrorCode,
-          'Invalid mac',
-        ),
+        success: true,
+        response: this.initZaloPayCallbackRes(1, 'Success'),
+        bookingCode,
       };
+    } catch (error) {
+      this.logger.error('Error processing ZaloPay callback:', error);
+      throw error;
     }
-
-    const transData = JSON.parse(callbackData.data);
-
-    return {
-      success: true,
-      response: this.initZaloPayCallbackRes(1, 'Success'),
-      bookingCode: transData.app_trans_id.split('_')[1],
-    };
   }
 }

@@ -25,6 +25,7 @@ export interface SignupInput {
 
 export interface AuthResponse {
     accessToken: string
+    refreshToken: string
     user: User
 }
 

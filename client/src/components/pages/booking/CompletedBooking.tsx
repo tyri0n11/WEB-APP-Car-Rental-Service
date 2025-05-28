@@ -1,7 +1,12 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { bookingApi } from "../../../apis/booking";
+import { MembershipLevel } from "../../../types/membership";
+import { useMembershipContext } from "../../../contexts/MembershipContext";
+import { useAuth } from "../../../hooks/useAuth";
+import { ROUTES } from "../../../routes/constants/ROUTES";
 import StepNavigation from "./StepNavigation";
+import { FaCheckCircle, FaStar } from "react-icons/fa";
 import "./CompletedBooking.css";
 
 interface BookingDetails {
@@ -14,7 +19,7 @@ interface BookingDetails {
   returnAddress: string;
   totalPrice: number;
   status: string;
-  code?: string; // Making code optional since it might not be present in the API response
+  code?: string;
   car?: {
     id: string;
     make: string;
@@ -24,6 +29,8 @@ interface BookingDetails {
     licensePlate: string;
     images?: { url: string; isMain: boolean }[];
   };
+  pointsEarned?: number;
+  membershipLevel?: MembershipLevel;
 }
 
 // Interface for ZaloPay payment return parameters
@@ -37,183 +44,162 @@ interface ZaloPayReturnParams {
   pmcid?: string;
   status?: string;
   bookingCode?: string;
+  pointsEarned?: number;
+  membershipLevel?: MembershipLevel;
 }
 
 const CompletedBooking: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const params = useParams<{ status: string; code: string }>();
+  const { refreshMembership } = useMembershipContext();
+  const { user } = useAuth();
   const [booking, setBooking] = useState<BookingDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [paymentInfo, setPaymentInfo] = useState<{
     status: string;
     transactionId: string | null;
+    pointsEarned?: number;
+    membershipLevel?: MembershipLevel;
   }>({
     status: "",
     transactionId: null,
+    pointsEarned: 0,
+    membershipLevel: undefined
   });
 
-  // Memoize the parsing function to avoid unnecessary recalculations
-  const parseZaloPayReturnParams = useCallback((): ZaloPayReturnParams => {
-    const params = new URLSearchParams(location.search);
-    const returnParams: ZaloPayReturnParams = {};
+  const fetchBookingData = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-    // Extract all possible ZaloPay parameters
-    returnParams.amount = params.get("amount") || undefined;
-    returnParams.appid = params.get("appid") || undefined;
-    returnParams.apptransid = params.get("apptransid") || undefined;
-    returnParams.bankcode = params.get("bankcode") || undefined;
-    returnParams.checksum = params.get("checksum") || undefined;
-    returnParams.discountamount = params.get("discountamount") || undefined;
-    returnParams.pmcid = params.get("pmcid") || undefined;
-    returnParams.status = params.get("status") || undefined;
+      if (!params.status || !params.code) {
+        throw new Error('Missing required URL parameters');
+      }
 
-    // Get direct booking code if available
-    returnParams.bookingCode = params.get("bookingCode") || undefined;
+      // Clean up session storage
+      sessionStorage.removeItem("pendingBookingData");
 
-    // If no direct bookingCode but we have apptransid, extract from it
-    if (!returnParams.bookingCode && returnParams.apptransid) {
-      const parts = returnParams.apptransid.split("_");
-      if (parts.length === 2) {
-        returnParams.bookingCode = parts[1];
+      console.log('CompletedBooking: Starting data fetch:', { 
+        status: params.status,
+        code: params.code,
+        search: location.search
+      });
+
+      // Validate payment status
+      if (params.status !== "1") {
+        throw new Error(`Payment was not successful (status: ${params.status})`);
+      }
+
+      const searchParams = new URLSearchParams(location.search);
+      setPaymentInfo({
+        status: params.status,
+        transactionId: searchParams.get("apptransid") || null,
+        pointsEarned: Number(searchParams.get("earnedPoints")) || 0,
+        membershipLevel: searchParams.get("membershipLevel") as MembershipLevel || undefined
+      });
+
+      // Fetch booking details and refresh membership data in parallel
+      const [bookingDetails] = await Promise.all([
+        bookingApi.findByCode(params.code),
+        refreshMembership()
+      ]);
+
+      if (!bookingDetails) {
+        throw new Error("No booking data received from server");
+      }
+
+      setBooking({
+        ...bookingDetails,
+        startDate: bookingDetails.startDate.toString(),
+        endDate: bookingDetails.endDate.toString(),
+        pointsEarned: Number(searchParams.get("earnedPoints")) || 0,
+        membershipLevel: searchParams.get("membershipLevel") as MembershipLevel || undefined
+      });
+    } catch (err) {
+      console.error("Error fetching booking details:", err);
+      setError(err instanceof Error ? err.message : "An error occurred");
+    } finally {
+      setLoading(false);
+    }
+  }, [params.status, params.code, location.search, refreshMembership]);
+
+  useEffect(() => {
+    // Skip if we already have data or there's an error
+    if (booking || error) {
+      return;
+    }
+
+    // First handle auth restoration if needed
+    const pendingDataStr = sessionStorage.getItem("pendingBookingData");
+    if (pendingDataStr) {
+      try {
+        const pendingData = JSON.parse(pendingDataStr);
+        const storedToken = pendingData?.accessToken;
+        const currentToken = localStorage.getItem('accessToken');
+        
+        console.log('CompletedBooking: Auth state:', {
+          hasStoredToken: !!storedToken,
+          hasCurrentToken: !!currentToken
+        });
+
+        if (storedToken && !currentToken) {
+          // Need to restore auth
+          localStorage.setItem('accessToken', storedToken);
+          window.location.reload();
+          return;
+        }
+      } catch (parseError) {
+        console.error('Error parsing pendingBookingData:', parseError);
       }
     }
 
-    return returnParams;
-  }, [location.search]);
+    // Don't proceed without auth
+    if (!user || !localStorage.getItem('accessToken')) {
+      console.log('CompletedBooking: Waiting for auth');
+      return;
+    }
 
-  // Fetch booking details only once
-  useEffect(() => {
-    // Don't make API calls if already loaded or errored
-    if (booking || error) return;
-
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Parse ZaloPay return parameters
-        const zaloParams = parseZaloPayReturnParams();
-
-        // Log the URL and parameters for debugging
-        console.log("Current URL:", location.pathname + location.search);
-        console.log("ZaloPay return params:", zaloParams);
-
-        if (!zaloParams.bookingCode) {
-          throw new Error(
-            "No booking code found. Invalid access to this page."
-          );
-        }
-
-        if (!zaloParams.status) {
-          throw new Error(
-            "No payment status provided. Invalid access to this page."
-          );
-        }
-
-        if (zaloParams.status !== "1") {
-          throw new Error(
-            `Payment was not successful. Status: ${zaloParams.status}`
-          );
-        }
-
-        // Set payment info
-        setPaymentInfo({
-          status: zaloParams.status,
-          transactionId: zaloParams.apptransid || null,
-        });
-
-        // Only fetch if we have a booking code
-        const bookingDetails = await bookingApi.findByCode(zaloParams.bookingCode);
-
-        if (!bookingDetails) {
-          throw new Error("No booking data received from server");
-        }
-
-        // Map the API response to our BookingDetails interface
-        const mappedBooking: BookingDetails = {
-          ...bookingDetails,
-          code: zaloParams.bookingCode,
-          startDate: bookingDetails.startDate.toString(),
-          endDate: bookingDetails.endDate.toString(),
-        };
-
-        setBooking(mappedBooking);
-
-        // Store successful payment in localStorage for reference
-        localStorage.setItem(
-          "lastSuccessfulPayment",
-          JSON.stringify({
-            bookingCode: zaloParams.bookingCode,
-            status: zaloParams.status,
-            amount: zaloParams.amount,
-            timestamp: new Date().toISOString(),
-          })
-        );
-
-        // Clean up pending booking data
-        localStorage.removeItem("pendingBookingData");
-      } catch (err) {
-        console.error("Error in CompletedBooking:", err);
-        setError(
-          err instanceof Error ? err.message : "Failed to load booking details"
-        );
-
-        // If payment failed or we're missing parameters, redirect to payment page after a delay
-        if (
-          err instanceof Error &&
-          (err.message.includes("Payment was not successful") ||
-            err.message.includes("Invalid access"))
-        ) {
-          console.log("Redirecting to payment page...");
-          setTimeout(() => {
-            navigate("/user/payment");
-          }, 3000);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    // Execute only once and when dependencies are ready
-    fetchData();
-
-    // Return empty cleanup function to avoid memory leaks
-    return () => { };
-  }, [location.pathname, parseZaloPayReturnParams, navigate]);
-
-  const handleViewBookings = () => {
-    navigate("/profile/rides");
-  };
+    // If we have auth, fetch the data
+    fetchBookingData();
+  }, [booking, error, user, fetchBookingData]);
 
   if (loading) {
     return (
-      <div className="loading">
-        <div className="loading-spinner"></div>
-        <p>Loading booking details...</p>
+      <div className="loading-container">
+        <div className="loading-spinner" />
+        <p>Processing your payment...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="error">
-        <h2>Error</h2>
-        <p>{error}</p>
-        {error.includes("Payment was not successful") && (
-          <p>Redirecting to payment page...</p>
-        )}
+      <div className="error-container">
+        <div className="error-message">
+          <h2>Oops! Something went wrong</h2>
+          <p>{error}</p>
+          {error.includes("Payment was not successful") && (
+            <button onClick={() => navigate(ROUTES.PROTECTED.PROFILE_SECTIONS.RIDES)} className="view-bookings-btn">
+              View My Bookings
+            </button>
+          )}
+        </div>
       </div>
     );
   }
 
   if (!booking) {
     return (
-      <div className="error">
-        <h2>Booking Not Found</h2>
-        <p>
-          No booking information was found. Please try again or contact support.
-        </p>
+      <div className="error-container">
+        <div className="error-message">
+          <h2>Booking Not Found</h2>
+          <p>We couldn't find your booking details.</p>
+          <button onClick={() => navigate(ROUTES.PROTECTED.PROFILE_SECTIONS.RIDES)} className="view-bookings-btn">
+            View My Bookings
+          </button>
+        </div>
       </div>
     );
   }
@@ -223,69 +209,65 @@ const CompletedBooking: React.FC = () => {
       <StepNavigation currentStep={3} />
 
       <div className="confirmation-success">
-        <h1>🎉 Booking Completed Successfully!</h1>
-        <p>Your payment has been processed and your booking is confirmed.</p>
-        {paymentInfo.transactionId && (
-          <p className="transaction-id">
-            Transaction ID: {paymentInfo.transactionId}
-          </p>
+        <div className="success-icon">
+          <FaCheckCircle size={48} color="#4CAF50" />
+        </div>
+        <h2>Payment Successful!</h2>
+        <p className="transaction-id">
+          Transaction ID: {paymentInfo.transactionId}
+        </p>
+        
+        {paymentInfo.pointsEarned && paymentInfo.pointsEarned > 0 && (
+          <div className="points-earned">
+            <FaStar className="points-icon" />
+            <p className="points-text">Congratulations! You earned {paymentInfo.pointsEarned} points!</p>
+            {paymentInfo.membershipLevel && (
+              <p className="membership-level">
+                Current Membership Level: {paymentInfo.membershipLevel}
+              </p>
+            )}
+          </div>
         )}
       </div>
 
       <div className="confirmation-details">
-        <h2>Booking Information</h2>
-        <div className="details-grid">
-          <div className="detail-item">
-            <label>Booking Code:</label>
-            <span>{booking.code}</span>
+        <h3>Booking Details</h3>
+        <div className="booking-info">
+          <div className="info-row">
+            <span>Car:</span>
+            <span>{booking.car?.make} {booking.car?.model} ({booking.car?.year})</span>
           </div>
-
-          {booking.car && (
-            <div className="detail-item">
-              <label>Car:</label>
-              <span>
-                {booking.car.make} {booking.car.model} ({booking.car.year})
-              </span>
-            </div>
-          )}
-
-          <div className="detail-item">
-            <label>Status:</label>
-            <span className={`status-${booking.status.toLowerCase()}`}>
-              {booking.status}
-            </span>
-          </div>
-
-          <div className="detail-item">
-            <label>Pickup Date:</label>
-            <span>{new Date(booking.startDate).toLocaleString()}</span>
-          </div>
-
-          <div className="detail-item">
-            <label>Return Date:</label>
-            <span>{new Date(booking.endDate).toLocaleString()}</span>
-          </div>
-
-          <div className="detail-item">
-            <label>Pickup Address:</label>
+          <div className="info-row">
+            <span>Pickup:</span>
             <span>{booking.pickupAddress}</span>
           </div>
-
-          <div className="detail-item">
-            <label>Return Address:</label>
+          <div className="info-row">
+            <span>Return:</span>
             <span>{booking.returnAddress}</span>
           </div>
-
-          <div className="detail-item">
-            <label>Total Price:</label>
-            <span className="total-price">${booking.totalPrice.toLocaleString()}</span>
+          <div className="info-row">
+            <span>Duration:</span>
+            <span>{new Date(booking.startDate).toLocaleDateString()} - {new Date(booking.endDate).toLocaleDateString()}</span>
+          </div>
+          <div className="info-row total">
+            <span>Total Paid:</span>
+            <span>{booking.totalPrice.toLocaleString()}đ</span>
           </div>
         </div>
-      </div>
-
-      <div className="confirmation-actions">
-        <button onClick={handleViewBookings} className="view-bookings-button">
-          View All Bookings
+      </div>      <div className="confirmation-actions">
+        <button onClick={() => navigate("/profile/rides")} className="primary-button">
+          View My Bookings
+        </button>
+        <button 
+          onClick={() => navigate(ROUTES.PROTECTED.PROFILE_SECTIONS.MEMBERSHIP, { 
+            state: { 
+              fromCompletedBooking: true,
+              earnedPoints: paymentInfo.pointsEarned 
+            } 
+          })}
+          className="secondary-button"
+        >
+          View Membership & Points
         </button>
       </div>
     </div>

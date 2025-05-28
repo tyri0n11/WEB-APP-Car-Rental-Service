@@ -29,6 +29,7 @@ import { ReviewModule } from './modules/review/review.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { ActivityModule } from './modules/activity/activity.module';
+import { MembershipModule } from './modules/membership/membership.module';
 
 @Module({
   imports: [
@@ -105,14 +106,14 @@ import { ActivityModule } from './modules/activity/activity.module';
     EmailModule,
     TokenModule,
     ImageModule,
-    CarModule,
-    CategoryModule,
+    CarModule,    CategoryModule,
     BookingModule,
     PaymentModule,
     TransactionModule,
     ReviewModule,
     DashboardModule,
     ActivityModule,
+    MembershipModule,
   ],
   controllers: [AppController],
   providers: [

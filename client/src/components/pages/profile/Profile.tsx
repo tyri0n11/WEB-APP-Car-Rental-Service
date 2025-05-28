@@ -1,17 +1,14 @@
-import React, { useState, Component, ErrorInfo, ReactNode, useEffect } from "react";
-import { FaAddressCard, FaCar, FaHeart, FaLock, FaSignOutAlt, FaUser } from "react-icons/fa";
+import React, { useState, Component, ErrorInfo, ReactNode, useEffect, useCallback } from "react";
+import { FaCar, FaHeart, FaLock, FaSignOutAlt, FaUser, FaCrown } from "react-icons/fa";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useUser } from "../../../contexts/UserContext";
+import { useLocation, useNavigate, Outlet } from "react-router-dom";
 import "./Profile.css";
-import Account from "./sections/account/Account";
-import ChangePassword from "./sections/change-password/ChangePassword";
-import Favourites from "./sections/favourites/Favourites";
-import MyRides from "./sections/rides/Rides";
 
 interface MenuItem {
   label: string;
   icon: React.ReactNode;
-  content: React.ReactNode;
+    path: string;
   isLogout?: boolean;
 }
 
@@ -68,17 +65,103 @@ function LoadingFallback() {
   );
 }
 
-const Profile: React.FC = () => {
-  const [activeTab, setActiveTab] = useState(0);
+const Profile: React.FC = () => {  
   const { logout } = useAuth();
   const { user } = useUser();
+  const location = useLocation();
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+
+  // Determine active tab from URL
+  const getActiveTabFromPath = (path: string) => {
+    const section = path.split('/').pop();
+    switch (section) {
+      case 'membership':
+        return 1;
+      case 'favorites':
+        return 2;
+      case 'rides':
+        return 3;
+      case 'password':
+        return 4;
+      case 'account':
+      default:
+        return 0;
+    }
+  };
+
+  const [activeTab, setActiveTab] = useState(getActiveTabFromPath(location.pathname));
 
   useEffect(() => {
     if (user) {
       setIsLoading(false);
     }
   }, [user]);
+
+  useEffect(() => {
+    setActiveTab(getActiveTabFromPath(location.pathname));
+  }, [location.pathname]);
+
+  const menuItems: MenuItem[] = [
+    { 
+      label: "Tài Khoản", 
+      icon: <FaUser />, 
+      path: "/user/profile/account"
+    },
+    { 
+      label: "Thành Viên", 
+      icon: <FaCrown />, 
+      path: "/user/profile/membership"
+    },
+    { 
+      label: "Xe Yêu Thích", 
+      icon: <FaHeart />, 
+      path: "/user/profile/favorites"
+    },
+    { 
+      label: "Lịch Sử Đặt", 
+      icon: <FaCar />, 
+      path: "/user/profile/rides"
+    },
+    {
+      label: "Đổi mật khẩu",
+      icon: <FaLock />,
+      path: "/user/profile/password"
+    },
+    {
+      label: "Đăng xuất",
+      icon: <FaSignOutAlt />,
+      path: "",
+      isLogout: true
+    },
+  ];
+
+  const handleAuthError = useCallback(async () => {
+    await logout();
+    navigate('/', { replace: true });
+  }, [logout, navigate]);
+
+  useEffect(() => {
+    if (!user && !isLoading) {
+      handleAuthError();
+    }
+  }, [user, isLoading, handleAuthError]);
+
+  const handleTabClick = async (index: number) => {
+    try {
+      if (menuItems[index].isLogout) {
+        await handleAuthError();
+        return;
+      }
+
+      setActiveTab(index);
+      navigate(menuItems[index].path);
+    } catch (error) {
+      if (error instanceof Error && error.message.includes('unauthorized')) {
+        await handleAuthError();
+      }
+    }
+  };
 
   if (isLoading || !user) {
     return (
@@ -91,31 +174,6 @@ const Profile: React.FC = () => {
       </div>
     );
   }
-
-  const menuItems = [
-    { label: "Tài Khoản", icon: <FaUser />, content: <Account /> },
-    { label: "Xe Yêu Thích", icon: <FaHeart />, content: <Favourites /> },
-    { label: "Lịch Sử Đặt", icon: <FaCar />, content: <MyRides /> },
-    {
-      label: "Đổi mật khẩu",
-      icon: <FaLock />,
-      content: <ChangePassword />,
-    },
-    {
-      label: "Đăng xuất",
-      icon: <FaSignOutAlt />,
-      content: "Đang đăng xuất...",
-      isLogout: true
-    },
-  ];
-
-  const handleTabClick = (index: number) => {
-    if (menuItems[index].isLogout) {
-      logout();
-      return;
-    }
-    setActiveTab(index);
-  };
 
   return (
     <div className="profilePage">
@@ -145,10 +203,13 @@ const Profile: React.FC = () => {
           </div>
           <div className="profileContent">
             <div className="profileTitle">{menuItems[activeTab].label}</div>
-            <ErrorBoundary onReset={() => setActiveTab(0)}>
+            <ErrorBoundary onReset={() => {
+              setActiveTab(0);
+              navigate("/user/profile/account");
+            }}>
               <React.Suspense fallback={<LoadingFallback />}>
                 <div className="profileDetails">
-                  {menuItems[activeTab].content}
+                  <Outlet />
                 </div>
               </React.Suspense>
             </ErrorBoundary>

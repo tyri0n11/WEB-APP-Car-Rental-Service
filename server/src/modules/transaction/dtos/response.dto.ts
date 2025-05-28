@@ -1,7 +1,7 @@
 import {
   PaymentProvider,
   Transaction,
-  TransactiontStatus,
+  TransactionStatus,
 } from '@prisma/client';
 import { Exclude, Expose } from 'class-transformer';
 
@@ -18,11 +18,13 @@ export class TransactionResponseDTO implements Transaction {
   @Expose()
   paymentProvider: PaymentProvider;
   @Expose()
-  status: TransactiontStatus;
+  status: TransactionStatus;
   @Expose()
-  paidAt: Date;
+  bookingId: string | null;
   @Expose()
-  refundedAt: Date;
+  paidAt: Date | null;
+  @Expose()
+  refundedAt: Date | null;
   @Exclude()
   createdAt: Date;
   @Exclude()

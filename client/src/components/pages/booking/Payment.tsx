@@ -41,6 +41,14 @@ const Payment: React.FC = () => {
         return;
       }
 
+      // Get auth token and store it with booking data
+      const accessToken = localStorage.getItem('accessToken');
+      console.log('Payment: Current auth state:', { 
+        hasAccessToken: !!accessToken,
+        currentUrl: window.location.href
+      });
+
+      // Create booking request
       const bookingData = {
         carId,
         startDate: new Date(startTime).toISOString(),
@@ -48,27 +56,40 @@ const Payment: React.FC = () => {
         pickupAddress: pickupLocation,
         returnAddress: returnLocation || pickupLocation,
         paymentProvider: PaymentProvider.ZALOPAY,
-        returnUrl: `${window.location.origin}/completed-booking`, // ZaloPay will append bookingCode and status
+        returnUrl: `${window.location.origin}/user/completed-booking/status/1/bookingcode/`, // The backend will append the booking code
       };
 
       console.log("Creating booking with data:", bookingData);
 
-      // Store booking data in localStorage before redirecting
-      localStorage.setItem(
-        "pendingBookingData",
-        JSON.stringify({
+      // Store booking data and auth token for restoration after payment redirect
+      const pendingData = {
+        accessToken,
+        bookingData: {
           ...bookingData,
           totalPrice,
           customerName,
           phoneNumber,
-          timestamp: new Date().toISOString(),
-        })
-      );
+          timestamp: new Date().toISOString()
+        }
+      };
+      
+      console.log('Payment: Storing pending data:', {
+        hasAccessToken: !!pendingData.accessToken,
+        bookingData: pendingData.bookingData
+      });
+      
+      // Store in sessionStorage for restoration after payment redirect
+      sessionStorage.setItem("pendingBookingData", JSON.stringify(pendingData));
 
       const response = await bookingApi.create(bookingData);
       console.log("Received payment URL:", response.paymentUrl);
 
       if (response.paymentUrl) {
+        // Ensure data is stored before redirect
+        console.log('Payment: Final check before redirect:', {
+          pendingData: !!sessionStorage.getItem("pendingBookingData"),
+          accessToken: !!localStorage.getItem('accessToken')
+        });
         // Redirect to payment gateway
         window.location.href = response.paymentUrl;
       } else {

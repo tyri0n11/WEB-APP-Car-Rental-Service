@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import ImgurClient from 'imgur';
+import { ImgurClient } from 'imgur';
 
 @Injectable()
 export class ImageService {
@@ -14,7 +14,9 @@ export class ImageService {
     if (!clientId) {
       throw new InternalServerErrorException('IMGUR_CLIENT_ID is not defined');
     }
-    this.imgurClient = new ImgurClient({ clientId });
+    this.imgurClient = new ImgurClient({
+      clientId: clientId
+    });
   }
 
   async uploadImage(imageFile: Express.Multer.File) {

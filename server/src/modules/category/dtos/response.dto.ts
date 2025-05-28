@@ -5,13 +5,18 @@ export class CategoryResponseDTO implements Category {
   constructor(partial: Partial<CategoryResponseDTO>) {
     Object.assign(this, partial);
   }
-
   @Expose()
   id: string;
+
   @Expose()
   name: string;
+
+  @Expose()
+  description: string | null;
+
   @Exclude()
   createdAt: Date;
+
   @Exclude()
   updatedAt: Date;
 }

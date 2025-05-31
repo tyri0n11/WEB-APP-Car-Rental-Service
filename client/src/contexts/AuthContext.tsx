@@ -48,26 +48,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const login = useCallback(async (input: LoginInput) => {
         try {
             setState(prev => ({ ...prev, loading: true, error: null }))
-            const { accessToken, user } = await authApi.login(input)
+            // user object from login response might be partial or different from getMe
+            const { accessToken } = await authApi.login(input)
             localStorage.setItem('accessToken', accessToken)
-            setState(prev => ({
-                ...prev,
-                user,
-                loading: false,
-                isAuthenticated: true,
-                error: null // Clear any previous error
-            }))
+            // Call checkAuth to fetch the full user details via getMe and set auth state
+            // This ensures consistency with how user state is loaded on page refresh
+            await checkAuth()
         } catch (error) {
+            // console.error('Login failed:', error);
+            // Ensure token is cleared if login process fails at any point after it might have been set
+            localStorage.removeItem('accessToken')
             setState(prev => ({
                 ...prev,
-                user: null, // Ensure user is null on login failure
+                user: null,
                 isAuthenticated: false,
-                error: error instanceof Error ? error.message : 'An error occurred',
+                error: error instanceof Error ? error.message : 'An error occurred during login',
                 loading: false
             }))
             throw error
         }
-    }, [])
+    }, [checkAuth])
 
     const signup = useCallback(async (input: SignupInput) => {
         try {

@@ -57,10 +57,25 @@ const Favourites: React.FC = () => {
             return;
         }
 
-        // Tính tổng tiền dựa trên số ngày
+        if (typeof car.pricePerDay !== 'number' || car.pricePerDay <= 0) {
+            showNotification('error', 'Thông tin giá xe không hợp lệ hoặc không có sẵn.');
+            return;
+        }
+
         const startDate = new Date(selectedDates.startDate);
         const endDate = new Date(selectedDates.endDate);
+
+        if (endDate <= startDate) {
+            showNotification('error', 'Ngày trả xe phải sau ngày nhận xe.');
+            return;
+        }
+
         const days = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+        
+        if (days <= 0) { // Should be caught by endDate <= startDate, but as an extra safeguard
+            showNotification('error', 'Số ngày thuê không hợp lệ.');
+            return;
+        }
         const totalPrice = days * car.pricePerDay;
 
         // Navigate to booking confirmation with all necessary data
@@ -115,11 +130,13 @@ const Favourites: React.FC = () => {
                             <div className="car-image-container">
                                 <img
                                     className="car-image"
-                                    src={car.images[0]?.url}
+                                    src={car.images && car.images.length > 0 ? car.images[0]?.url : '/placeholder-car.jpg'}
                                     alt={`${car.brand} ${car.model}`}
                                 />
                                 <div className="price-badge">
-                                    {car.pricePerDay.toLocaleString()}₫/ngày
+                                    {typeof car.pricePerDay === 'number' && car.pricePerDay > 0 
+                                        ? car.pricePerDay.toLocaleString() + '₫/ngày' 
+                                        : 'N/A'}
                                 </div>
                             </div>
                             <div className="car-info">

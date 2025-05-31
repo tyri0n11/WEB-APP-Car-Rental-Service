@@ -24,11 +24,11 @@ const Service: React.FC = () => {
   return (
     <div style={styles.container}>
       <div style={styles.content}>
-        <h1 style={styles.title}>Available Cars</h1>
+        <h1 style={styles.title}>Các xe hiện có</h1>
         <CustomePaginate />
       </div>
     </div>
   );
 };
 
-export default Service; 
+export default Service;

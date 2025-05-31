@@ -34,6 +34,22 @@ class BookingApi extends BaseApi {
     }
   }
 
+  async listMyBookings(query?: FindManyBookingsQuery): Promise<PaginatedResponse<Booking>> {
+    try {
+      const params: Record<string, any> = {}
+      if (query) {
+        if (query.page) params.page = query.page
+        if (query.perPage) params.perPage = query.perPage
+        // Note: Status, startDate, and endDate filters might not be applicable or implemented
+        // on the server for "my-bookings". Adjust if necessary based on server capabilities.
+      }
+      const result = await this.get<{ data: PaginatedResponse<Booking> }>('/bookings/my-bookings', params)
+      return result.data
+    } catch (error) {
+      throw handleApiError(error)
+    }
+  }
+
   async findOne(id: string): Promise<Booking> {
     try {
       const result = await this.get<{ data: Booking }>(`/bookings/${id}`, {})
@@ -62,4 +78,4 @@ class BookingApi extends BaseApi {
   }
 }
 
-export const bookingApi = new BookingApi() 
+export const bookingApi = new BookingApi()

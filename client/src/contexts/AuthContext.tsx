@@ -1,5 +1,5 @@
 import React, { createContext, useState, useCallback, useEffect, ReactNode } from 'react'
-import type { AuthContextValue, LoginInput, SignupInput, User } from '../types/auth'
+import type { AuthContextValue, LoginInput, SignupInput } from '../types/auth' // Removed unused User import
 import { authApi } from '../apis/auth'
 
 const initialState: Omit<AuthContextValue, 'login' | 'signup' | 'logout' | 'refreshToken' | 'forgotPassword' | 'resetPassword' | 'verifyEmail' | 'resendVerificationEmail' | 'changePassword'> = {
@@ -48,19 +48,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const login = useCallback(async (input: LoginInput) => {
         try {
             setState(prev => ({ ...prev, loading: true, error: null }))
-            const { accessToken, user } = await authApi.login(input)
+            // user object from login response might be partial or different from getMe
+            const { accessToken } = await authApi.login(input)
             localStorage.setItem('accessToken', accessToken)
-            setState(prev => ({
-                ...prev,
-                user,
-                loading: false,
-                isAuthenticated: true
-            }))
+            // Call checkAuth to fetch the full user details via getMe and set auth state
+            // This ensures consistency with how user state is loaded on page refresh
             await checkAuth()
         } catch (error) {
+            // console.error('Login failed:', error);
+            // Ensure token is cleared if login process fails at any point after it might have been set
+            localStorage.removeItem('accessToken')
             setState(prev => ({
                 ...prev,
-                error: error instanceof Error ? error.message : 'An error occurred',
+                user: null,
+                isAuthenticated: false,
+                error: error instanceof Error ? error.message : 'An error occurred during login',
                 loading: false
             }))
             throw error

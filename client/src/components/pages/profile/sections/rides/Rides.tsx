@@ -47,15 +47,14 @@ function RidesSkeleton() {
 export function MyRides() {
     const { user } = useAuth();
     const navigate = useNavigate();
-    const { getBookings, bookings, isLoading, error } = useBooking();
+    const { getMyBookings, bookings, isLoading, error } = useBooking();
     const [selectedStatus, setSelectedStatus] = useState<BookingStatus | 'ALL'>('ALL');
 
     useEffect(() => {
         if (user) {
-            getBookings();
+            getMyBookings();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [user]);
+    }, [user, getMyBookings]); 
 
     const handleRebook = (booking: Booking) => {
         if (booking.car?.id) {
@@ -87,7 +86,7 @@ export function MyRides() {
             <div className="my-rides-root">
                 <div className="my-rides-error">
                     <p>Lỗi khi tải chuyến đi: {error}</p>
-                    <button onClick={getBookings}>Thử lại</button>
+                    <button onClick={getMyBookings}>Thử lại</button> {/* Changed to getMyBookings */}
                 </div>
             </div>
         );

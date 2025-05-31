@@ -9,7 +9,7 @@ import { BookingProvider } from "./contexts/BookingContext.tsx";
 import "./index.css";
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
+  //<StrictMode>
     <AuthProvider>
       <UserProvider>
         <CarProvider>
@@ -21,5 +21,5 @@ createRoot(document.getElementById("root")!).render(
         </CarProvider>
       </UserProvider>
     </AuthProvider>
-  </StrictMode>
+  //</StrictMode>
 );

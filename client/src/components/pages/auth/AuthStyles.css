@@ -15,7 +15,8 @@
 .signup-wrapper,
 .signin-wrapper {
   position: fixed;
-  min-width: 400px;
+  min-width: 500px;
+  /* Increased from default */
   height: auto;
   background: white;
   border: 2px solid rgba(255, 255, 255, 0.1);
@@ -28,7 +29,8 @@
   flex-direction: column;
   overflow: hidden;
   transition: height 0.2s ease;
-  padding: 16px;
+  padding: 40px;
+  /* More padding for better spacing */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -49,9 +51,10 @@
 }
 
 .form-box h1 {
-  font-size: 20px;
+  font-size: 2.5rem;
+  /* Larger title */
   text-align: center;
-  margin-bottom: 8px;
+  margin-bottom: 30px;
   color: #029cea;
 }
 
@@ -75,27 +78,34 @@
 }
 
 .form-box .name-box .input-box input {
+  height: 45px;
+  /* Match the single input height */
   border: 1px solid rgba(73, 73, 73, 0.63);
   width: 100%;
   border-radius: 11px;
+  padding: 12px 15px;
 }
 
 .input-box label {
-  font-size: 12px;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  /* Added more space below labels */
   display: block;
-  margin-bottom: 5px;
   color: #000000;
 }
 
 .input-box input {
-  height: 32px;
-  margin-bottom: 6px;
+  height: 45px;
+  /* Increased from 32px */
   width: 100%;
+  padding: 12px 15px;
+  margin: 10px 0;
+  /* Increased from 8px */
   border: 1px solid rgba(0, 0, 0, 0.63);
   border-radius: 11px;
-  font-size: 14px;
+  font-size: 1.1rem;
   color: rgb(0, 0, 0);
-  padding: 8px 12px;
+  transition: all 0.3s ease;
 }
 
 .input-box input:focus {
@@ -123,7 +133,8 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  font-size: 12px;
+  font-size: 1.1rem;
+  /* Increased font size */
   margin: 8px 0 12px;
 }
 
@@ -157,22 +168,24 @@
 }
 
 .form-box button {
-  width: 180px;
-  /* Changed from 100% to fixed width */
-  height: 36px;
+  width: auto;
+  min-width: 180px;
+  height: auto;
   background: linear-gradient(135deg, #029cea, #629af5);
   border: none;
   outline: none;
   border-radius: 40px;
   box-shadow: 0 0 10px rgba(130, 190, 242, 0.1);
   cursor: pointer;
-  font-size: 14px;
+  font-size: 1.2rem;
+  /* Increased button font size */
   font-weight: bold;
   transition: all 0.3s ease-in-out;
   color: white;
   display: block;
-  margin: 0 auto;
-  /* Center the button */
+  margin: 0;
+  padding: 12px 30px;
+  /* Increased padding */
 }
 
 .form-box button:hover {
@@ -190,12 +203,14 @@
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   margin: 15px 0;
 }
 
 .form-box .login-link,
 .form-box .register-link {
-  font-size: 12px;
+  font-size: 1.1rem;
+  /* Increased link font size */
   text-align: center;
   margin: 16px 0 12px;
 }
@@ -222,4 +237,9 @@
 .input-box input.input-error {
   border: 1.5px solid #e74c3c !important;
   background: #fff6f6;
+}
+
+.input-error+div {
+  font-size: 0.9rem !important;
+  /* Adjust error message size */
 }

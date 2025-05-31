@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { AUTH_NOTIFICATIONS } from "../../../../constants/notificationMessages";
 import { useNotification } from "../../../../contexts/NotificationContext";
 import { useAuth } from "../../../../contexts/AuthContext";
 import { ROUTES } from '../../../../routes/constants/ROUTES';
@@ -22,7 +21,11 @@ function prettifyErrorMessage(msg: string): string {
     .replace(/is not valid/gi, 'không hợp lệ')
     .replace(/must be at least/gi, 'phải có ít nhất')
     .replace(/must contain at least/gi, 'phải chứa ít nhất')
-    .replace(/invalid credentials/gi, 'Email hoặc mật khẩu không đúng')
+    .replace(/invalid credentials/gi, 'Email hoặc mật khẩu không khớp')
+    .replace(/Email or mật khẩu doesn't match/gi, 'Email hoặc mật khẩu không khớp')
+    .replace(/Email or password doesn't match/gi, 'Email hoặc mật khẩu không khớp')
+    .replace(/password doesn't match/gi, 'Email hoặc mật khẩu không khớp')
+    .replace(/mật khẩu doesn't match/gi, 'Email hoặc mật khẩu không khớp')
 }
 
 const SignIn: React.FC<{

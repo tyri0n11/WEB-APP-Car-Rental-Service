@@ -25,7 +25,6 @@ const styles = {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        fontFamily: "'Be Vietnam Pro', Arial, Helvetica, sans-serif",
         gap: "12px", // Thêm khoảng cách giữa tiêu đề và đoạn văn
     },
     cardHover: {

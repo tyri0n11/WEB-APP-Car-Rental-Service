@@ -36,7 +36,6 @@ export class ReviewService extends BaseService<Review> {
       throw new BadRequestException('Booking not found');
     }
 
-    console.log(foundBooking);
     const userName = firstName + ' ' + lastName;
     const review = await super.create({
       comment,

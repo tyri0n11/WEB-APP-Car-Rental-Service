@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import StepNavigation from './StepNavigation'; // Import StepNavigation component
 import './BookingConfirmation.css'; // Import the updated CSS file
-import { ROUTES } from '../../../routes/constants/ROUTES';
 
 const BookingConfirmation: React.FC = () => {
   const navigate = useNavigate();

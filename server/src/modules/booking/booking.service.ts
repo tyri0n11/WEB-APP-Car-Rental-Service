@@ -12,6 +12,7 @@ import {
   ActivityType,
   Booking,
   BookingStatus,
+  CarImage,
   CarStatus,
 } from '@prisma/client';
 import { Queue } from 'bullmq';
@@ -79,7 +80,11 @@ export class BookingService extends BaseService<Booking> {
       filter: {
         carId,
         status: {
-          in: [BookingStatus.CONFIRMED, BookingStatus.ONGOING],
+          in: [
+            BookingStatus.CONFIRMED,
+            BookingStatus.ONGOING,
+            BookingStatus.PAID,
+          ],
         },
         OR: [
           {
@@ -103,7 +108,8 @@ export class BookingService extends BaseService<Booking> {
   }
 
   async createBookingOnRedis(userId: string, dto: CreateBookingRequestDTO) {
-    const car = await this.carService.findOne({ id: dto.carId });
+    const car = await this.carService.findById(dto.carId);
+    console.log('car: ', car);
 
     const isAvailable = await this.checkCarAvailability(
       dto.carId,
@@ -121,6 +127,10 @@ export class BookingService extends BaseService<Booking> {
       dto.endDate,
     );
 
+    const carImageUrl: string = car.images.find(
+      (img: CarImage) => img.isMain,
+    ).url;
+
     const bookingCode = this.generateBookingCode(car.id);
     const bookingKey = this.genRedisKey.booking(bookingCode);
 
@@ -129,6 +139,7 @@ export class BookingService extends BaseService<Booking> {
       userId,
       bookingCode,
       totalPrice,
+      carImageUrl,
     };
 
     await this.redisService
@@ -237,7 +248,7 @@ export class BookingService extends BaseService<Booking> {
             totalPrice: bookingData.totalPrice,
             pickupAddress: bookingData.pickupAddress,
             returnAddress: bookingData.returnAddress,
-            status: BookingStatus.ONGOING,
+            status: BookingStatus.PAID,
             user: {
               connect: {
                 id: bookingData.userId,
@@ -248,6 +259,7 @@ export class BookingService extends BaseService<Booking> {
                 id: bookingData.carId,
               },
             },
+            carImageUrl: bookingData.carImageUrl,
             transaction: {
               connect: {
                 id: transactionId,

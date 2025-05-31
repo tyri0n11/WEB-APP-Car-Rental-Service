@@ -46,7 +46,7 @@ export class BookingController {
   @Get('my-bookings')
   @ApiPagination()
   @ApiBookingQueries()
-  listMyBookings(
+  findMyBookings(
     @Req() req: RequestWithUser,
     @Query() query: FindManyBookingsQueryDTO,
   ) {
@@ -68,7 +68,7 @@ export class BookingController {
   @Get(':id')
   @UseGuards(BookingOwnerGuard)
   findOne(@Param('id') id: string) {
-    return this.bookingService.findOne({ id });
+    return this.bookingService.findById(id);
   }
 
   @Patch(':id/return')

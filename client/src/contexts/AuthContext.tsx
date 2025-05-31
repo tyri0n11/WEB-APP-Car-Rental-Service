@@ -1,5 +1,5 @@
 import React, { createContext, useState, useCallback, useEffect, ReactNode } from 'react'
-import type { AuthContextValue, LoginInput, SignupInput, User } from '../types/auth'
+import type { AuthContextValue, LoginInput, SignupInput } from '../types/auth' // Removed unused User import
 import { authApi } from '../apis/auth'
 
 const initialState: Omit<AuthContextValue, 'login' | 'signup' | 'logout' | 'refreshToken' | 'forgotPassword' | 'resetPassword' | 'verifyEmail' | 'resendVerificationEmail' | 'changePassword'> = {
@@ -54,18 +54,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 ...prev,
                 user,
                 loading: false,
-                isAuthenticated: true
+                isAuthenticated: true,
+                error: null // Clear any previous error
             }))
-            await checkAuth()
         } catch (error) {
             setState(prev => ({
                 ...prev,
+                user: null, // Ensure user is null on login failure
+                isAuthenticated: false,
                 error: error instanceof Error ? error.message : 'An error occurred',
                 loading: false
             }))
             throw error
         }
-    }, [checkAuth])
+    }, [])
 
     const signup = useCallback(async (input: SignupInput) => {
         try {

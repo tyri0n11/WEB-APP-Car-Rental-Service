@@ -25,4 +25,30 @@ export class FindManyBookingsQueryDTO {
   @IsOptional()
   @IsString()
   endDate?: Date;
+
+  @IsOptional()
+  @IsString()
+  carId?: string;
+
+  @IsOptional()
+  @IsString()
+  userId?: string;
+}
+
+export class ListBookingRequestDTO {
+  @IsOptional()
+  @IsString()
+  userId?: string;
+
+  @IsOptional()
+  @IsEnum(BookingStatus)
+  status?: BookingStatus;
+
+  @IsOptional()
+  @IsString()
+  startDate?: Date;
+
+  @IsOptional()
+  @IsString()
+  endDate?: Date;
 }

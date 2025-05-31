@@ -5,7 +5,7 @@ import { Activity } from '@prisma/client';
 export class ActivityResponseDto implements Activity {
   id: string;
   type: ActivityType;
-  bookingId: string;
+  bookingCode: string | null;
   carId: string | null;
   amount: number | null;
   title: string;

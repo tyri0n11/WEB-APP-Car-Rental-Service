@@ -179,14 +179,19 @@ export class BookingService extends BaseService<Booking> {
     );
     this.logger.log(`Added ${bookingCode} to unlockCarQueue`);
 
-    this.activityService.create({
-      bookingCode: bookingData.bookingCode,
-      carId: bookingData.carId,
-      amount: bookingData.totalPrice,
-      type: ActivityType.BOOKING,
-      description: `Customer ${bookingData.userId} booked ${bookingData.carId}`,
-      title: ActivityTitle.BOOKING,
-    });
+    try {
+      await this.activityService.create({
+        bookingCode: bookingData.bookingCode,
+        carId: bookingData.carId,
+        amount: bookingData.totalPrice,
+        type: ActivityType.BOOKING,
+        description: `Customer ${bookingData.userId} booked ${bookingData.carId}`,
+        title: ActivityTitle.BOOKING,
+      });
+    } catch (error) {
+      this.logger.error('Error create booking activity', error);
+    }
+
     return { bookingData, paymentUrl };
   }
 
@@ -200,14 +205,19 @@ export class BookingService extends BaseService<Booking> {
       throw new BadRequestException('Booking not found or completed');
     }
     const bookingData: BookingResponseOnRedisDTO = JSON.parse(bookingDataJson);
-    this.activityService.create({
-      bookingCode: bookingData.bookingCode,
-      carId: bookingData.carId,
-      amount: bookingData.totalPrice,
-      type: ActivityType.PAYMENT,
-      title: ActivityTitle.PAYMENT,
-      description: `Customer ${bookingData.userId} paid for ${bookingData.carId}`,
-    });
+    try {
+      await this.activityService.create({
+        bookingCode: bookingData.bookingCode,
+        carId: bookingData.carId,
+        amount: bookingData.totalPrice,
+        type: ActivityType.PAYMENT,
+        title: ActivityTitle.PAYMENT,
+        description: `Customer ${bookingData.userId} paid for ${bookingData.carId}`,
+      });
+    } catch (error) {
+      this.logger.error('Error create booking activity', error);
+    }
+
     const createdBooking = await this.databaseService.$transaction(
       async (tx) => {
         await tx.car.update({

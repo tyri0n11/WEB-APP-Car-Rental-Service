@@ -15,6 +15,8 @@ export class BookingResponseDTO implements Booking {
   @Expose()
   carId: string;
   @Expose()
+  carImageUrl: string;
+  @Expose()
   startDate: Date;
   @Expose()
   endDate: Date;
@@ -39,36 +41,16 @@ export class BookingResponseDTO implements Booking {
 }
 
 export class BookingResponseOnRedisDTO {
-  @Expose()
   carId: string;
-
-  @Expose()
+  carImageUrl: string;
   userId: string;
-
-  @Expose()
   startDate: Date;
-
-  @Expose()
   endDate: Date;
-
-  @Expose()
   pickupAddress: string;
-
-  @Expose()
   returnAddress: string;
-
-  @Expose()
   paymentProvider: PaymentProvider;
-
-  @Expose()
   bookingCode: string;
-
-  @Expose()
   status: BookingStatus;
-
-  @Expose()
   totalPrice: number;
-
-  @Expose()
   returnUrl: string;
 }

@@ -41,6 +41,7 @@ interface BookingContextType extends BookingState {
   createBooking: (data: CreateBookingRequest) => Promise<void>
   getBooking: (id: string) => Promise<void>
   getBookings: () => Promise<void>
+  getMyBookings: () => Promise<void>
   findByCode: (code: string) => Promise<void>
   returnCar: (id: string) => Promise<void>
 }
@@ -101,6 +102,31 @@ export function BookingProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
+  const getMyBookings = useCallback(async () => {
+    try {
+      dispatch({ type: 'SET_LOADING', payload: true })
+      dispatch({ type: 'SET_ERROR', payload: null })
+      const response = await bookingApi.listMyBookings() // Use listMyBookings
+      dispatch({ type: 'SET_BOOKINGS', payload: response })
+    } catch (error) {
+      dispatch({ type: 'SET_ERROR', payload: error instanceof Error ? error.message : 'An error occurred' })
+      dispatch({
+        type: 'SET_BOOKINGS',
+        payload: {
+          data: [],
+          meta: {
+            total: 0,
+            page: 1,
+            perPage: 10,
+            totalPages: 0
+          }
+        }
+      })
+    } finally {
+      dispatch({ type: 'SET_LOADING', payload: false })
+    }
+  }, [])
+
   const findByCode = useCallback(async (code: string) => {
     try {
       dispatch({ type: 'SET_LOADING', payload: true })
@@ -132,6 +158,7 @@ export function BookingProvider({ children }: { children: ReactNode }) {
     createBooking,
     getBooking,
     getBookings,
+    getMyBookings,
     findByCode,
     returnCar
   }
@@ -147,4 +174,4 @@ export function useBooking() {
   return context
 }
 
-export default BookingContext 
+export default BookingContext

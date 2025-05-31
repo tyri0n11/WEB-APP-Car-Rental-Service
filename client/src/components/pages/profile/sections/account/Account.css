@@ -86,6 +86,13 @@
   border-color: #ff4444;
 }
 
+/* Field error - shown below input fields */
+.field-error {
+  color: #e53e3e;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
 /* Error and success messages */
 .error-message {
   background-color: #fed7d7;

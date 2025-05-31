@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FaIdCard, FaUser, FaEdit, FaSave, FaTimes, FaUpload } from 'react-icons/fa';
 import { useAuth } from '../../../../../contexts/AuthContext';
 import { useUser } from '../../../../../contexts/UserContext';
+import { useNotification } from '../../../../../contexts/NotificationContext';
 import type { UpdateProfileInput, UpdateDrivingLicenseInput } from '../../../../../types/user';
 import { uploadImage } from '../../../../../utils/image';
 import './Account.css';
@@ -15,6 +16,7 @@ const styles = {
 const Account: React.FC = () => {
   const { user: authUser } = useAuth();
   const { user, updateProfile, updateDrivingLicense, isLoading, error: apiError } = useUser();
+  const { showNotification } = useNotification();
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -23,7 +25,6 @@ const Account: React.FC = () => {
   const [uploadingBack, setUploadingBack] = useState(false);
   const [frontImage, setFrontImage] = useState<string>('');
   const [backImage, setBackImage] = useState<string>('');
-  const [debugPayload] = useState<string | null>(null);
   const frontLicenseInputRef = useRef<HTMLInputElement>(null);
   const backLicenseInputRef = useRef<HTMLInputElement>(null);
 
@@ -43,10 +44,15 @@ const Account: React.FC = () => {
       setFrontImage(licenseImages[0] || '');
       setBackImage(licenseImages[1] || '');
 
-      // Định dạng ngày hết hạn sang YYYY-MM-DD cho input
-      const expiryDate = user.drivingLicence?.expiryDate
-        ? new Date(user.drivingLicence.expiryDate).toISOString().split('T')[0]
-        : '';
+      // Định dạng ngày hết hạn sang dd/mm/yyyy cho input
+      let expiryDate = '';
+      if (user.drivingLicence?.expiryDate) {
+        const date = new Date(user.drivingLicence.expiryDate);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        expiryDate = `${day}/${month}/${year}`;
+      }
 
       setFormData({
         firstName: user.firstName,
@@ -61,10 +67,32 @@ const Account: React.FC = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    
+    if (name === 'expiryDate') {
+      // Allow typing only in dd/mm/yyyy format
+      const dateRegex = /^(\d{0,2})(\/)?(\d{0,2})(\/)?(\d{0,4})$/;
+      if (!dateRegex.test(value)) {
+        return;
+      }
+    }
+    
+    if (name === 'licenceNumber') {
+      // Allow only numbers and limit to 12 digits
+      if (!/^\d*$/.test(value)) {
+        return;
+      }
+      
+      if (value.length > 12) {
+        return;
+      }
+    }
+    
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
+    
+    // Clear any previous messages
     setError(null);
     setSuccess(null);
   };
@@ -98,9 +126,14 @@ const Account: React.FC = () => {
         }));
       }
 
-      setSuccess(`Tải ảnh mặt ${side === 'front' ? 'trước' : 'sau'} giấy phép lái xe thành công`);
+      const successMessage = `Tải ảnh mặt ${side === 'front' ? 'trước' : 'sau'} giấy phép lái xe thành công`;
+      showNotification('success', successMessage);
+      setSuccess(successMessage);
     } catch (err) {
-      setError(err instanceof Error ? err.message : `Tải ảnh mặt ${side === 'front' ? 'trước' : 'sau'} thất bại`);
+      const errorMessage = err instanceof Error ? err.message : `Tải ảnh mặt ${side === 'front' ? 'trước' : 'sau'} thất bại`;
+      showNotification('error', errorMessage);
+      setError(errorMessage);
+      
       // Xóa file input
       if (side === 'front') {
         if (frontLicenseInputRef.current) frontLicenseInputRef.current.value = '';
@@ -123,6 +156,48 @@ const Account: React.FC = () => {
       setLoading(true);
       setError(null);
 
+      // Validate license number
+      if (formData.licenceNumber) {
+        if (!/^\d{12}$/.test(formData.licenceNumber)) {
+          throw new Error('Số giấy phép lái xe phải gồm đúng 12 chữ số');
+        }
+      }
+
+      // Validate expiry date
+      if (formData.expiryDate) {
+        const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+        const match = formData.expiryDate.match(dateRegex);
+        
+        if (!match) {
+          throw new Error('Định dạng ngày hết hạn không hợp lệ. Vui lòng nhập theo định dạng dd/mm/yyyy');
+        }
+        
+        const day = parseInt(match[1], 10);
+        const month = parseInt(match[2], 10) - 1; // JS months are 0-based
+        const year = parseInt(match[3], 10);
+        
+        const inputDate = new Date(year, month, day);
+        const today = new Date();
+        
+        // Check if the date is valid
+        if (isNaN(inputDate.getTime())) {
+          throw new Error('Ngày hết hạn không hợp lệ');
+        }
+        
+        // Check if the date is in the past
+        if (inputDate < today) {
+          throw new Error('Ngày hết hạn không thể là ngày trong quá khứ');
+        }
+        
+        // Check if the date is too far in the future (more than 10 years)
+        const tenYearsFromNow = new Date();
+        tenYearsFromNow.setFullYear(tenYearsFromNow.getFullYear() + 10);
+        
+        if (inputDate > tenYearsFromNow) {
+          throw new Error('Ngày hết hạn không thể lớn hơn 10 năm từ hiện tại');
+        }
+      }
+
       // Cập nhật thông tin cá nhân
       await updateProfile({
         firstName: formData.firstName,
@@ -132,16 +207,25 @@ const Account: React.FC = () => {
       });
 
       // Cập nhật giấy phép lái xe với ảnh
+      // Convert dd/mm/yyyy to ISO date format
+      let isoDate = '';
+      if (formData.expiryDate) {
+        const [day, month, year] = formData.expiryDate.split('/');
+        isoDate = `${year}-${month}-${day}T00:00:00.000Z`;
+      }
+
       await updateDrivingLicense({
         licenceNumber: formData.licenceNumber,
-        expiryDate: new Date(formData.expiryDate).toISOString(),
+        expiryDate: isoDate,
         imageUrls: [frontImage, backImage].filter(Boolean)
       });
 
-      setSuccess('Cập nhật thông tin thành công');
+      showNotification('success', 'Cập nhật thông tin thành công');
       setIsEditing(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Cập nhật thông tin thất bại');
+      const errorMessage = err instanceof Error ? err.message : 'Cập nhật thông tin thất bại';
+      showNotification('error', errorMessage);
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -230,7 +314,7 @@ const Account: React.FC = () => {
           <h2><FaIdCard /> Thông tin giấy phép lái xe</h2>
 
           <div className="form-group">
-            <label>Số Giấy Phép Lái Xe</label>
+            <label>Số Giấy Phép Lái Xe (12 số)</label>
             <input
               type="text"
               name="licenceNumber"
@@ -238,20 +322,32 @@ const Account: React.FC = () => {
               onChange={handleInputChange}
               disabled={!isEditing}
               required
+              pattern="[0-9]{12}"
+              title="Số giấy phép lái xe phải gồm đúng 12 chữ số"
+              placeholder="Nhập 12 chữ số"
             />
+            {isEditing && formData.licenceNumber && formData.licenceNumber.length !== 12 && (
+              <div className="field-error">Số giấy phép lái xe phải gồm đúng 12 chữ số</div>
+            )}
           </div>
 
           <div className="form-group">
-            <label htmlFor="expiryDate">Ngày hết hạn</label>
+            <label htmlFor="expiryDate">Ngày hết hạn (dd/mm/yyyy)</label>
             <input
-              type="date"
+              type="text"
               id="expiryDate"
               name="expiryDate"
               value={formData.expiryDate}
               onChange={handleInputChange}
               disabled={!isEditing}
               required
+              placeholder="dd/mm/yyyy"
+              pattern="^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$"
+              title="Vui lòng nhập ngày hết hạn theo định dạng dd/mm/yyyy"
             />
+            {isEditing && formData.expiryDate && !/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/.test(formData.expiryDate) && (
+              <div className="field-error">Vui lòng nhập ngày hết hạn theo định dạng dd/mm/yyyy</div>
+            )}
           </div>
 
           <div className="license-images">
@@ -315,13 +411,6 @@ const Account: React.FC = () => {
           )
         }
       </form >
-
-      {debugPayload && (
-        <div className="debug-section">
-          <h4>Debug Payload:</h4>
-          <pre>{debugPayload}</pre>
-        </div>
-      )}
     </div >
   );
 };

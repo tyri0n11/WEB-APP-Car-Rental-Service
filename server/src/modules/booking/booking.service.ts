@@ -64,6 +64,44 @@ export class BookingService extends BaseService<Booking> {
     return `${carIdPrefix}${timestamp}${randomSuffix}`;
   }
 
+  private async checkCarAvailability(
+    carId: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<boolean> {
+    const bookingKey = this.genRedisKey.booking(carId);
+    const pendingBooking = await this.redisService.hget(bookingKey, 'data');
+    if (pendingBooking) {
+      return false;
+    }
+
+    const existingBookings = await this.findMany({
+      filter: {
+        carId,
+        status: {
+          in: [BookingStatus.CONFIRMED, BookingStatus.ONGOING],
+        },
+        OR: [
+          {
+            startDate: { lte: endDate },
+            endDate: { gte: startDate },
+          },
+        ],
+      },
+    });
+    if (existingBookings.length > 0) return false;
+    return true;
+  }
+
+  private async calculateTotalPrice(
+    dailyPrice: number,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<number> {
+    const days = dayjs(endDate).diff(startDate, 'day');
+    return dailyPrice * days;
+  }
+
   async createBookingOnRedis(userId: string, dto: CreateBookingRequestDTO) {
     const car = await this.carService.findOne({ id: dto.carId });
 
@@ -100,44 +138,6 @@ export class BookingService extends BaseService<Booking> {
       .exec();
 
     return { bookingCode, totalPrice };
-  }
-
-  async checkCarAvailability(
-    carId: string,
-    startDate: Date,
-    endDate: Date,
-  ): Promise<boolean> {
-    const bookingKey = this.genRedisKey.booking(carId);
-    const pendingBooking = await this.redisService.hget(bookingKey, 'data');
-    if (pendingBooking) {
-      return false;
-    }
-
-    const existingBookings = await this.findMany({
-      filter: {
-        carId,
-        status: {
-          in: [BookingStatus.CONFIRMED, BookingStatus.ONGOING],
-        },
-        OR: [
-          {
-            startDate: { lte: endDate },
-            endDate: { gte: startDate },
-          },
-        ],
-      },
-    });
-    if (existingBookings.length > 0) return false;
-    return true;
-  }
-
-  async calculateTotalPrice(
-    dailyPrice: number,
-    startDate: Date,
-    endDate: Date,
-  ): Promise<number> {
-    const days = dayjs(endDate).diff(startDate, 'day');
-    return dailyPrice * days;
   }
 
   async confirmBooking(

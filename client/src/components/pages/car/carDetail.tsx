@@ -125,11 +125,7 @@ const CarDetail: React.FC = () => {
 
     const userWithPhone = user as User & { phoneNumber: string };
 
-<<<<<<< HEAD
-    navigate(ROUTES.PROTECTED.BOOKING_CONFIRMATION, {
-=======
     navigate('/user/booking-confirmation', {
->>>>>>> d834f17664c81ca0a39d2ad7f8a30f90a174ff98
       state: {
         carId: car.id,
         customerName: user.firstName + ' ' + user.lastName,

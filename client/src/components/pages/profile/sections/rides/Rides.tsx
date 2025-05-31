@@ -17,6 +17,22 @@ function formatDate(dateString: string): string {
     });
 }
 
+function getCarImageUrl(booking: Booking): string {
+    // If the car has images and at least one image exists
+    if (booking.car?.images && booking.car.images.length > 0) {
+        // Try to find the main image first
+        const mainImage = booking.car.images.find(img => img.isMain === true);
+        if (mainImage && mainImage.url) return mainImage.url;
+        
+        // If no main image or main image URL is null/empty, try the first image with a valid URL
+        const firstValidImage = booking.car.images.find(img => img && img.url && img.url.trim() !== '');
+        if (firstValidImage && firstValidImage.url) return firstValidImage.url;
+    }
+    
+    // No valid images found, return empty string (the img element will show a broken image indicator)
+    return '';
+}
+
 function RidesSkeleton() {
     return (
         <div className="my-rides-root">
@@ -51,7 +67,7 @@ export function MyRides() {
     const [selectedStatus, setSelectedStatus] = useState<BookingStatus | 'ALL'>('ALL');
 
     useEffect(() => {
-        if (user) {
+        if (user) { // Always fetch if user is present
             getMyBookings();
         }
     }, [user, getMyBookings]); 
@@ -62,7 +78,7 @@ export function MyRides() {
         }
     };
 
-    // Get the bookings array from the context
+    // Get the bookings array directly from the context
     const bookingsArray = bookings?.data || [];
 
     const filteredBookings = bookingsArray.filter((booking: Booking) => {
@@ -165,7 +181,7 @@ export function MyRides() {
                             <div key={booking.id} className="ride-card">
                                 <div className="ride-image">
                                     <img
-                                        src={booking.car?.images?.[0]?.url || '/placeholder-car.jpg'}
+                                        src={getCarImageUrl(booking)}
                                         alt={`${booking.car?.make || 'Xe'} ${booking.car?.model || ''}`}
                                     />
                                 </div>

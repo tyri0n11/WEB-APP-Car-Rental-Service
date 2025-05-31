@@ -126,13 +126,16 @@ export class CarService extends BaseService<Car> {
         include: this.defaultIncludes,
       },
     );
-
-    this.activityService.create({
-      carId: car.id,
-      type: ActivityType.CAR_ADDED,
-      title: ActivityTitle.CAR_ADDED,
-      description: `Car ${car.id} added`,
-    });
+    try {
+      await this.activityService.create({
+        carId: car.id,
+        type: ActivityType.CAR_ADDED,
+        title: ActivityTitle.CAR_ADDED,
+        description: `Car ${car.id} added`,
+      });
+    } catch (error) {
+      this.logger.error('Error create car activity', error);
+    }
 
     return this.processCarResponse(car);
   }

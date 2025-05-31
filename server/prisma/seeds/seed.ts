@@ -567,16 +567,12 @@ async function main() {
     }
 
     // Create car images
+    await prisma.carImage.deleteMany({ where: { carId: car.id } });
+
+    // Then add all images
     for (const imageData of images) {
-      await prisma.carImage.upsert({
-        where: {
-          carId_url: {
-            carId: car.id,
-            url: imageData.url,
-          },
-        },
-        update: imageData,
-        create: {
+      await prisma.carImage.create({
+        data: {
           ...imageData,
           carId: car.id,
         },

@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { CarStatus, FuelType } from '@prisma/client';
-import { Type } from 'class-transformer';
+import { Type, Transform } from 'class-transformer';
 import {
   IsArray,
   IsEnum,
@@ -67,6 +67,7 @@ export class FindManyCarsQueryDTO {
   })
   @IsOptional()
   @IsEnum(FuelType)
+  @Transform(({ value }) => value?.toUpperCase())
   fuelType?: FuelType;
 
   @ApiPropertyOptional({
@@ -74,6 +75,7 @@ export class FindManyCarsQueryDTO {
   })
   @IsOptional()
   @IsEnum(CarStatus)
+  @Transform(({ value }) => value?.toUpperCase())
   status?: CarStatus;
 
   @ApiPropertyOptional({

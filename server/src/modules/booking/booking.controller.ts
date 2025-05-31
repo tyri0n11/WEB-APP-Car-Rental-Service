@@ -42,6 +42,19 @@ export class BookingController {
     });
   }
 
+  @Get('my-bookings')
+  @ApiPagination()
+  @ApiBookingQueries()
+  listMyBookings(
+    @Req() req: RequestWithUser,
+    @Query() query: FindManyBookingsQueryDTO,
+  ) {
+    return this.bookingService.findManyWithPagination({
+      ...query,
+      userId: req.user.id,
+    });
+  }
+
   @Get()
   @ApiPagination()
   @ApiBookingQueries()

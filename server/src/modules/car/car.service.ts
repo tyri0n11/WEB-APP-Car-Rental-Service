@@ -42,13 +42,7 @@ export class CarService extends BaseService<Car> {
       case CarSortBy.PRICE_DESC:
         return { dailyPrice: 'desc' };
       case CarSortBy.RATING:
-        return {
-          reviews: {
-            _avg: {
-              rating: 'desc',
-            },
-          },
-        };
+        return { rating: 'desc' };
       case CarSortBy.NEWEST:
         return { createdAt: 'desc' };
       case CarSortBy.OLDEST:
@@ -137,6 +131,7 @@ export class CarService extends BaseService<Car> {
       carId: car.id,
       type: ActivityType.CAR_ADDED,
       title: ActivityTitle.CAR_ADDED,
+      description: `Car ${car.id} added`,
     });
 
     return this.processCarResponse(car);

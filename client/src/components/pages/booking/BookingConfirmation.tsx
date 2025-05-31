@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import StepNavigation from './StepNavigation'; // Import StepNavigation component
 import './BookingConfirmation.css'; // Import the updated CSS file
-import { ROUTES } from '../../../routes/constants/ROUTES';
 
 const BookingConfirmation: React.FC = () => {
   const navigate = useNavigate();
@@ -65,7 +64,7 @@ const BookingConfirmation: React.FC = () => {
     setIsSubmitting(true);
 
     // Navigate to Payment (Step 2)
-    navigate(ROUTES.PROTECTED.PAYMENT, {
+    navigate('/payment', {
       state: {
         carId,
         carDetails,

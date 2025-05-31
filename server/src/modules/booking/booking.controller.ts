@@ -21,6 +21,7 @@ import { ApiBookingQueries } from './decorators/findManyQuery.decorator';
 import { CreateBookingRequestDTO } from './dtos/create.request.dto';
 import { FindManyBookingsQueryDTO } from './dtos/findMany.request.dto';
 import { ResourceOwnerGuard } from '@/guards/base/resourceOwner.guard';
+import { BookingOwnerGuard } from './guards/bookingOwner.guard';
 @UseGuards(JwtAccessGuard)
 @Controller('bookings')
 export class BookingController {
@@ -42,6 +43,19 @@ export class BookingController {
     });
   }
 
+  @Get('my-bookings')
+  @ApiPagination()
+  @ApiBookingQueries()
+  listMyBookings(
+    @Req() req: RequestWithUser,
+    @Query() query: FindManyBookingsQueryDTO,
+  ) {
+    return this.bookingService.findManyWithPagination({
+      ...query,
+      userId: req.user.id,
+    });
+  }
+
   @Get()
   @ApiPagination()
   @ApiBookingQueries()
@@ -52,7 +66,7 @@ export class BookingController {
   }
 
   @Get(':id')
-  @UseGuards(ResourceOwnerGuard)
+  @UseGuards(BookingOwnerGuard)
   findOne(@Param('id') id: string) {
     return this.bookingService.findOne({ id });
   }
@@ -65,7 +79,7 @@ export class BookingController {
   }
 
   @Get('code/:code')
-  @UseGuards(ResourceOwnerGuard)
+  @UseGuards(BookingOwnerGuard)
   findByCode(@Param('code') code: string) {
     return this.bookingService.findByCode(code);
   }

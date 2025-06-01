@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Car, getCarById, updateCar } from '../../../apis/cars';
+import { carApi } from '../../../apis/car';
 import { CAR_NOTIFICATIONS } from '../../../constants/notificationMessages';
 import { useNotificationWithState } from '../../../contexts/NotificationContext';
 import { ROUTES } from '../../../routes/constants/ROUTES';
-import { FuelType } from '../../../types/car';
+import { Car, FuelType } from '../../../types/car';
 import './AdminCarEdit.css';
 
 const AdminCarEdit: React.FC = () => {
@@ -35,20 +35,25 @@ const AdminCarEdit: React.FC = () => {
       if (!id) return;
       try {
         setLoading(true);
-        const carData = await getCarById(id);
+        const carData = await carApi.findOne(id);
         setCar(carData);
+        
+        // Type assertion to any to work around the type mismatch
+        const carAny = carData as any;
+        
+        // Map the car data to form fields safely
         setFormData({
-          make: carData.make,
-          model: carData.model,
-          year: carData.year,
-          kilometers: carData.kilometers,
-          description: carData.description,
-          dailyPrice: carData.dailyPrice,
-          licensePlate: carData.licensePlate,
-          numSeats: carData.numSeats,
-          autoGearbox: carData.autoGearbox,
-          fuelType: carData.fuelType,
-          address: carData.address,
+          make: carAny.make || carAny.brand || '',
+          model: carAny.model || '',
+          year: carAny.year || new Date().getFullYear(),
+          kilometers: carAny.kilometers || 0,
+          description: carAny.description || '',
+          dailyPrice: carAny.dailyPrice || carAny.pricePerDay || 0,
+          licensePlate: carAny.licensePlate || '',
+          numSeats: carAny.numSeats || carAny.seats || 4,
+          autoGearbox: carAny.autoGearbox || carAny.transmission === 'automatic' || true,
+          fuelType: carAny.fuelType as FuelType || FuelType.PETROL,
+          address: carAny.address || carAny.location || '',
         });
       } catch (err) {
         console.error('Error fetching car:', err);
@@ -76,7 +81,23 @@ const AdminCarEdit: React.FC = () => {
 
     const result = await handleAsync(
       async () => {
-        const updatedCar = await updateCar(id, formData);
+        // Create update data with only fields that are allowed in the DTO
+        const updateData = {
+          make: formData.make,
+          model: formData.model,
+          year: formData.year,
+          kilometers: formData.kilometers,
+          description: formData.description,
+          dailyPrice: formData.dailyPrice,
+          licensePlate: formData.licensePlate,
+          numSeats: formData.numSeats,
+          autoGearbox: formData.autoGearbox,
+          fuelType: formData.fuelType,
+          address: formData.address
+        };
+        
+        // Use the API update method with properly formatted data
+        const updatedCar = await carApi.update(id, updateData);
         return updatedCar;
       },
       {
@@ -279,4 +300,4 @@ const AdminCarEdit: React.FC = () => {
   );
 };
 
-export default AdminCarEdit; 
+export default AdminCarEdit;

@@ -17,6 +17,7 @@ import { useUser } from "./contexts/UserContext";
 import BookingConfirmation from './components/pages/booking/BookingConfirmation';
 import Payment from './components/pages/booking/Payment';
 import CompletedBooking from './components/pages/booking/CompletedBooking';
+import { checkTokenValidity } from "./utils/tokenUtils";
 
 function App() {
   const [showSignIn, setShowSignIn] = useState(false);
@@ -26,6 +27,13 @@ function App() {
 
   // Check if current route is admin route
   const isAdminRoute = location.pathname.startsWith('/admin');
+
+  useEffect(() => {
+    // Check token validity on app initialization and when isAdminRoute changes
+    if (isAdminRoute) {
+      checkTokenValidity();
+    }
+  }, [isAdminRoute]);
 
   useEffect(() => {
     if (showSignIn || showSignUp) {

@@ -11,6 +11,7 @@ import { Box } from '@mui/material';
 import { Stack } from '@mui/material';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 import { dashboardApi } from '../../../apis/dashboard';
+import AdminCategories from './AdminCategories'; // Import AdminCategories
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
@@ -173,6 +174,18 @@ const Dashboard: React.FC = () => {
               <h2>Quản lý doanh thu</h2>
             </div>
             <AdminRevenue />
+          </div>
+        );
+      case 'categories': // Add case for categories
+        return (
+          <div className={styles.mainContent}>
+            <div className={styles.header}>
+              <button className={styles.menuToggle} onClick={toggleSidebar}>
+                <FaBars />
+              </button>
+              <h2>Quản lý danh mục</h2>
+            </div>
+            <AdminCategories />
           </div>
         );
       default:

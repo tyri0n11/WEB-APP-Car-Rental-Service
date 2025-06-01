@@ -1,54 +1,126 @@
 .admin-car-edit {
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 2.5rem; /* Increased padding */
+  max-width: 900px; /* Slightly reduced max-width for better focus on content */
+  margin: 2rem auto; /* Added top/bottom margin */
+  background-color: #f9fafb; /* Light background for the page */
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Softer shadow for the page container */
 }
 
 .edit-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem; /* Increased margin */
+  padding-bottom: 1.5rem; /* Add padding and border */
+  border-bottom: 1px solid #e5e7eb; /* Light border */
 }
 
 .edit-header h1 {
-  font-size: 1.8rem;
-  color: #333;
+  font-size: 1.75rem; /* Adjusted font size */
+  color: #1f2937; /* Darker heading color */
+  font-weight: 600;
   margin: 0;
 }
 
-.back-button-edit{
-  padding: 0.5rem 1rem;
-  background-color: #f0f0f0;
-  border: none;
-  border-radius: 4px;
+/* Consistent Button Styling - Base */
+.back-button-edit,
+.save-button,
+.cancel-button,
+.error-container button {
+  padding: 0.7rem 1.4rem; /* Standardized padding */
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
   cursor: pointer;
-  font-size: 0.9rem;
-  color: #666;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, transform 0.1s ease, box-shadow 0.2s ease;
+  border: 1px solid transparent; /* Base border */
+  min-width: 130px; /* Consistent min-width for buttons other than save/cancel */
+  text-align: center;
+  box-sizing: border-box; /* Added for predictable sizing */
 }
 
-.back-button:hover {
-  background-color: #e0e0e0;
+.back-button-edit:hover,
+.save-button:hover,
+.cancel-button:hover,
+.error-container button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
+
+.back-button-edit:active,
+.save-button:active,
+.cancel-button:active,
+.error-container button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Specific Button Styles */
+.back-button-edit {
+  background-color: #6c757d; /* Secondary */
+  color: white;
+  border-color: #6c757d;
+}
+.back-button-edit:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+.save-button,
+.cancel-button {
+  width: 150px; /* Enforce specific, identical width */
+  /* min-width will be overridden by width here, which is fine */
+}
+
+.save-button {
+  background-color: #007bff; /* Primary */
+  color: white;
+  border-color: #007bff;
+}
+.save-button:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.cancel-button {
+  background-color: #f8f9fa; /* Light */
+  color: #343a40;
+  border-color: #ced4da;
+}
+.cancel-button:hover {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.error-container button {
+  background-color: #6c757d;
+  color: white;
+  border-color: #6c757d;
+}
+.error-container button:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
 
 .edit-form {
   background-color: white;
-  padding: 2rem;
+  padding: 2.5rem; /* Increased padding */
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Softer shadow for form */
 }
 
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+  gap: 1.75rem; /* Increased gap */
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.6rem; /* Increased gap */
 }
 
 .form-group.full-width {
@@ -57,29 +129,33 @@
 
 .form-group label {
   font-size: 0.9rem;
-  color: #666;
+  color: #4b5563; /* Slightly darker label */
   font-weight: 500;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-  transition: border-color 0.2s;
+  padding: 0.8rem 1rem; /* Increased padding */
+  border: 1px solid #d1d5db; /* Lighter border */
+  border-radius: 6px; /* Consistent border-radius */
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  background-color: #fff;
+  color: #1f2937;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: #2563eb; /* Tailwind blue-600 */
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3); /* Focus ring */
 }
 
 .form-group input[type="number"] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .form-group input[type="number"]::-webkit-outer-spin-button,
@@ -91,50 +167,43 @@
 .checkbox-group {
   flex-direction: row;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem; /* Increased gap */
+  padding-top: 0.5rem; /* Add some padding to align with other fields better */
 }
 
 .checkbox-group input[type="checkbox"] {
-  width: 1.2rem;
-  height: 1.2rem;
+  width: 1.1rem; /* Slightly smaller checkbox */
+  height: 1.1rem;
   margin: 0;
+  accent-color: #2563eb; /* Tailwind blue-600 for checkbox color */
+  border: 1px solid #d1d5db;
+  border-radius: 3px;
+  appearance: none; /* For custom styling if needed, but accent-color is often enough */
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"]:checked {
+  background-color: #2563eb;
+  border-color: #2563eb;
+  /* Add a checkmark using pseudo-elements if not native */
+}
+
+.checkbox-group label {
+  margin-bottom: 0; /* Align label with checkbox */
+  font-weight: normal; /* Normal weight for checkbox label */
+  color: #374151;
 }
 
 .form-actions {
   display: flex;
   gap: 1rem;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #eee;
+  margin-top: 2.5rem; /* Increased margin */
+  padding-top: 1.75rem; /* Increased padding */
+  border-top: 1px solid #e5e7eb; /* Lighter border */
+  justify-content: flex-end;
 }
 
-.save-button,
-.cancel-button {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.save-button {
-  background-color: #007bff;
-  color: white;
-}
-
-.save-button:hover {
-  background-color: #0056b3;
-}
-
-.cancel-button {
-  background-color: #f8f9fa;
-  color: #666;
-}
-
-.cancel-button:hover {
-  background-color: #e9ecef;
-}
 
 .loading-container,
 .error-container {
@@ -143,35 +212,38 @@
   align-items: center;
   justify-content: center;
   min-height: 400px;
-  gap: 1rem;
+  gap: 1.5rem; /* Increased gap */
+  padding: 2rem;
+  background-color: #f9fafb;
+  border-radius: 8px;
 }
 
-.error-container button {
-  padding: 0.5rem 1rem;
-  background-color: #f8f9fa;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  color: #666;
+.loading-container p, .error-container p {
+  font-size: 1.1rem;
+  color: #4b5563;
 }
 
-.error-container button:hover {
-  background-color: #e9ecef;
-}
 
 @media (max-width: 768px) {
   .admin-car-edit {
-    padding: 1rem;
+    padding: 1.5rem;
+    margin: 1rem;
   }
 
   .form-grid {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
 
   .edit-header {
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
     text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+  }
+  .edit-header h1 {
+    font-size: 1.6rem;
   }
 
   .form-actions {
@@ -179,7 +251,22 @@
   }
 
   .save-button,
-  .cancel-button {
+  .cancel-button,
+  .back-button-edit,
+  .error-container button {
     width: 100%;
+    padding: 0.8rem 1.5rem; /* Adjust padding for full width */
   }
-} 
+}
+
+@media (max-width: 480px) {
+  .admin-car-edit {
+    padding: 1rem;
+  }
+  .edit-form {
+    padding: 1.5rem;
+  }
+  .edit-header h1 {
+    font-size: 1.4rem;
+  }
+}

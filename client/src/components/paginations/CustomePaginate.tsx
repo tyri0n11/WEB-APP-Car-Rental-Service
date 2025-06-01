@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Car, CarQueryParams, getCars, updateCar, deleteCar, updateCarStatus, createCar } from '../../apis/cars';
+// Unused imports: updateCar, updateCarStatus
+import { Car, CarQueryParams, getCars, createCar, deleteCar } from '../../apis/cars'; 
 import { useAuth } from '../../hooks/useAuth';
 import { ROUTES } from '../../routes/constants/ROUTES';
 import { CarStatus, FuelType } from '../../types/car';
@@ -51,9 +52,8 @@ const CustomePaginate: React.FC<CustomePaginateProps> = ({
     prev: null,
     next: null
   });
-  const [deletingCarId, setDeletingCarId] = useState<string | null>(null);
-  const [updatingStatusId, setUpdatingStatusId] = useState<string | null>(null);
-  const [statusLoading, setStatusLoading] = useState(false);
+  const [deletingCarId, setDeletingCarId] = useState<string | null>(null); 
+  // Unused state variables: updatingStatusId, setUpdatingStatusId, statusLoading, setStatusLoading
   const [showAddModal, setShowAddModal] = useState(false);
   const [addForm, setAddForm] = useState({
     imageUrls: [''],
@@ -162,18 +162,15 @@ const CustomePaginate: React.FC<CustomePaginateProps> = ({
     }
   };
 
-  const handleEdit = (carId: string) => {
-    navigate(`/admin/cars/${carId}/edit`);
-  };
-
   const handleDelete = async (carId: string) => {
     if (!window.confirm('Bạn có chắc chắn muốn xóa xe này?')) return;
     setDeletingCarId(carId);
     try {
       await deleteCar(carId);
-      fetchCars();
+      fetchCars(); // Refetch cars to update the list
     } catch (err) {
       alert('Xóa xe thất bại!');
+      console.error('Error deleting car:', err);
     } finally {
       setDeletingCarId(null);
     }
@@ -339,31 +336,24 @@ const CustomePaginate: React.FC<CustomePaginateProps> = ({
               <div
                 key={car.id}
                 className="car-item"
-                onClick={() => !isAdmin && handleCarClick(car.id)}
-                style={{ cursor: isAdmin ? 'default' : 'pointer' }}
+                onClick={(e) => {
+                  const target = e.target as HTMLElement;
+                  // If the click is on the delete button (or anything inside admin-car-actions),
+                  // do nothing here. The button's own onClick will handle it.
+                  if (target.closest('.admin-car-actions')) {
+                    return;
+                  }
+                  // Otherwise, handleCarClick will navigate admin to edit page or user to detail page.
+                  handleCarClick(car.id);
+                }}
+                style={{ cursor: 'pointer' }} 
               >
                 <CarCard car={car} />
                 {isAdmin && (
-                  <div className="admin-car-actions" style={{ marginTop: 8, display: 'flex', gap: 8 }}>
+                  <div className="admin-car-actions" style={{ marginTop: 8, display: 'flex', justifyContent: 'center', gap: 8 }}>
+                    {/* Edit button is removed as per request */}
                     <button
-                      onClick={() => handleEdit(car.id)}
-                      style={{
-                        padding: '4px 12px',
-                        borderRadius: 20,
-                        border: '1px solid #2563eb',
-                        background: '#2563eb',
-                        color: '#fff',
-                        fontWeight: 500,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 4
-                      }}
-                    >
-                      ✏️ Sửa
-                    </button>
-                    <button
-                      onClick={() => handleDelete(car.id)}
+                      onClick={(e) => { e.stopPropagation(); handleDelete(car.id); }} // Stop propagation to prevent card click
                       style={{
                         padding: '4px 12px',
                         borderRadius: 20,

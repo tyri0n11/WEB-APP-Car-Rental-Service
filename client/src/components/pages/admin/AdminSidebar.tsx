@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaCar, FaChartBar, FaClipboardList, FaEye, FaHome, FaSignOutAlt, FaTimes } from 'react-icons/fa';
+import { FaCar, FaChartBar, FaClipboardList, FaEye, FaHome, FaSignOutAlt, FaTags, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
 import styles from './AdminSidebar.module.css';
@@ -9,6 +9,7 @@ const tabs = [
   { label: 'Xe', icon: <FaCar />, id: 'cars' },
   { label: 'Đơn hàng', icon: <FaClipboardList />, id: 'bookings' },
   { label: 'Doanh thu', icon: <FaChartBar />, id: 'revenue' },
+  { label: 'Danh mục', icon: <FaTags />, id: 'categories' }, // Added Categories
 ];
 
 interface AdminSidebarProps {
@@ -63,4 +64,4 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, onTabChange, isO
   );
 };
 
-export default AdminSidebar; 
+export default AdminSidebar;

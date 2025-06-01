@@ -1,0 +1,382 @@
+.pageContainer {
+    padding: 2rem;
+    background-color: #f9fafb;
+    min-height: 100vh;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.addButton {
+    background-color: #007bff;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.addButton:hover {
+    background-color: #0056b3;
+}
+
+.categoryTable {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border-radius: 8px;
+    overflow: hidden; /* Ensures border-radius is respected by table contents */
+}
+
+.categoryTable th,
+.categoryTable td {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.categoryTable th {
+    background-color: #f3f4f6;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    text-transform: uppercase;
+}
+
+.categoryTable td {
+    font-size: 0.9rem;
+    color: #4b5563;
+}
+
+.categoryTable tr:last-child td {
+    border-bottom: none;
+}
+
+.actionsCell button {
+    margin-right: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.editButton {
+    background-color: #ffc107; /* Warning color */
+    color: #212529;
+    border-color: #ffc107;
+}
+.editButton:hover {
+    background-color: #e0a800;
+    border-color: #d39e00;
+}
+
+.deleteButton {
+    background-color: #dc3545; /* Danger color */
+    color: white;
+    border-color: #dc3545;
+}
+.deleteButton:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+/* Modal Styles */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 500px;
+}
+
+.modalContent h2 {
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #1f2937;
+}
+
+.modalFormGroup {
+    margin-bottom: 1.5rem;
+}
+
+.modalFormGroup label {
+    display: block;
+    font-size: 0.9rem;
+    color: #4b5563;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.modalFormGroup input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+}
+
+.modalFormGroup input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+.modalActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 2rem;
+}
+
+.modalActions button {
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.saveModalButton {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+.saveModalButton:hover {
+    background-color: #0056b3;
+}
+
+.cancelModalButton {
+    background-color: #f8f9fa;
+    color: #343a40;
+    border-color: #ced4da;
+}
+.cancelModalButton:hover {
+    background-color: #e9ecef;
+}
+
+.loadingText, .errorText {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1rem;
+    color: #4b5563;
+}
+
+.adminCategoriesContainer h2 {
+  font-size: 1.8rem; /* Increased font size */
+  color: #333;
+  margin-bottom: 1.5rem; /* Increased margin */
+  border-bottom: 1px solid #eee; /* Added border */
+  padding-bottom: 0.75rem; /* Added padding */
+}
+
+/* Added styles for form and list */
+.addCategoryForm {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.addCategoryForm h3 {
+  font-size: 1.3rem;
+  color: #444;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.inputField,
+.textareaField {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 1rem;
+}
+
+.textareaField {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.addButton {
+  background-color: #28a745; /* Green */
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.addButton:hover {
+  background-color: #218838; /* Darker green */
+}
+
+.addButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.categoryList {
+  margin-top: 2rem;
+}
+
+.categoryList h3 {
+  font-size: 1.3rem;
+  color: #444;
+  margin-bottom: 1rem;
+}
+
+.categoryList table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.categoryList th,
+.categoryList td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.categoryList th {
+  background-color: #f0f0f0;
+  font-weight: 600;
+}
+
+.actionButton {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-right: 0.5rem;
+  transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+}
+
+.actionButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.deleteButton {
+  background-color: #dc3545; /* Red */
+  color: white;
+}
+
+.deleteButton:hover:not(:disabled) {
+  background-color: #c82333; /* Darker red */
+}
+
+/* Styles for Edit Category Form and general form enhancements */
+.formCard {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.formCard h3 {
+  font-size: 1.3rem;
+  color: #444;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.editCategoryForm {
+  /* Specific styles for edit form if needed, inherits .formCard */
+  border-left: 4px solid #007bff; /* Blue accent for edit form */
+}
+
+.addCategoryForm {
+    /* Specific styles for add form if needed, inherits .formCard */
+    border-left: 4px solid #28a745; /* Green accent for add form */
+}
+
+.formActions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.saveButton {
+  background-color: #007bff; /* Blue */
+  color: white;
+}
+.saveButton:hover:not(:disabled) {
+  background-color: #0056b3; /* Darker blue */
+}
+
+.cancelButton {
+  background-color: #6c757d; /* Gray */
+  color: white;
+}
+.cancelButton:hover:not(:disabled) {
+  background-color: #5a6268; /* Darker gray */
+}
+
+.editButton {
+  background-color: #ffc107; /* Yellow */
+  color: #212529; /* Dark text for yellow bg */
+}
+
+.editButton:hover:not(:disabled) {
+  background-color: #e0a800; /* Darker yellow */
+}
+
+.errorState {
+  color: #dc3545; /* Red for error messages */
+  background-color: #f8d7da; /* Light red background for error state */
+  border: 1px solid #f5c6cb; /* Red border for error state */
+}
+
+.errorState p {
+  margin: 0;
+}
+
+/* Added styles for error banner */
+.errorBanner {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+}

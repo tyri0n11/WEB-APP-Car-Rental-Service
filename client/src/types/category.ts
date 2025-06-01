@@ -11,6 +11,11 @@ export interface CreateCategoryInput {
     description?: string
 }
 
+export interface UpdateCategoryInput {
+    name?: string
+    description?: string
+}
+
 export interface CategoryContextValue {
     categories: Category[]
     isLoading: boolean
@@ -19,4 +24,4 @@ export interface CategoryContextValue {
     deleteCategory: (id: string) => Promise<void>
     getCategory: (id: string) => Promise<Category>
     getAllCategories: () => Promise<void>
-} 
+}

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Car, getCarById, updateCar } from '../../../apis/cars';
+import { carApi } from '../../../apis/car';
 import { CAR_NOTIFICATIONS } from '../../../constants/notificationMessages';
 import { useNotificationWithState } from '../../../contexts/NotificationContext';
 import { ROUTES } from '../../../routes/constants/ROUTES';
-import { FuelType } from '../../../types/car';
+import { Car, FuelType } from '../../../types/car';
 import './AdminCarEdit.css';
 
 const AdminCarEdit: React.FC = () => {
@@ -35,20 +35,25 @@ const AdminCarEdit: React.FC = () => {
       if (!id) return;
       try {
         setLoading(true);
-        const carData = await getCarById(id);
+        const carData = await carApi.findOne(id);
         setCar(carData);
+        
+        // Type assertion to any to work around the type mismatch
+        const carAny = carData as any;
+        
+        // Map the car data to form fields safely
         setFormData({
-          make: carData.make,
-          model: carData.model,
-          year: carData.year,
-          kilometers: carData.kilometers,
-          description: carData.description,
-          dailyPrice: carData.dailyPrice,
-          licensePlate: carData.licensePlate,
-          numSeats: carData.numSeats,
-          autoGearbox: carData.autoGearbox,
-          fuelType: carData.fuelType,
-          address: carData.address,
+          make: carAny.make || carAny.brand || '',
+          model: carAny.model || '',
+          year: carAny.year || new Date().getFullYear(),
+          kilometers: carAny.kilometers || 0,
+          description: carAny.description || '',
+          dailyPrice: carAny.dailyPrice || carAny.pricePerDay || 0,
+          licensePlate: carAny.licensePlate || '',
+          numSeats: carAny.numSeats || carAny.seats || 4,
+          autoGearbox: carAny.autoGearbox || carAny.transmission === 'automatic' || true,
+          fuelType: carAny.fuelType as FuelType || FuelType.PETROL,
+          address: carAny.address || carAny.location || '',
         });
       } catch (err) {
         console.error('Error fetching car:', err);
@@ -76,7 +81,23 @@ const AdminCarEdit: React.FC = () => {
 
     const result = await handleAsync(
       async () => {
-        const updatedCar = await updateCar(id, formData);
+        // Create update data with only fields that are allowed in the DTO
+        const updateData = {
+          make: formData.make,
+          model: formData.model,
+          year: formData.year,
+          kilometers: formData.kilometers,
+          description: formData.description,
+          dailyPrice: formData.dailyPrice,
+          licensePlate: formData.licensePlate,
+          numSeats: formData.numSeats,
+          autoGearbox: formData.autoGearbox,
+          fuelType: formData.fuelType,
+          address: formData.address
+        };
+        
+        // Use the API update method with properly formatted data
+        const updatedCar = await carApi.update(id, updateData);
         return updatedCar;
       },
       {
@@ -94,7 +115,7 @@ const AdminCarEdit: React.FC = () => {
   if (loading) {
     return (
       <div className="loading-container">
-        <p>Loading car details...</p>
+        <p>Đang tải thông tin xe...</p>
       </div>
     );
   }
@@ -102,8 +123,8 @@ const AdminCarEdit: React.FC = () => {
   if (error || !car) {
     return (
       <div className="error-container">
-        <p>{error || 'Car not found'}</p>
-        <button onClick={() => navigate(ROUTES.ADMIN.DASHBOARD)}>Back to Cars</button>
+        <p>{error || 'Không tìm thấy xe'}</p>
+        <button onClick={() => navigate(ROUTES.ADMIN.DASHBOARD)}>Trở về danh sách xe</button>
       </div>
     );
   }
@@ -111,16 +132,16 @@ const AdminCarEdit: React.FC = () => {
   return (
     <div className="admin-car-edit">
       <div className="edit-header">
-        <h1>Edit Car Details</h1>
+        <h1>Chỉnh Sửa Thông Tin Xe</h1>
         <button className="back-button-edit" onClick={() => navigate(ROUTES.ADMIN.DASHBOARD)}>
-          Back to Cars
+          Trở về danh sách xe
         </button>
       </div>
 
       <form onSubmit={handleSubmit} className="edit-form">
         <div className="form-grid">
           <div className="form-group">
-            <label htmlFor="make">Make</label>
+            <label htmlFor="make">Hãng xe</label>
             <input
               type="text"
               id="make"
@@ -132,7 +153,7 @@ const AdminCarEdit: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="model">Model</label>
+            <label htmlFor="model">Mẫu xe</label>
             <input
               type="text"
               id="model"
@@ -144,7 +165,7 @@ const AdminCarEdit: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="year">Year</label>
+            <label htmlFor="year">Năm sản xuất</label>
             <input
               type="number"
               id="year"
@@ -158,7 +179,7 @@ const AdminCarEdit: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="kilometers">Kilometers</label>
+            <label htmlFor="kilometers">Số KM đã đi</label>
             <input
               type="number"
               id="kilometers"
@@ -171,7 +192,7 @@ const AdminCarEdit: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="dailyPrice">Daily Price</label>
+            <label htmlFor="dailyPrice">Giá thuê theo ngày</label>
             <input
               type="number"
               id="dailyPrice"
@@ -185,7 +206,7 @@ const AdminCarEdit: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="licensePlate">License Plate</label>
+            <label htmlFor="licensePlate">Biển số xe</label>
             <input
               type="text"
               id="licensePlate"
@@ -197,7 +218,7 @@ const AdminCarEdit: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="numSeats">Number of Seats</label>
+            <label htmlFor="numSeats">Số ghế ngồi</label>
             <input
               type="number"
               id="numSeats"
@@ -210,7 +231,7 @@ const AdminCarEdit: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="fuelType">Fuel Type</label>
+            <label htmlFor="fuelType">Loại nhiên liệu</label>
             <select
               id="fuelType"
               name="fuelType"
@@ -218,9 +239,9 @@ const AdminCarEdit: React.FC = () => {
               onChange={handleInputChange}
               required
             >
-              <option value={FuelType.PETROL}>Petrol</option>
-              <option value={FuelType.DIESEL}>Diesel</option>
-              <option value={FuelType.ELECTRIC}>Electric</option>
+              <option value={FuelType.PETROL}>Xăng</option>
+              <option value={FuelType.DIESEL}>Dầu diesel</option>
+              <option value={FuelType.ELECTRIC}>Điện</option>
               <option value={FuelType.HYBRID}>Hybrid</option>
             </select>
           </div>
@@ -233,12 +254,12 @@ const AdminCarEdit: React.FC = () => {
                 checked={formData.autoGearbox}
                 onChange={handleInputChange}
               />
-              Automatic Gearbox
+              Hộp số tự động
             </label>
           </div>
 
           <div className="form-group full-width">
-            <label htmlFor="address">Address</label>
+            <label htmlFor="address">Địa chỉ</label>
             <input
               type="text"
               id="address"
@@ -250,7 +271,7 @@ const AdminCarEdit: React.FC = () => {
           </div>
 
           <div className="form-group full-width">
-            <label htmlFor="description">Description</label>
+            <label htmlFor="description">Mô tả</label>
             <textarea
               id="description"
               name="description"
@@ -264,14 +285,14 @@ const AdminCarEdit: React.FC = () => {
 
         <div className="form-actions">
           <button type="submit" className="save-button">
-            Save Changes
+            Lưu thay đổi
           </button>
           <button
             type="button"
             className="cancel-button"
             onClick={() => navigate(ROUTES.ADMIN.DASHBOARD)}
           >
-            Cancel
+            Hủy bỏ
           </button>
         </div>
       </form>
@@ -279,4 +300,4 @@ const AdminCarEdit: React.FC = () => {
   );
 };
 
-export default AdminCarEdit; 
+export default AdminCarEdit;

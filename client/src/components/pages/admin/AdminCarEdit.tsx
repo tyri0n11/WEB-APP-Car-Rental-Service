@@ -115,7 +115,7 @@ const AdminCarEdit: React.FC = () => {
   if (loading) {
     return (
       <div className="loading-container">
-        <p>Loading car details...</p>
+        <p>Đang tải thông tin xe...</p>
       </div>
     );
   }
@@ -123,8 +123,8 @@ const AdminCarEdit: React.FC = () => {
   if (error || !car) {
     return (
       <div className="error-container">
-        <p>{error || 'Car not found'}</p>
-        <button onClick={() => navigate(ROUTES.ADMIN.DASHBOARD)}>Back to Cars</button>
+        <p>{error || 'Không tìm thấy xe'}</p>
+        <button onClick={() => navigate(ROUTES.ADMIN.DASHBOARD)}>Trở về danh sách xe</button>
       </div>
     );
   }
@@ -132,16 +132,16 @@ const AdminCarEdit: React.FC = () => {
   return (
     <div className="admin-car-edit">
       <div className="edit-header">
-        <h1>Edit Car Details</h1>
+        <h1>Chỉnh Sửa Thông Tin Xe</h1>
         <button className="back-button-edit" onClick={() => navigate(ROUTES.ADMIN.DASHBOARD)}>
-          Back to Cars
+          Trở về danh sách xe
         </button>
       </div>
 
       <form onSubmit={handleSubmit} className="edit-form">
         <div className="form-grid">
           <div className="form-group">
-            <label htmlFor="make">Make</label>
+            <label htmlFor="make">Hãng xe</label>
             <input
               type="text"
               id="make"
@@ -153,7 +153,7 @@ const AdminCarEdit: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="model">Model</label>
+            <label htmlFor="model">Mẫu xe</label>
             <input
               type="text"
               id="model"
@@ -165,7 +165,7 @@ const AdminCarEdit: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="year">Year</label>
+            <label htmlFor="year">Năm sản xuất</label>
             <input
               type="number"
               id="year"
@@ -179,7 +179,7 @@ const AdminCarEdit: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="kilometers">Kilometers</label>
+            <label htmlFor="kilometers">Số KM đã đi</label>
             <input
               type="number"
               id="kilometers"
@@ -192,7 +192,7 @@ const AdminCarEdit: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="dailyPrice">Daily Price</label>
+            <label htmlFor="dailyPrice">Giá thuê theo ngày</label>
             <input
               type="number"
               id="dailyPrice"
@@ -206,7 +206,7 @@ const AdminCarEdit: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="licensePlate">License Plate</label>
+            <label htmlFor="licensePlate">Biển số xe</label>
             <input
               type="text"
               id="licensePlate"
@@ -218,7 +218,7 @@ const AdminCarEdit: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="numSeats">Number of Seats</label>
+            <label htmlFor="numSeats">Số ghế ngồi</label>
             <input
               type="number"
               id="numSeats"
@@ -231,7 +231,7 @@ const AdminCarEdit: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="fuelType">Fuel Type</label>
+            <label htmlFor="fuelType">Loại nhiên liệu</label>
             <select
               id="fuelType"
               name="fuelType"
@@ -239,9 +239,9 @@ const AdminCarEdit: React.FC = () => {
               onChange={handleInputChange}
               required
             >
-              <option value={FuelType.PETROL}>Petrol</option>
-              <option value={FuelType.DIESEL}>Diesel</option>
-              <option value={FuelType.ELECTRIC}>Electric</option>
+              <option value={FuelType.PETROL}>Xăng</option>
+              <option value={FuelType.DIESEL}>Dầu diesel</option>
+              <option value={FuelType.ELECTRIC}>Điện</option>
               <option value={FuelType.HYBRID}>Hybrid</option>
             </select>
           </div>
@@ -254,12 +254,12 @@ const AdminCarEdit: React.FC = () => {
                 checked={formData.autoGearbox}
                 onChange={handleInputChange}
               />
-              Automatic Gearbox
+              Hộp số tự động
             </label>
           </div>
 
           <div className="form-group full-width">
-            <label htmlFor="address">Address</label>
+            <label htmlFor="address">Địa chỉ</label>
             <input
               type="text"
               id="address"
@@ -271,7 +271,7 @@ const AdminCarEdit: React.FC = () => {
           </div>
 
           <div className="form-group full-width">
-            <label htmlFor="description">Description</label>
+            <label htmlFor="description">Mô tả</label>
             <textarea
               id="description"
               name="description"
@@ -285,14 +285,14 @@ const AdminCarEdit: React.FC = () => {
 
         <div className="form-actions">
           <button type="submit" className="save-button">
-            Save Changes
+            Lưu thay đổi
           </button>
           <button
             type="button"
             className="cancel-button"
             onClick={() => navigate(ROUTES.ADMIN.DASHBOARD)}
           >
-            Cancel
+            Hủy bỏ
           </button>
         </div>
       </form>

@@ -5,7 +5,7 @@ import { useAuth } from '../../../hooks/useAuth';
 import styles from './AdminSidebar.module.css';
 
 const tabs = [
-  { label: 'General', icon: <FaHome />, id: 'dashboard' },
+  { label: 'Tổng quan', icon: <FaHome />, id: 'dashboard' },
   { label: 'Xe', icon: <FaCar />, id: 'cars' },
   { label: 'Đơn hàng', icon: <FaClipboardList />, id: 'bookings' },
   { label: 'Doanh thu', icon: <FaChartBar />, id: 'revenue' },

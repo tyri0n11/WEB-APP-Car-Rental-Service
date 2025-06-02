@@ -1,0 +1,168 @@
+.add-car-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Ensure modal is on top */
+}
+
+.add-car-modal-container {
+  background-color: #fff;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 90%;
+  max-width: 600px; /* Max width for larger screens */
+  max-height: 90vh; /* Max height to prevent overflow */
+  overflow-y: auto; /* Allow scrolling for content */
+  position: relative; /* For positioning the close button */
+}
+
+.add-car-modal-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-car-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+.add-car-modal-close:hover {
+  color: #333;
+}
+
+.add-car-modal-title {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: 600;
+  text-align: center;
+  color: #333;
+}
+
+.add-car-modal-fields {
+  display: grid;
+  grid-template-columns: 1fr; /* Single column for smaller screens */
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+/* Two columns for wider screens */
+@media (min-width: 768px) {
+  .add-car-modal-fields {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+
+.add-car-modal-label {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  color: #555;
+  font-weight: 500;
+}
+
+.add-car-modal-input,
+.add-car-modal-select {
+  margin-top: 6px;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 15px;
+  width: 100%; /* Ensure inputs take full width of their grid cell */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.add-car-modal-input:focus,
+.add-car-modal-select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+
+.add-car-modal-checkbox-label {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  color: #555;
+}
+
+.add-car-modal-checkbox-label input[type="checkbox"] {
+  margin-right: 8px;
+  width: auto; /* Override width for checkbox */
+}
+
+
+.add-car-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.add-car-modal-submit,
+.add-car-modal-cancel {
+  padding: 10px 20px;
+  border-radius: 20px; /* More rounded buttons */
+  border: none;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.add-car-modal-submit {
+  background-color: #28a745; /* Green */
+  color: white;
+  border: 1px solid #28a745;
+}
+
+.add-car-modal-submit:hover {
+  background-color: #218838;
+}
+
+.add-car-modal-submit:disabled {
+  background-color: #a5d6a7; /* Lighter green when disabled */
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.add-car-modal-cancel {
+  background-color: #f8f9fa; /* Light grey */
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+.add-car-modal-cancel:hover {
+  background-color: #e2e6ea;
+}
+
+/* Styling for select dropdown arrow (optional, browser-specific) */
+.add-car-modal-select {
+  appearance: none; /* Remove default arrow */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  padding-right: 30px; /* Make space for custom arrow */
+}
+
+/* For Firefox, remove the default arrow more explicitly */
+.add-car-modal-select::-ms-expand {
+  display: none;
+} 

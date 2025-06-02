@@ -37,7 +37,7 @@ export function CategoryProvider({ children }: { children: ReactNode }) {
     const deleteCategory = useCallback(async (id: string) => {
         try {
             setState(prev => ({ ...prev, isLoading: true, error: null }))
-            await categoryApi.delete(id)
+            await categoryApi.deleteCategory(id)
             setState(prev => ({
                 ...prev,
                 categories: prev.categories.filter(category => category.id !== id),

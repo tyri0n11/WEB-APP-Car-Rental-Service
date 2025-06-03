@@ -47,7 +47,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const login = useCallback(async (input: LoginInput) => {
         try {
-            setState(prev => ({ ...prev, loading: true, error: null }))
+            // Clear previous user state and set loading for the new login attempt
+            setState({
+                user: null,
+                isAuthenticated: false,
+                loading: true,
+                error: null
+            });
             // user object from login response might be partial or different from getMe
             const { accessToken } = await authApi.login(input)
             localStorage.setItem('accessToken', accessToken)
@@ -58,13 +64,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             // console.error('Login failed:', error);
             // Ensure token is cleared if login process fails at any point after it might have been set
             localStorage.removeItem('accessToken')
-            setState(prev => ({
-                ...prev,
+            // Explicitly set state on error
+            setState({
                 user: null,
                 isAuthenticated: false,
                 error: error instanceof Error ? error.message : 'An error occurred during login',
                 loading: false
-            }))
+            });
             throw error
         }
     }, [checkAuth])

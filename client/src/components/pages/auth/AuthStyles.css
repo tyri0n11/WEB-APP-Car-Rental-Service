@@ -113,7 +113,7 @@
 }
 
 .input-box input::placeholder {
-  color: rgb(0, 0, 0);
+  color: gray;
 }
 
 .input-box input::content {

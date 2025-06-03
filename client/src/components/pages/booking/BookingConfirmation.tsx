@@ -90,7 +90,7 @@ const BookingConfirmation: React.FC = () => {
           <div className="user-info">
             <label>
               <strong>Full Name:</strong>
-              <input
+              <input className='input-box-booking'
                 type="text"
                 value={customerNameInput}
                 onChange={handleCustomerNameChange}
@@ -101,7 +101,7 @@ const BookingConfirmation: React.FC = () => {
 
             <label>
               <strong>Phone Number:</strong>
-              <input
+              <input className='input-box-booking'
                 type="text"
                 value={phoneNumberInput}
                 onChange={handlePhoneNumberChange}
@@ -114,7 +114,7 @@ const BookingConfirmation: React.FC = () => {
           <div className="location">
             <label>
               <strong>Pickup Location:</strong>
-              <input
+              <input className='input-box-booking'
                 type="text"
                 value={pickupLocationInput}
                 onChange={handlePickupLocationChange}
@@ -125,7 +125,7 @@ const BookingConfirmation: React.FC = () => {
 
             <label>
               <strong>Return Location:</strong>
-              <input
+              <input className='input-box-booking'
                 type="text"
                 value={returnLocationInput}
                 onChange={handleReturnLocationChange}

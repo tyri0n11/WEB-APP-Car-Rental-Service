@@ -1,5 +1,19 @@
 import { BaseApi } from './base';
 
+export interface BookingAdmin {
+  id: string;
+  userId: string;
+  carId: string;
+  carImageUrl: string;
+  code: string;
+  startDate: string;
+  endDate: string;
+  totalPrice: number;
+  status: string;
+  pickupAddress: string;
+  returnAddress: string;
+}
+
 interface DashboardStatistics {
   totalCars: number;
   totalBookings: number;
@@ -32,6 +46,19 @@ class DashboardApi extends BaseApi {
   async getRecentActivities(): Promise<RecentActivity[]> {
     try {
       const result = await this.get<{ data: RecentActivity[] }>('/dashboard/recent-activities', {});
+      return result.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async getBookings(page: number, limit: number): Promise<BookingAdmin[]> {
+    try {
+      const result = await this.get<{ data: BookingAdmin[] }>('/bookings', {
+        params: {
+          page,
+          limit,
+        },
+      });
       return result.data;
     } catch (error) {
       throw error;

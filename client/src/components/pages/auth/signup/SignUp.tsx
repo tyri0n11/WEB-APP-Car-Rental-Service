@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaTimes } from "react-icons/fa";
+import { FaTimes, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useAuth } from "../../../../hooks/useAuth";
 import { useNotification } from "../../../../contexts/NotificationContext";
 import "../AuthStyles.css";
@@ -14,6 +14,8 @@ const SignUp: React.FC<{
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [repassword, setRepassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showRepassword, setShowRepassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isAgreed, setIsAgreed] = useState(false);
   const [errors, setErrors] = useState<{
@@ -163,27 +165,65 @@ const SignUp: React.FC<{
 
               <div className="input-box">
                 <label>Mật khẩu</label>
-                <input
-                  type="password"
-                  placeholder="Nhập mật khẩu"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  disabled={isLoading}
-                  className={errors.password ? "input-error" : ""}
-                />
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Nhập mật khẩu"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    disabled={isLoading}
+                    className={errors.password ? "input-error" : ""}
+                  />
+                  <div
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{
+                      position: 'absolute',
+                      right: '12px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      cursor: 'pointer',
+                      fontSize: '18px',
+                      color: '#666',
+                      display: 'flex',
+                      alignItems: 'center',
+                      zIndex: 1
+                    }}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </div>
+                </div>
                 {errors.password && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.password}</div>}
               </div>
 
               <div className="input-box">
                 <label>Nhập lại mật khẩu</label>
-                <input
-                  type="password"
-                  placeholder="Nhập lại mật khẩu"
-                  value={repassword}
-                  onChange={(e) => setRepassword(e.target.value)}
-                  disabled={isLoading}
-                  className={errors.repassword ? "input-error" : ""}
-                />
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type={showRepassword ? "text" : "password"}
+                    placeholder="Nhập lại mật khẩu"
+                    value={repassword}
+                    onChange={(e) => setRepassword(e.target.value)}
+                    disabled={isLoading}
+                    className={errors.repassword ? "input-error" : ""}
+                  />
+                  <div
+                    onClick={() => setShowRepassword(!showRepassword)}
+                    style={{
+                      position: 'absolute',
+                      right: '12px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      cursor: 'pointer',
+                      fontSize: '18px',
+                      color: '#666',
+                      display: 'flex',
+                      alignItems: 'center',
+                      zIndex: 1
+                    }}
+                  >
+                    {showRepassword ? <FaEyeSlash /> : <FaEye />}
+                  </div>
+                </div>
                 {errors.repassword && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.repassword}</div>}
               </div>
 

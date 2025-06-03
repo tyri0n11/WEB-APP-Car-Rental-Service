@@ -7,11 +7,17 @@ interface DashboardStatistics {
   activeRentals: number;
 }
 
-export interface RecentActivities {
-  id: number;
+export interface RecentActivity {
+  type: string;
+  id: string;
+  bookingCode: string;
+  carId: string;
+  amount: number;
   title: string;
   description: string;
+  metadata: Record<string, any>;
   createdAt: string;
+  updatedAt: string;
 }
 
 class DashboardApi extends BaseApi {
@@ -23,9 +29,9 @@ class DashboardApi extends BaseApi {
       throw error;
     }
   }
-  async getRecentActivities(): Promise<RecentActivities> {
+  async getRecentActivities(): Promise<RecentActivity[]> {
     try {
-      const result = await this.get<{ data: RecentActivities }>('/dashboard/recent-activities', {});
+      const result = await this.get<{ data: RecentActivity[] }>('/dashboard/recent-activities', {});
       return result.data;
     } catch (error) {
       throw error;

@@ -10,7 +10,7 @@ import styles from './Dashboard.module.css';
 import { Box } from '@mui/material';
 import { Stack } from '@mui/material';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
-import { dashboardApi } from '../../../apis/dashboard';
+import { dashboardApi, RecentActivity } from '../../../apis/dashboard';
 import AdminCategories from './AdminCategories'; // Import AdminCategories
 
 const Dashboard: React.FC = () => {
@@ -27,6 +27,8 @@ const Dashboard: React.FC = () => {
     totalRevenue: 0,
     activeRentals: 0
   });
+  const [recentActivities, setRecentActivities] = useState<RecentActivity[]>([]);
+  const [loadingActivities, setLoadingActivities] = useState(false);
 
   useEffect(() => {
     const fetchStatistics = async () => {
@@ -40,6 +42,16 @@ const Dashboard: React.FC = () => {
 
     if (activeTab === 'dashboard') {
       fetchStatistics();
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
+    if (activeTab === 'dashboard') {
+      setLoadingActivities(true);
+      dashboardApi.getRecentActivities()
+        .then(setRecentActivities)
+        .catch(() => setRecentActivities([]))
+        .finally(() => setLoadingActivities(false));
     }
   }, [activeTab]);
 
@@ -112,29 +124,30 @@ const Dashboard: React.FC = () => {
               <div className={styles.section}>
                 <h2>Hoạt Động Gần Đây</h2>
                 <div className={styles.activityList}>
-                  <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ width: '100%' }}>
-                    <div className={styles.activityChartCard}>
-                      <h4 className={styles.activityChartTitle}>Hoạt Động Người Dùng</h4>
-                      <Box className={styles.chartWrapper}>
-                        <SparkLineChart 
-                          data={[1, 4, 2, 5, 7, 2, 4, 6]} 
-                          height={100} 
-                          color={'#3b82f6'}
-                        />
-                      </Box>
-                    </div>
-                    <div className={styles.activityChartCard}>
-                      <h4 className={styles.activityChartTitle}>Hoạt Động Đặt Xe</h4>
-                      <Box className={styles.chartWrapper}>
-                        <SparkLineChart
-                          plotType="bar"
-                          data={[1, 4, 2, 5, 7, 2, 4, 6]}
-                          height={100}
-                          color={'#10b981'}
-                        />
-                      </Box>
-                    </div>
-                  </Stack>
+                  {loadingActivities ? (
+                    <div>Đang tải hoạt động...</div>
+                  ) : recentActivities.length === 0 ? (
+                    <div>Không có hoạt động nào gần đây.</div>
+                  ) : (
+                    <ul className={styles.recentActivityList}>
+                      {recentActivities.map(act => (
+                        <li key={act.id} className={styles.recentActivityItem}>
+                          <div className={styles.activityIcon}>
+                            <span role="img" aria-label="activity">📝</span>
+                          </div>
+                          <div className={styles.activityContent}>
+                            <div className={styles.activityTitle}>{act.title}</div>
+                            <div className={styles.activityMeta}>
+                              <span>{new Date(act.createdAt).toLocaleTimeString('vi-VN')} {new Date(act.createdAt).toLocaleDateString('vi-VN')}</span>
+                              {act.bookingCode && <span>Mã đơn: {act.bookingCode}</span>}
+                              <span>Số tiền: {act.amount != null ? act.amount.toLocaleString('vi-VN') : '-'} VND</span>
+                            </div>
+                            <div className={styles.activityDescription}>{act.description}</div>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </div>
             </div>

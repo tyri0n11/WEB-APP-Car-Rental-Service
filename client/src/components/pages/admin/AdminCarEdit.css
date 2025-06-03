@@ -25,7 +25,7 @@
 
 /* Consistent Button Styling - Base */
 .back-button-edit,
-.save-button,
+.save-button-action,
 .cancel-button,
 .error-container button {
   padding: 0.7rem 1.4rem; /* Standardized padding */
@@ -41,7 +41,7 @@
 }
 
 .back-button-edit:hover,
-.save-button:hover,
+.save-button-action:hover,
 .cancel-button:hover,
 .error-container button:hover {
   transform: translateY(-2px);
@@ -49,7 +49,7 @@
 }
 
 .back-button-edit:active,
-.save-button:active,
+.save-button-action:active,
 .cancel-button:active,
 .error-container button:active {
   transform: translateY(0);
@@ -67,18 +67,18 @@
   border-color: #545b62;
 }
 
-.save-button,
+.save-button-action,
 .cancel-button {
   width: 150px; /* Enforce specific, identical width */
   /* min-width will be overridden by width here, which is fine */
 }
 
-.save-button {
+.save-button-action {
   background-color: #007bff; /* Primary */
   color: white;
   border-color: #007bff;
 }
-.save-button:hover {
+.save-button-action:hover {
   background-color: #0056b3;
   border-color: #0056b3;
 }
@@ -165,45 +165,94 @@
 }
 
 .checkbox-group {
-  flex-direction: row;
+  display: flex;
   align-items: center;
-  gap: 0.75rem; /* Increased gap */
-  padding-top: 0.5rem; /* Add some padding to align with other fields better */
+  gap: 0.75rem;
+  padding-top: 0.5rem;
 }
 
-.checkbox-group input[type="checkbox"] {
-  width: 1.1rem; /* Slightly smaller checkbox */
-  height: 1.1rem;
-  margin: 0;
-  accent-color: #2563eb; /* Tailwind blue-600 for checkbox color */
-  border: 1px solid #d1d5db;
-  border-radius: 3px;
-  appearance: none; /* For custom styling if needed, but accent-color is often enough */
-  -webkit-appearance: none;
+.modern-checkbox {
+  width: 22px;
+  height: 22px;
+  accent-color: #2563eb;
+  border-radius: 6px;
+  border: 2px solid #d1d5db;
+  transition: border-color 0.2s, box-shadow 0.2s;
   cursor: pointer;
+  margin: 0;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(59,130,246,0.04);
 }
 
-.checkbox-group input[type="checkbox"]:checked {
-  background-color: #2563eb;
+.modern-checkbox:focus {
+  outline: none;
   border-color: #2563eb;
-  /* Add a checkmark using pseudo-elements if not native */
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.18);
 }
 
-.checkbox-group label {
-  margin-bottom: 0; /* Align label with checkbox */
-  font-weight: normal; /* Normal weight for checkbox label */
-  color: #374151;
+.modern-checkbox-label {
+  font-size: 1rem;
+  color: #22223b;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 0;
 }
 
+
+.save-button-action, .cancel-button {
+  min-width: 180px;
+  height: 52px;
+  font-size: 1.08rem;
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 0 2.2rem;
+  transition: box-shadow 0.18s, background 0.18s, color 0.18s, border-color 0.18s, transform 0.13s;
+  letter-spacing: 0.01em;
+  outline: none;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.08);
+  margin: 0;
+  display: inline-block;
+}
+
+.save-button-action {
+  background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.13);
+  position: relative;
+  margin: 0;
+  z-index: 1;
+}
+.save-button-action:hover, .save-button-action:focus {
+  background: linear-gradient(90deg, #1d4ed8 0%, #2563eb 100%);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.18);
+  transform: translateY(-2px) scale(1.045);
+}
 .form-actions {
   display: flex;
-  gap: 1rem;
-  margin-top: 2.5rem; /* Increased margin */
-  padding-top: 1.75rem; /* Increased padding */
-  border-top: 1px solid #e5e7eb; /* Lighter border */
-  justify-content: flex-end;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.2rem;
+  margin-top: 2.5rem;
+  padding-top: 1.75rem;
+  justify-content: center;
 }
-
+.cancel-button {
+  background: #fff;
+  color: #2563eb;
+  border: 2px solid #cbd5e1;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.04);
+  position: relative;
+  z-index: 1;
+}
+.cancel-button:hover, .cancel-button:focus {
+  background: #f1f5f9;
+  border-color: #2563eb;
+  color: #1d4ed8;
+  transform: translateY(-2px) scale(1.045);
+}
 
 .loading-container,
 .error-container {
@@ -247,15 +296,17 @@
   }
 
   .form-actions {
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
   }
 
-  .save-button,
-  .cancel-button,
-  .back-button-edit,
-  .error-container button {
-    width: 100%;
-    padding: 0.8rem 1.5rem; /* Adjust padding for full width */
+  .save-button-action, .cancel-button {
+    width: auto;
+    min-width: 120px;
+    height: 48px;
+    padding: 0 1.2rem;
   }
 }
 

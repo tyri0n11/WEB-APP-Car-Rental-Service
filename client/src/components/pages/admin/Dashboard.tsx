@@ -7,9 +7,6 @@ import AdminCars from './AdminCars';
 import AdminRevenue from './AdminRevenue';
 import AdminSidebar from './AdminSidebar';
 import styles from './Dashboard.module.css';
-import { Box } from '@mui/material';
-import { Stack } from '@mui/material';
-import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 import { dashboardApi, RecentActivity } from '../../../apis/dashboard';
 import AdminCategories from './AdminCategories'; // Import AdminCategories
 
@@ -80,7 +77,7 @@ const Dashboard: React.FC = () => {
               </button>
               <div className={styles.headerContent}>
                 <h1>Bảng Điều Khiển Admin</h1>
-                <p>Chào mừng trở lại, {user?.firstName} {user?.lastName}</p>
+                <p>Chào mừng trở lại, {user?.lastName}</p>
               </div>
             </div>
 

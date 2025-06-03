@@ -55,10 +55,10 @@ export interface CarImage {
 }
 
 export enum FuelType {
-  PETROL = 'petrol',
-  DIESEL = 'diesel',
-  ELECTRIC = 'electric',
-  HYBRID = 'hybrid'
+  PETROL = 'PETROL',
+  DIESEL = 'DIESEL',
+  ELECTRIC = 'ELECTRIC',
+  HYBRID = 'HYBRID'
 }
 
 export interface CarStatus {

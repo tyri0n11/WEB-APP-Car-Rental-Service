@@ -92,7 +92,7 @@ export class CarController {
   @UseGuards(JwtAccessGuard, RolesGuard)
   @Roles(Role.ADMIN)
   remove(@Param('id') id: string) {
-    return this.carService.remove(+id);
+    return this.carService.delete(id);
   }
 
   @Delete(':id/favorite')

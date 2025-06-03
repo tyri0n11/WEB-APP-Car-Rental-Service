@@ -109,7 +109,6 @@ export class BookingService extends BaseService<Booking> {
 
   async createBookingOnRedis(userId: string, dto: CreateBookingRequestDTO) {
     const car = await this.carService.findById(dto.carId);
-    console.log('car: ', car);
 
     const isAvailable = await this.checkCarAvailability(
       dto.carId,

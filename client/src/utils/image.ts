@@ -33,11 +33,28 @@ export async function uploadImage(file: File, accessToken: string, type?: string
       throw new Error(errorData.message || 'Failed to upload image')
     }
 
-    const result = await response.json()
-    const imageUrl = result?.data?.link || result?.data?.imageUrl || result?.imageUrl || result?.url
+    const result = await response.json();
+    let imageUrl: string | undefined;
 
-    if (!imageUrl) {
-      throw new Error('Invalid response format from image upload')
+    if (result && typeof result.url === 'string') {
+        imageUrl = result.url;
+    } else if (result && typeof result.link === 'string') {
+        imageUrl = result.link;
+    } else if (result && result.data) { 
+        if (typeof result.data === 'string') {
+            imageUrl = result.data; 
+        } else if (typeof result.data.url === 'string') {
+            imageUrl = result.data.url; 
+        } else if (typeof result.data.link === 'string') {
+            imageUrl = result.data.link; 
+        }
+    } else if (typeof result === 'string') { 
+        imageUrl = result;
+    }
+
+    // Check if imageUrl was successfully extracted and is a non-empty string
+    if (!imageUrl) { 
+        throw new Error(`Invalid response format from image upload. Could not extract URL. Received: ${JSON.stringify(result)}`);
     }
 
     return imageUrl
@@ -45,4 +62,4 @@ export async function uploadImage(file: File, accessToken: string, type?: string
     console.error('Image upload error:', error)
     throw error
   }
-} 
+}

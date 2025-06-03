@@ -18,23 +18,32 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const { user: authUser, logout } = useAuth()
 
     useEffect(() => {
-        if (authUser) {
-            // Fetch complete user details including phone number
+        if (authUser && authUser.id) { // Add a check for authUser.id
+            setState(prev => ({ ...prev, isLoading: true, error: null })); // Set loading and clear error
             userApi.getUser(authUser.id)
-                .then(user => {
+                .then(detailedUser => {
                     setState(prev => ({
                         ...prev,
-                        user,
-                        isLoading: false
+                        user: detailedUser,
+                        isLoading: false,
+                        error: null
                     }))
                 })
                 .catch(error => {
                     setState(prev => ({
                         ...prev,
+                        user: null,
                         error: error instanceof Error ? error.message : 'An error occurred',
                         isLoading: false
                     }))
                 })
+        } else if (!authUser) { // If authUser becomes null (e.g., after logout)
+            setState(prev => ({ // Clear user details from UserContext
+                ...prev,
+                user: null,
+                isLoading: false,
+                error: null
+            }));
         }
     }, [authUser])
 
@@ -131,4 +140,4 @@ export function useUser() {
     return context
 }
 
-export default UserContext 
+export default UserContext

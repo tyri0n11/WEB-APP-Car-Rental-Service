@@ -42,13 +42,7 @@ export class CarService extends BaseService<Car> {
       case CarSortBy.PRICE_DESC:
         return { dailyPrice: 'desc' };
       case CarSortBy.RATING:
-        return {
-          reviews: {
-            _avg: {
-              rating: 'desc',
-            },
-          },
-        };
+        return { rating: 'desc' };
       case CarSortBy.NEWEST:
         return { createdAt: 'desc' };
       case CarSortBy.OLDEST:
@@ -132,12 +126,16 @@ export class CarService extends BaseService<Car> {
         include: this.defaultIncludes,
       },
     );
-
-    this.activityService.create({
-      carId: car.id,
-      type: ActivityType.CAR_ADDED,
-      title: ActivityTitle.CAR_ADDED,
-    });
+    try {
+      await this.activityService.create({
+        carId: car.id,
+        type: ActivityType.CAR_ADDED,
+        title: ActivityTitle.CAR_ADDED,
+        description: `Car ${car.id} added`,
+      });
+    } catch (error) {
+      this.logger.error('Error create car activity', error);
+    }
 
     return this.processCarResponse(car);
   }

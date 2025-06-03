@@ -107,7 +107,7 @@ const ChangePassword: React.FC = () => {
             });
             setErrors({});
             setIsSubmitted(false);
-            showNotification('success', 'Đổi mật khẩu thành công!');
+            // The success notification is now handled by handleAsync.
         } catch (error: any) {
             showNotification('error', error?.message || 'Đổi mật khẩu thất bại.');
         }

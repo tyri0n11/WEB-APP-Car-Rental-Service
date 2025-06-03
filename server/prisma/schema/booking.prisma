@@ -1,8 +1,10 @@
 enum BookingStatus {
     CONFIRMED
+    PAID
     ONGOING
     COMPLETED
     CANCELLED
+    RETURNED
 }
 
 model Booking {
@@ -11,6 +13,7 @@ model Booking {
     userId        String
     car           Car           @relation(fields: [carId], references: [id], onDelete: Cascade)
     carId         String
+    carImageUrl   String        @default("")
     code          String        @unique
     startDate     DateTime
     endDate       DateTime
@@ -18,7 +21,6 @@ model Booking {
     status        BookingStatus
     transaction   Transaction   @relation(fields: [transactionId], references: [id])
     review        Review?
-    activities    Activity[]
     transactionId String        @unique
     pickupAddress String
     returnAddress String

@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Booking, BookingStatus, PaymentProvider } from '@prisma/client';
 import { Exclude, Expose } from 'class-transformer';
 
@@ -14,6 +15,8 @@ export class BookingResponseDTO implements Booking {
   @Expose()
   carId: string;
   @Expose()
+  carImageUrl: string;
+  @Expose()
   startDate: Date;
   @Expose()
   endDate: Date;
@@ -24,6 +27,10 @@ export class BookingResponseDTO implements Booking {
   @Expose()
   totalPrice: number;
   @Expose()
+  @ApiProperty({
+    enum: BookingStatus,
+    example: BookingStatus.CONFIRMED,
+  })
   status: BookingStatus;
   @Exclude()
   transactionId: string;
@@ -34,36 +41,16 @@ export class BookingResponseDTO implements Booking {
 }
 
 export class BookingResponseOnRedisDTO {
-  @Expose()
   carId: string;
-
-  @Expose()
+  carImageUrl: string;
   userId: string;
-
-  @Expose()
   startDate: Date;
-
-  @Expose()
   endDate: Date;
-
-  @Expose()
   pickupAddress: string;
-
-  @Expose()
   returnAddress: string;
-
-  @Expose()
   paymentProvider: PaymentProvider;
-
-  @Expose()
   bookingCode: string;
-
-  @Expose()
   status: BookingStatus;
-
-  @Expose()
   totalPrice: number;
-
-  @Expose()
   returnUrl: string;
 }

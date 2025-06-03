@@ -12,6 +12,7 @@ import {
   ActivityType,
   Booking,
   BookingStatus,
+  CarImage,
   CarStatus,
 } from '@prisma/client';
 import { Queue } from 'bullmq';
@@ -24,7 +25,10 @@ import { PaymentService } from '../payment/payment.service';
 import { TransactionService } from '../transaction/transaction.service';
 import { CreateBookingRequestDTO } from './dtos/create.request.dto';
 import { CrearteBookingResponseDTO } from './dtos/create.response.dto';
-import { FindManyBookingsQueryDTO } from './dtos/findMany.request.dto';
+import {
+  FindManyBookingsQueryDTO,
+  ListBookingRequestDTO,
+} from './dtos/findMany.request.dto';
 import {
   BookingResponseDTO,
   BookingResponseOnRedisDTO,
@@ -61,8 +65,50 @@ export class BookingService extends BaseService<Booking> {
     return `${carIdPrefix}${timestamp}${randomSuffix}`;
   }
 
+  private async checkCarAvailability(
+    carId: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<boolean> {
+    const bookingKey = this.genRedisKey.booking(carId);
+    const pendingBooking = await this.redisService.hget(bookingKey, 'data');
+    if (pendingBooking) {
+      return false;
+    }
+
+    const existingBookings = await this.findMany({
+      filter: {
+        carId,
+        status: {
+          in: [
+            BookingStatus.CONFIRMED,
+            BookingStatus.ONGOING,
+            BookingStatus.PAID,
+          ],
+        },
+        OR: [
+          {
+            startDate: { lte: endDate },
+            endDate: { gte: startDate },
+          },
+        ],
+      },
+    });
+    if (existingBookings.length > 0) return false;
+    return true;
+  }
+
+  private async calculateTotalPrice(
+    dailyPrice: number,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<number> {
+    const days = dayjs(endDate).diff(startDate, 'day');
+    return dailyPrice * days;
+  }
+
   async createBookingOnRedis(userId: string, dto: CreateBookingRequestDTO) {
-    const car = await this.carService.findOne({ id: dto.carId });
+    const car = await this.carService.findById(dto.carId);
 
     const isAvailable = await this.checkCarAvailability(
       dto.carId,
@@ -80,6 +126,10 @@ export class BookingService extends BaseService<Booking> {
       dto.endDate,
     );
 
+    const carImageUrl: string = car.images.find(
+      (img: CarImage) => img.isMain,
+    ).url;
+
     const bookingCode = this.generateBookingCode(car.id);
     const bookingKey = this.genRedisKey.booking(bookingCode);
 
@@ -88,6 +138,7 @@ export class BookingService extends BaseService<Booking> {
       userId,
       bookingCode,
       totalPrice,
+      carImageUrl,
     };
 
     await this.redisService
@@ -97,44 +148,6 @@ export class BookingService extends BaseService<Booking> {
       .exec();
 
     return { bookingCode, totalPrice };
-  }
-
-  async checkCarAvailability(
-    carId: string,
-    startDate: Date,
-    endDate: Date,
-  ): Promise<boolean> {
-    const bookingKey = this.genRedisKey.booking(carId);
-    const pendingBooking = await this.redisService.hget(bookingKey, 'data');
-    if (pendingBooking) {
-      return false;
-    }
-
-    const existingBookings = await this.findMany({
-      filter: {
-        carId,
-        status: {
-          in: [BookingStatus.CONFIRMED, BookingStatus.ONGOING],
-        },
-        OR: [
-          {
-            startDate: { lte: endDate },
-            endDate: { gte: startDate },
-          },
-        ],
-      },
-    });
-    if (existingBookings.length > 0) return false;
-    return true;
-  }
-
-  async calculateTotalPrice(
-    dailyPrice: number,
-    startDate: Date,
-    endDate: Date,
-  ): Promise<number> {
-    const days = dayjs(endDate).diff(startDate, 'day');
-    return dailyPrice * days;
   }
 
   async confirmBooking(
@@ -176,13 +189,19 @@ export class BookingService extends BaseService<Booking> {
     );
     this.logger.log(`Added ${bookingCode} to unlockCarQueue`);
 
-    await this.activityService.create({
-      bookingId: bookingData.bookingCode,
-      carId: bookingData.carId,
-      amount: bookingData.totalPrice,
-      type: ActivityType.BOOKING,
-      title: ActivityTitle.BOOKING,
-    });
+    try {
+      await this.activityService.create({
+        bookingCode: bookingData.bookingCode,
+        carId: bookingData.carId,
+        amount: bookingData.totalPrice,
+        type: ActivityType.BOOKING,
+        description: `Customer ${bookingData.userId} booked ${bookingData.carId}`,
+        title: ActivityTitle.BOOKING,
+      });
+    } catch (error) {
+      this.logger.error('Error create booking activity', error);
+    }
+
     return { bookingData, paymentUrl };
   }
 
@@ -196,13 +215,19 @@ export class BookingService extends BaseService<Booking> {
       throw new BadRequestException('Booking not found or completed');
     }
     const bookingData: BookingResponseOnRedisDTO = JSON.parse(bookingDataJson);
-    await this.activityService.create({
-      bookingId: bookingData.bookingCode,
-      carId: bookingData.carId,
-      amount: bookingData.totalPrice,
-      type: ActivityType.PAYMENT,
-      title: ActivityTitle.PAYMENT,
-    });
+    try {
+      await this.activityService.create({
+        bookingCode: bookingData.bookingCode,
+        carId: bookingData.carId,
+        amount: bookingData.totalPrice,
+        type: ActivityType.PAYMENT,
+        title: ActivityTitle.PAYMENT,
+        description: `Customer ${bookingData.userId} paid for ${bookingData.carId}`,
+      });
+    } catch (error) {
+      this.logger.error('Error create booking activity', error);
+    }
+
     const createdBooking = await this.databaseService.$transaction(
       async (tx) => {
         await tx.car.update({
@@ -222,7 +247,7 @@ export class BookingService extends BaseService<Booking> {
             totalPrice: bookingData.totalPrice,
             pickupAddress: bookingData.pickupAddress,
             returnAddress: bookingData.returnAddress,
-            status: BookingStatus.CONFIRMED,
+            status: BookingStatus.PAID,
             user: {
               connect: {
                 id: bookingData.userId,
@@ -233,6 +258,7 @@ export class BookingService extends BaseService<Booking> {
                 id: bookingData.carId,
               },
             },
+            carImageUrl: bookingData.carImageUrl,
             transaction: {
               connect: {
                 id: transactionId,
@@ -268,16 +294,8 @@ export class BookingService extends BaseService<Booking> {
     await this.completeBooking(bookingCode, createdTransation.id);
   }
 
-  async findManyByUserId(userId: string): Promise<BookingResponseDTO[]> {
-    return await super.findMany({
-      filter: {
-        userId,
-      },
-    });
-  }
-
-  async findManyWithPagination(query: FindManyBookingsQueryDTO) {
-    const { page, perPage, startDate, endDate, status } = query;
+  async listBooking(dto: ListBookingRequestDTO): Promise<BookingResponseDTO[]> {
+    const { userId, status, startDate, endDate } = dto;
 
     const filter: any = {};
     if (startDate && endDate) {
@@ -291,6 +309,45 @@ export class BookingService extends BaseService<Booking> {
     if (status) {
       filter.status = {
         equals: status,
+      };
+    }
+    if (userId) {
+      filter.userId = {
+        equals: userId,
+      };
+    }
+    return await super.findMany({
+      filter,
+    });
+  }
+
+  async findManyWithPagination(query: FindManyBookingsQueryDTO) {
+    const { page, perPage, startDate, endDate, status, carId, userId } = query;
+
+    const filter: any = {};
+    if (startDate && endDate) {
+      filter.startDate = {
+        gte: startDate,
+      };
+      filter.endDate = {
+        lte: endDate,
+      };
+    }
+    if (status) {
+      filter.status = {
+        equals: status,
+      };
+    }
+
+    if (carId) {
+      filter.carId = {
+        equals: carId,
+      };
+    }
+
+    if (userId) {
+      filter.userId = {
+        equals: userId,
       };
     }
 
@@ -324,14 +381,17 @@ export class BookingService extends BaseService<Booking> {
           throw new BadRequestException('Booking not found');
         }
 
-        if (booking.status !== BookingStatus.ONGOING) {
-          throw new BadRequestException('Booking is not ongoing');
+        if (
+          booking.status !== BookingStatus.ONGOING &&
+          booking.status !== BookingStatus.CONFIRMED
+        ) {
+          throw new BadRequestException('Booking is not ongoing or confirmed');
         }
 
         const updatedBooking = await tx.booking.update({
           where: { id },
           data: {
-            status: BookingStatus.COMPLETED,
+            status: BookingStatus.RETURNED,
             updatedAt: new Date(),
           },
         });
@@ -348,10 +408,11 @@ export class BookingService extends BaseService<Booking> {
     );
 
     this.activityService.create({
-      bookingId: updatedBooking.id,
+      bookingCode: updatedBooking.code,
       carId: updatedBooking.carId,
       type: ActivityType.RETURN,
       title: ActivityTitle.RETURN,
+      description: `Car ${updatedBooking.carId} returned`,
     });
 
     return updatedBooking;

@@ -13,9 +13,12 @@ const axiosInstance = axios.create({
 
 // Add request interceptor to add auth token
 axiosInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('access_token');
+  const token = localStorage.getItem('accessToken');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
+    console.log('Cars API: Authorization header set with token');
+  } else {
+    console.log('Cars API: No token found in localStorage (accessToken)');
   }
   return config;
 });
@@ -130,8 +133,16 @@ export const getCars = async (params?: CarQueryParams): Promise<CarsResponse> =>
 };
 
 export const getCarById = async (id: string): Promise<Car> => {
-  const response = await axiosInstance.get(`/${id}`);
-  return response.data.data;
+  const token = localStorage.getItem('accessToken');
+  console.log('getCarById: Authorization token from localStorage:', token ? 'Token exists' : 'No token found');
+  
+  try {
+    const response = await axiosInstance.get(`/${id}`);
+    return response.data.data;
+  } catch (error) {
+    console.error('Error in getCarById:', error);
+    throw error;
+  }
 };
 
 export const createCar = async (carData: CreateCarData): Promise<Car> => {
@@ -140,8 +151,16 @@ export const createCar = async (carData: CreateCarData): Promise<Car> => {
 };
 
 export const updateCar = async (id: string, carData: UpdateCarData): Promise<Car> => {
-  const response = await axiosInstance.patch(`/${id}`, carData);
-  return response.data;
+  const token = localStorage.getItem('accessToken');
+  console.log('updateCar: Authorization token from localStorage:', token ? 'Token exists' : 'No token found');
+  
+  try {
+    const response = await axiosInstance.patch(`/${id}`, carData);
+    return response.data;
+  } catch (error) {
+    console.error('Error in updateCar:', error);
+    throw error;
+  }
 };
 
 export const updateCarStatus = async (id: string, status: string): Promise<Car> => {

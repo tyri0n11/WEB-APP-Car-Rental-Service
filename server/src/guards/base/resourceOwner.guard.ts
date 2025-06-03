@@ -14,7 +14,7 @@ export abstract class ResourceOwnerGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: RequestWithUser = context.switchToHttp().getRequest();
     const user = request.user;
-    const resourceId = request.params.id;
+    const resourceId = request.params.id || request.params.code;
 
     const isOwner = await this.checkOwnership(user.id, resourceId);
     if (!isOwner) {

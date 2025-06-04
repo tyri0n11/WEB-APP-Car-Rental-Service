@@ -98,14 +98,14 @@ const SignIn: React.FC<{
               <div className="input-box">
                 <label>Mật khẩu</label>
                 <div style={{ position: 'relative' }}>
-                  <input
+                <input
                     type={showPassword ? "text" : "password"}
-                    placeholder="Nhập mật khẩu"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    disabled={isLoading}
-                    className={errors.password ? "input-error" : ""}
-                  />
+                  placeholder="Nhập mật khẩu"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={isLoading}
+                  className={errors.password ? "input-error" : ""}
+                />
                   <div 
                     onClick={() => setShowPassword(!showPassword)}
                     style={{

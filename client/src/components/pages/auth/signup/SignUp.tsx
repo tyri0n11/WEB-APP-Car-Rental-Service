@@ -166,14 +166,14 @@ const SignUp: React.FC<{
               <div className="input-box">
                 <label>Mật khẩu</label>
                 <div style={{ position: 'relative' }}>
-                  <input
+                <input
                     type={showPassword ? "text" : "password"}
-                    placeholder="Nhập mật khẩu"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    disabled={isLoading}
-                    className={errors.password ? "input-error" : ""}
-                  />
+                  placeholder="Nhập mật khẩu"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={isLoading}
+                  className={errors.password ? "input-error" : ""}
+                />
                   <div
                     onClick={() => setShowPassword(!showPassword)}
                     style={{
@@ -198,14 +198,14 @@ const SignUp: React.FC<{
               <div className="input-box">
                 <label>Nhập lại mật khẩu</label>
                 <div style={{ position: 'relative' }}>
-                  <input
+                <input
                     type={showRepassword ? "text" : "password"}
-                    placeholder="Nhập lại mật khẩu"
-                    value={repassword}
-                    onChange={(e) => setRepassword(e.target.value)}
-                    disabled={isLoading}
-                    className={errors.repassword ? "input-error" : ""}
-                  />
+                  placeholder="Nhập lại mật khẩu"
+                  value={repassword}
+                  onChange={(e) => setRepassword(e.target.value)}
+                  disabled={isLoading}
+                  className={errors.repassword ? "input-error" : ""}
+                />
                   <div
                     onClick={() => setShowRepassword(!showRepassword)}
                     style={{

@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { dashboardApi, BookingAdmin } from '../../../apis/dashboard';
 
-interface BookingPaginationResponse {
+interface Pagination {
   total: number;
   lastPage: number;
   currentPage: number;
   perPage: number;
   prev: number | null;
   next: number | null;
-  data: BookingAdmin[];
 }
+
 
 const BookingTable: React.FC = () => {
   const [bookings, setBookings] = useState<BookingAdmin[]>([]);
@@ -26,7 +26,7 @@ const BookingTable: React.FC = () => {
   const fetchBookings = async (page = 1) => {
     setLoading(true);
     try {
-      const res: any = await dashboardApi.getBookings(page, pagination.perPage);
+      const res: any = await dashboardApi.getBookings({ page, perPage: pagination.perPage });
       if (Array.isArray(res)) {
         setBookings(res);
         setPagination({

@@ -57,9 +57,9 @@ class DashboardApi extends BaseApi {
       throw error;
     }
   }
-  async getBookings(params: BookingQueryParams = {}): Promise<BookingAdmin[]> {
+  async getBookings(params: BookingQueryParams = {}): Promise<any> {
     try {
-      const result = await this.get<{ data: BookingAdmin[] }>('/bookings', params);
+      const result = await this.get<{ data: any }>('/bookings', params);
       return result.data;
     } catch (error: unknown) {
       throw error;

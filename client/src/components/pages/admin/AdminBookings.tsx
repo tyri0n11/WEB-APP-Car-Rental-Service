@@ -27,25 +27,15 @@ const BookingTable: React.FC = () => {
     setLoading(true);
     try {
       const res: any = await dashboardApi.getBookings({ page, perPage: pagination.perPage });
-      if (Array.isArray(res)) {
-        setBookings(res);
+      if (res && Array.isArray(res.data)) {
+        setBookings(res.data);
         setPagination({
-          total: res.length,
-          lastPage: 1,
-          currentPage: 1,
-          perPage: res.length,
-          prev: null,
-          next: null,
-        });
-      } else if (res && res.data && Array.isArray(res.data.data)) {
-        setBookings(res.data.data || []);
-        setPagination({
-          total: res.data.total,
-          lastPage: res.data.lastPage,
-          currentPage: res.data.currentPage,
-          perPage: res.data.perPage,
-          prev: res.data.prev,
-          next: res.data.next,
+          total: res.total,
+          lastPage: res.lastPage,
+          currentPage: res.currentPage,
+          perPage: res.perPage,
+          prev: res.prev,
+          next: res.next,
         });
       } else {
         setBookings([]);

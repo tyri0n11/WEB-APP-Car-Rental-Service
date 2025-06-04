@@ -247,16 +247,18 @@ const AdminCarEdit: React.FC = () => {
           </div>
 
           <div className="form-group checkbox-group">
-            <label>
-              <input
-                type="checkbox"
-                name="autoGearbox"
-                checked={formData.autoGearbox}
-                onChange={handleInputChange}
-              />
+            <input
+              type="checkbox"
+              id="autoGearbox"
+              name="autoGearbox"
+              checked={formData.autoGearbox}
+              onChange={handleInputChange}
+              className="modern-checkbox"
+            />
+            <label htmlFor="autoGearbox" className="modern-checkbox-label">
               Hộp số tự động
             </label>
-          </div>
+          </div>          
 
           <div className="form-group full-width">
             <label htmlFor="address">Địa chỉ</label>
@@ -282,9 +284,10 @@ const AdminCarEdit: React.FC = () => {
             />
           </div>
         </div>
+        
 
         <div className="form-actions">
-          <button type="submit" className="save-button">
+          <button type="submit" className="save-button-action">
             Lưu thay đổi
           </button>
           <button

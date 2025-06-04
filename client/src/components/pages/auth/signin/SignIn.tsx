@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaTimes } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaTimes } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useNotification } from "../../../../contexts/NotificationContext";
 import { useAuth } from "../../../../contexts/AuthContext";
@@ -34,6 +34,7 @@ const SignIn: React.FC<{
 }> = ({ onClose, onSwitchToSignUp }) => {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -96,14 +97,33 @@ const SignIn: React.FC<{
 
               <div className="input-box">
                 <label>Mật khẩu</label>
+                <div style={{ position: 'relative' }}>
                 <input
-                  type="password"
+                    type={showPassword ? "text" : "password"}
                   placeholder="Nhập mật khẩu"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isLoading}
                   className={errors.password ? "input-error" : ""}
                 />
+                  <div 
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{
+                      position: 'absolute',
+                      right: '12px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      cursor: 'pointer',
+                      fontSize: '18px',
+                      color: '#666',
+                      display: 'flex',
+                      alignItems: 'center',
+                      zIndex: 1
+                    }}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </div>
+                </div>
                 {errors.password && <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>{errors.password}</div>}
               </div>
 

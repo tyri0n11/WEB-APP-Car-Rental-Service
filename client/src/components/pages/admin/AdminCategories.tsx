@@ -193,7 +193,7 @@ const AdminCategories: React.FC = () => {
                 <th>ID</th>{/* Added ID column header */}
                 <th>Tên Danh Mục</th>
                 <th>Mô Tả</th>
-                <th>Hành Động</th>
+                {/* <th>Hành Động</th> */}
               </tr>
             </thead>
             <tbody>
@@ -202,7 +202,7 @@ const AdminCategories: React.FC = () => {
                   <td>{category.id}</td>{/* Added ID data cell */}
                   <td>{category.name}</td>
                   <td>{category.description || '-'}</td>
-                  <td>
+                  {/* <td>
                     <button 
                       onClick={() => handleEditCategory(category)} 
                       className={`${styles.actionButton} ${styles.editButton}`}
@@ -217,7 +217,7 @@ const AdminCategories: React.FC = () => {
                     >
                       {isSubmitting && !editingCategory ? 'Đang xóa...' : 'Xóa'} 
                     </button>
-                  </td>
+                  </td> */}
                 </tr>
               ))}
             </tbody>

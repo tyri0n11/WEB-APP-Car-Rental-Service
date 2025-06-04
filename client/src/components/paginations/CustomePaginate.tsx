@@ -19,7 +19,7 @@ interface Pagination {
   next: number | null;
 }
 
-interface CustomePaginateProps {
+export interface CustomePaginateProps {
   itemsPerPage?: number;
   defaultCarImage?: string;
   showFilter?: boolean;

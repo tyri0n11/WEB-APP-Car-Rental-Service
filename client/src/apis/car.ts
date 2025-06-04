@@ -74,7 +74,7 @@ class CarApi extends BaseApi {
         }
     }
 
-    async deleteCar(id: string): Promise<void> {
+    async deleteCar(id: number): Promise<void> {
         try {
             await this.delete(`/cars/${id}`);
         } catch (error) {

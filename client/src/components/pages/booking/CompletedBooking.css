@@ -2,15 +2,21 @@
   max-width: 1000px;
   margin: 40px auto;
   padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .confirmation-success {
   text-align: center;
-  margin-bottom: 40px;
-  padding: 24px;
+  margin: 0 0 40px 0;
+  padding: 24px 32px;
   background-color: #f0fff4;
   border-radius: 12px;
   border: 1px solid #9ae6b4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .confirmation-success h1 {

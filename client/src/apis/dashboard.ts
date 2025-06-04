@@ -1,4 +1,19 @@
+import axios from 'axios';
 import { BaseApi } from './base';
+
+export interface BookingAdmin {
+  id: string;
+  userId: string;
+  carId: string;
+  carImageUrl: string;
+  code: string;
+  startDate: string;
+  endDate: string;
+  totalPrice: number;
+  status: string;
+  pickupAddress: string;
+  returnAddress: string;
+}
 
 interface DashboardStatistics {
   totalCars: number;
@@ -20,6 +35,11 @@ export interface RecentActivity {
   updatedAt: string;
 }
 
+export interface BookingQueryParams {
+  page?: number;
+  perPage?: number;
+}
+
 class DashboardApi extends BaseApi {
   async getStatistics(): Promise<DashboardStatistics> {
     try {
@@ -36,6 +56,18 @@ class DashboardApi extends BaseApi {
     } catch (error) {
       throw error;
     }
+  }
+  async getBookings(params: BookingQueryParams = {}): Promise<any> {
+    try {
+      const result = await this.get<{ data: any }>('/bookings', params);
+      return result.data;
+    } catch (error: unknown) {
+      throw error;
+    }
+  }
+  async returnBooking(bookingId: string): Promise<BookingAdmin> {
+    const result = await this.patch<{ data: BookingAdmin }>(`/bookings/${bookingId}/return`, {});
+    return result.data;
   }
 }
 

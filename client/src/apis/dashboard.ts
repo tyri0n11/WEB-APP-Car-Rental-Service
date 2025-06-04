@@ -65,7 +65,10 @@ class DashboardApi extends BaseApi {
       throw error;
     }
   }
+  async returnBooking(bookingId: string): Promise<BookingAdmin> {
+    const result = await this.patch<{ data: BookingAdmin }>(`/bookings/${bookingId}/return`, {});
+    return result.data;
+  }
 }
-
 
 export const dashboardApi = new DashboardApi(); 
